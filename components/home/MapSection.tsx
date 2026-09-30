@@ -2,83 +2,101 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { MapPin, LayoutGrid, Maximize2, X, Compass, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import {
+  MapPin,
+  LayoutGrid,
+  Maximize2,
+  X,
+  Compass,
+  ExternalLink,
+  Plus,
+  Minus,
+  RotateCcw,
+} from "lucide-react";
+import {
+  TransformWrapper,
+  TransformComponent,
+} from "react-zoom-pan-pinch";
 import { Reveal } from "@/components/ui/Reveal";
 
-function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const imgRef = React.useRef<HTMLImageElement>(null);
-  const magnifierRef = React.useRef<HTMLDivElement>(null);
-  
-  const zoomLevel = 2.5;
-  const magnifierSize = 250;
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!imgRef.current || !magnifierRef.current) return;
-    
-    const elem = imgRef.current;
-    const { top, left, width, height } = elem.getBoundingClientRect();
-    
-    let x = e.clientX - left;
-    let y = e.clientY - top;
-    
-    // Bounds check
-    if (x < 0 || y < 0 || x > width || y > height) {
-      magnifierRef.current.style.opacity = "0";
-      return;
-    }
-    
-    magnifierRef.current.style.opacity = "1";
-    
-    // Position magnifier center at cursor
-    magnifierRef.current.style.left = `calc(50% - ${width / 2}px + ${x}px - ${magnifierSize / 2}px)`;
-    magnifierRef.current.style.top = `calc(50% - ${height / 2}px + ${y}px - ${magnifierSize / 2}px)`;
-    
-    magnifierRef.current.style.backgroundSize = `${width * zoomLevel}px ${height * zoomLevel}px`;
-    magnifierRef.current.style.backgroundPositionX = `${-x * zoomLevel + magnifierSize / 2}px`;
-    magnifierRef.current.style.backgroundPositionY = `${-y * zoomLevel + magnifierSize / 2}px`;
-  };
-
+function MapZoomViewer({ src, alt }: { src: string; alt: string }) {
   return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-full flex items-center justify-center bg-[#E8F5F3]/30 overflow-hidden cursor-crosshair"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => {
-        if (magnifierRef.current) magnifierRef.current.style.opacity = "0";
-      }}
-    >
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        className="max-w-full max-h-full object-contain"
-      />
-      
-      <div
-        ref={magnifierRef}
-        style={{
-          position: "absolute",
-          pointerEvents: "none",
-          height: `${magnifierSize}px`,
-          width: `${magnifierSize}px`,
-          opacity: "0", 
-          border: "2px solid #00695C",
-          backgroundColor: "white",
-          backgroundImage: `url('${src}')`,
-          backgroundRepeat: "no-repeat",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-          borderRadius: "12px",
-          zIndex: 100,
-          transition: "opacity 0.2s ease"
-        }}
-      />
+    <div className="relative w-full h-full bg-[#12262D]/5 flex items-center justify-center overflow-hidden">
+      <TransformWrapper
+        initialScale={1}
+        minScale={0.8}
+        maxScale={6}
+        centerOnInit={true}
+        wheel={{ step: 0.15 }}
+        pinch={{ step: 5 }}
+        doubleClick={{ step: 0.7 }}
+        limitToBounds={false}
+      >
+        {({ zoomIn, zoomOut, resetTransform }) => (
+          <>
+            {/* Floating Zoom & Pan Controls */}
+            <div className="absolute top-4 right-4 z-30 flex flex-col gap-1.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#E2E7E5] p-1.5">
+              <button
+                type="button"
+                onClick={() => zoomIn(0.4)}
+                className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors"
+                title="Zoom In (+)"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => zoomOut(0.4)}
+                className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
+                title="Zoom Out (−)"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => resetTransform(300)}
+                className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
+                title="Reset View"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Helper hint badge at bottom */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none bg-[#12262D]/75 backdrop-blur-sm text-white text-[11px] font-medium px-3.5 py-1 rounded-full flex items-center gap-1.5 shadow-md">
+              <span>Scroll wheel or pinch to zoom • Drag to pan</span>
+            </div>
+
+            <TransformComponent
+              wrapperClass="!w-full !h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
+              contentClass="!w-full !h-full flex items-center justify-center"
+              wrapperStyle={{ width: "100%", height: "100%" }}
+            >
+              <img
+                src={src}
+                alt={alt}
+                className="max-w-full max-h-[85vh] object-contain select-none pointer-events-auto"
+                draggable={false}
+              />
+            </TransformComponent>
+          </>
+        )}
+      </TransformWrapper>
     </div>
   );
 }
 
 export default function MapSection() {
   const [activeModal, setActiveModal] = useState<"LOCATION" | "LAYOUT" | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("map") === "layout") setActiveModal("LAYOUT");
+      if (params.get("map") === "location") setActiveModal("LOCATION");
+    }
+  }, []);
 
   const locationMapImage = "/images/MOHS-Layout-map.webp";
   const layoutMapImage = "/images/layout-map-v2-optimized.jpg";
@@ -216,34 +234,48 @@ export default function MapSection() {
                     ? "MOHS Venice City — Regional Location Map"
                     : "MOHS Venice City — Sector Layout & Masterplan"}
                 </h4>
-                <span className="hidden sm:inline-flex px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded">Hover to Zoom</span>
+                <span className="hidden sm:inline-flex px-2.5 py-1 bg-emerald-50 text-[#00695C] border border-[#00695C]/20 text-[10px] uppercase font-bold rounded-lg items-center gap-1">
+                  Pan & Zoom
+                </span>
               </div>
               <button
                 onClick={() => setActiveModal(null)}
                 className="p-1.5 rounded-lg hover:bg-slate-200 text-[#12262D] transition-colors"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            {/* The Image Magnifier Area */}
-            <div className="flex-1 w-full bg-[#E8F5F3]/20 relative min-h-0 overflow-hidden">
-              <ImageMagnifier 
+            {/* The Pan & Zoom Map Canvas Area */}
+            <div className="flex-1 w-full bg-[#E8F5F3]/10 relative min-h-0 overflow-hidden">
+              <MapZoomViewer 
                 src={activeModal === "LOCATION" ? locationMapImage : layoutMapImage} 
                 alt="Map Enlarge" 
               />
             </div>
             
-            <div className="p-4 bg-white border-t border-[#E2E7E5] flex items-center justify-between text-xs text-[#657278] shrink-0">
-              <span>
-                To schedule an in-person site inspection or receive high-res blueprints, call our team.
-              </span>
-              <a
-                href="tel:+8801711000000"
-                className="font-bold text-[#00695C] hover:underline"
-              >
-                +880 1711-000000
-              </a>
+            <div className="p-4 bg-white border-t border-[#E2E7E5] flex flex-wrap items-center justify-between gap-3 text-xs text-[#657278] shrink-0">
+              <div className="flex items-center gap-3">
+                <span>
+                  To schedule an in-person site inspection or receive high-res blueprints, call our team:
+                </span>
+                <a
+                  href="tel:+8801711000000"
+                  className="font-bold text-[#00695C] hover:underline"
+                >
+                  +880 1711-000000
+                </a>
+              </div>
+              {activeModal === "LAYOUT" && (
+                <Link
+                  href="/interactive-map"
+                  className="px-3.5 py-1.5 bg-[#00695C] hover:bg-[#005247] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
+                >
+                  <span>Open Interactive Map</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              )}
             </div>
           </div>
         </div>
