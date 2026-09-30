@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   TransformWrapper,
@@ -24,7 +24,7 @@ import {
   Share2,
   Code,
   Target,
-  Sparkles,
+  Eye,
 } from "lucide-react";
 import {
   PLOT_DATASET,
@@ -37,10 +37,14 @@ import {
 import SiteVisitModal from "@/components/property/SiteVisitModal";
 import EnquiryModal from "@/components/property/EnquiryModal";
 
+// Canvas dimensions: exactly half of SVG viewBox (6600x10200)
+// This guarantees exact 1 SVG unit = 0.5px math with ZERO layout ambiguity!
+const CANVAS_WIDTH = 3300;
+const CANVAS_HEIGHT = 5100;
+
 export default function InteractiveMapViewer() {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapWrapperRef = useRef<HTMLDivElement>(null);
 
   // Selection states
   const [selectedPlot, setSelectedPlot] = useState<PlotItem | null>(null);
@@ -58,7 +62,7 @@ export default function InteractiveMapViewer() {
   // Map view layers & controls
   const [showLegend, setShowLegend] = useState<boolean>(true);
   const [showFacilities, setShowFacilities] = useState<boolean>(false);
-  // Development Mode (Requirement 14: "Show Plot Boundaries")
+  // Development Mode (Requirement 14: "Show Plot Boundaries") - ON by default so plots are immediately visible!
   const [showPlotBoundaries, setShowPlotBoundaries] = useState<boolean>(true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
@@ -91,7 +95,60 @@ export default function InteractiveMapViewer() {
     };
   }, [typeFilter, sizeFilter, statusFilter, facingFilter, searchQuery]);
 
-  // Handle URL query param on mount (e.g. ?plot=P-093)
+  // Container viewport dimensions helper (immune to inner 5100px canvas expansion)
+  const getContainerDimensions = useCallback(() => {
+    if (!containerRef.current) {
+      return {
+        width: typeof window !== "undefined" ? window.innerWidth : 1600,
+        height: typeof window !== "undefined" ? window.innerHeight - 150 : 750,
+      };
+    }
+    const rect = containerRef.current.getBoundingClientRect();
+    const w = rect.width > 0 ? rect.width : (typeof window !== "undefined" ? window.innerWidth : 1600);
+    // CRITICAL: Ensure height is the real viewport height, NOT the 5100px canvas height!
+    const fallbackH = typeof window !== "undefined" ? window.innerHeight - 150 : 750;
+    const h = rect.height > 0 && rect.height < 2000 ? rect.height : fallbackH;
+    return { width: w, height: h };
+  }, []);
+
+  // Exact Mathematical Coordinate Zoom Function
+  // Translates (cx, cy) in 6600x10200 SVG system to dead center of screen
+  const zoomToCoords = useCallback((cx: number, cy: number, scale = 1.7, animTime = 400) => {
+    if (!transformRef.current) return;
+    const { width: containerW, height: containerH } = getContainerDimensions();
+
+    const pixelX = cx * 0.5;
+    const pixelY = cy * 0.5;
+
+    const targetX = containerW / 2 - pixelX * scale;
+    const targetY = containerH / 2 - pixelY * scale;
+
+    transformRef.current.setTransform(targetX, targetY, scale, animTime);
+  }, [getContainerDimensions]);
+
+  // Zoom to a specific plot
+  const zoomToPlot = useCallback((plot: PlotItem, animTime = 500) => {
+    zoomToCoords(plot.center[0], plot.center[1], 2.2, animTime);
+  }, [zoomToCoords]);
+
+  // Focus directly on the verified prototype test area (P-093, P-094, P-102, P-103, P-111)
+  const focusTestArea = useCallback((animTime = 500) => {
+    zoomToCoords(3915, 7410, 1.7, animTime);
+  }, [zoomToCoords]);
+
+  // Zoom out to see the entire masterplan from above
+  const viewFullMasterplan = useCallback(() => {
+    if (!transformRef.current) return;
+    const { width: containerW, height: containerH } = getContainerDimensions();
+
+    const scale = Math.min(containerW / CANVAS_WIDTH, containerH / CANVAS_HEIGHT) * 0.95;
+    const targetX = (containerW - CANVAS_WIDTH * scale) / 2;
+    const targetY = (containerH - CANVAS_HEIGHT * scale) / 2;
+
+    transformRef.current.setTransform(targetX, targetY, scale, 600);
+  }, [getContainerDimensions]);
+
+  // Handle URL query param or initial center on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -102,44 +159,24 @@ export default function InteractiveMapViewer() {
         );
         if (found) {
           setSelectedPlot(found);
-          const timer = setTimeout(() => {
-            zoomToPlot(found);
-          }, 300);
-          return () => clearTimeout(timer);
+          const t1 = setTimeout(() => zoomToPlot(found, 0), 60);
+          const t2 = setTimeout(() => zoomToPlot(found, 0), 250);
+          return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+          };
         }
       }
 
-      // If no query param, initial zoom to the verified test area
-      const timer = setTimeout(() => {
-        focusTestArea();
-      }, 300);
-      return () => clearTimeout(timer);
+      // Default: focus test area immediately and after initial render pass
+      const t1 = setTimeout(() => focusTestArea(0), 60);
+      const t2 = setTimeout(() => focusTestArea(0), 250);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
     }
-  }, []);
-
-  // Zoom to a specific plot using react-zoom-pan-pinch zoomToElement
-  const zoomToPlot = (plot: PlotItem) => {
-    if (!transformRef.current) return;
-    setTimeout(() => {
-      try {
-        transformRef.current?.zoomToElement(plot.id, 5.0, 500);
-      } catch (err) {
-        console.warn("zoomToPlot error:", err);
-      }
-    }, 50);
-  };
-
-  // Focus directly on the verified prototype test area (P-093, P-094, P-102, P-103, P-111)
-  const focusTestArea = () => {
-    if (!transformRef.current) return;
-    setTimeout(() => {
-      try {
-        transformRef.current?.zoomToElement("P-102", 4.2, 500);
-      } catch (err) {
-        console.warn("focusTestArea error:", err);
-      }
-    }, 50);
-  };
+  }, [focusTestArea, zoomToPlot]);
 
   const handleSelectPlot = (plot: PlotItem) => {
     setSelectedPlot(plot);
@@ -150,24 +187,7 @@ export default function InteractiveMapViewer() {
   const handleSelectFacility = (fac: FacilityItem) => {
     setSelectedFacility(fac);
     setSelectedPlot(null);
-
-    if (transformRef.current && containerRef.current && mapWrapperRef.current) {
-      const container = containerRef.current;
-      const mapWrapper = mapWrapperRef.current;
-      const containerW = container.clientWidth;
-      const containerH = container.clientHeight;
-      const mapW = mapWrapper.clientWidth;
-      const mapH = mapWrapper.clientHeight;
-
-      const scale = 4.0;
-      const pixelX = (fac.x / MAP_DIMENSIONS.width) * mapW;
-      const pixelY = (fac.y / MAP_DIMENSIONS.height) * mapH;
-
-      const targetX = containerW / 2 - pixelX * scale;
-      const targetY = containerH / 2 - pixelY * scale;
-
-      transformRef.current.setTransform(targetX, targetY, scale, 600);
-    }
+    zoomToCoords(fac.x, fac.y, 2.0, 500);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -232,16 +252,26 @@ export default function InteractiveMapViewer() {
               </p>
             </div>
 
-            {/* Quick Test Area & Development Mode Buttons */}
+            {/* Quick Action Buttons */}
             <div className="flex flex-wrap items-center gap-2 shrink-0">
               {/* Focus Verified Test Area Button */}
               <button
-                onClick={focusTestArea}
+                onClick={() => focusTestArea(500)}
                 className="px-3.5 py-2 bg-[#E8F5F3] hover:bg-emerald-100 text-[#00695C] border border-[#00695C]/30 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
-                title="Focus on verified test plots P-093, P-094, P-102, P-103, P-111"
+                title="Focus directly on verified test plots P-093, P-094, P-102, P-103, P-111"
               >
                 <Target className="w-3.5 h-3.5 text-[#00695C]" />
-                <span>Test Area (P-093, P-094, P-102...)</span>
+                <span>Sector 4 Plots (P-093, P-094...)</span>
+              </button>
+
+              {/* View Full Masterplan Button */}
+              <button
+                onClick={viewFullMasterplan}
+                className="px-3.5 py-2 bg-white hover:bg-slate-50 text-[#12262D] border border-[#E2E7E5] rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
+                title="Zoom out to see the entire masterplan project overview"
+              >
+                <Eye className="w-3.5 h-3.5 text-[#657278]" />
+                <span>Full Map</span>
               </button>
 
               {/* Dev Mode: Show Plot Boundaries (Requirement 14) */}
@@ -255,7 +285,7 @@ export default function InteractiveMapViewer() {
                 title="Toggle visual SVG plot boundaries and labels on/off"
               >
                 <Code className="w-3.5 h-3.5 text-[#D6A84F]" />
-                <span>Show Plot Boundaries: {showPlotBoundaries ? "ON" : "OFF"}</span>
+                <span>Plot Outlines: {showPlotBoundaries ? "ON" : "OFF"}</span>
               </button>
             </div>
           </div>
@@ -376,18 +406,27 @@ export default function InteractiveMapViewer() {
       {/* 3. Main Map Canvas Area */}
       <div
         ref={containerRef}
-        className="flex-1 relative w-full overflow-hidden bg-[#1E292E] min-h-[620px] sm:min-h-[720px] lg:min-h-[820px] flex items-center justify-center"
+        className="relative w-full h-[calc(100vh-140px)] min-h-[580px] max-h-[calc(100vh-140px)] overflow-hidden bg-[#1E292E]"
       >
         <TransformWrapper
           ref={transformRef}
-          initialScale={1.0}
-          minScale={0.8}
-          maxScale={12}
-          centerOnInit={true}
+          initialScale={1.7}
+          initialPositionX={-2528}
+          initialPositionY={-5948}
+          minScale={0.15}
+          maxScale={8}
+          centerOnInit={false}
           wheel={{ step: 0.15 }}
           pinch={{ step: 5 }}
           doubleClick={{ mode: "zoomIn", step: 0.8 }}
           limitToBounds={false}
+          onInit={(ref) => {
+            const w = typeof window !== "undefined" ? window.innerWidth : 1600;
+            const h = typeof window !== "undefined" ? (window.innerHeight - 150) : 750;
+            const targetX = w / 2 - (3915 * 0.5) * 1.7;
+            const targetY = h / 2 - (7410 * 0.5) * 1.7;
+            ref.setTransform(targetX, targetY, 1.7, 0);
+          }}
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <>
@@ -409,11 +448,18 @@ export default function InteractiveMapViewer() {
                     <Minus className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => resetTransform(400)}
+                    onClick={() => focusTestArea(400)}
                     className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
-                    title="Reset Full View"
+                    title="Reset to Sector 4 Plots"
                   >
                     <RotateCcw className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={viewFullMasterplan}
+                    className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
+                    title="View Full Masterplan"
+                  >
+                    <Eye className="w-4 h-4" />
                   </button>
                   <button
                     onClick={toggleFullscreen}
@@ -424,11 +470,11 @@ export default function InteractiveMapViewer() {
                   </button>
                 </div>
 
-                {/* Quick Target Verified Test Area Button */}
+                {/* Quick Target Sector 4 Button */}
                 <button
-                  onClick={focusTestArea}
+                  onClick={() => focusTestArea(500)}
                   className="bg-white/95 backdrop-blur-md hover:bg-emerald-50 text-[#00695C] p-2.5 rounded-2xl shadow-xl border border-[#E2E7E5] transition-colors flex items-center justify-center group"
-                  title="Target Test Area (P-093, P-094, P-102, P-103, P-111)"
+                  title="Target Sector 4 Prototype Plots"
                 >
                   <Target className="w-4 h-4 text-[#00695C] group-hover:scale-110 transition-transform" />
                 </button>
@@ -473,25 +519,28 @@ export default function InteractiveMapViewer() {
                 </div>
               )}
 
-              {/* The Pan-Zoom Vector SVG Canvas */}
+              {/* The Pan-Zoom Vector SVG Canvas with Fixed Exact Dimensions */}
               <TransformComponent
-                wrapperClass="!w-full !h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
-                contentClass="!w-full !h-full flex items-center justify-center"
+                wrapperClass="!w-full !h-full overflow-hidden cursor-grab active:cursor-grabbing"
+                contentClass="!w-auto !h-auto"
+                wrapperStyle={{ width: "100%", height: "100%" }}
               >
                 <div
-                  ref={mapWrapperRef}
-                  className="relative select-none shadow-2xl bg-white"
+                  className="relative select-none bg-white shadow-2xl"
                   style={{
-                    width: "100%",
-                    maxWidth: "6600px",
-                    aspectRatio: "6600 / 10200",
+                    width: `${CANVAS_WIDTH}px`,
+                    height: `${CANVAS_HEIGHT}px`,
+                    position: "relative",
                   }}
                 >
                   <svg
                     viewBox="0 0 6600 10200"
-                    preserveAspectRatio="xMidYMid meet"
-                    className="w-full h-full block pointer-events-auto bg-white"
-                    style={{ width: "100%", height: "100%", backgroundColor: "#FFFFFF" }}
+                    style={{
+                      width: `${CANVAS_WIDTH}px`,
+                      height: `${CANVAS_HEIGHT}px`,
+                      display: "block",
+                    }}
+                    className="pointer-events-auto"
                   >
                     <defs>
                       {/* Glow filter for selected plot */}
@@ -525,18 +574,27 @@ export default function InteractiveMapViewer() {
                       let filter = undefined;
 
                       if (isSelected) {
-                        fill = "rgba(214, 168, 79, 0.45)"; // Gold highlight
+                        fill = "rgba(214, 168, 79, 0.50)"; // Gold highlight
                         stroke = "#D6A84F"; // Gold boundary
                         strokeWidth = 6;
                         filter = "url(#plot-glow)";
                       } else if (isHovered) {
-                        fill = "rgba(0, 105, 92, 0.40)"; // Subtle teal fill
+                        fill = "rgba(0, 105, 92, 0.45)"; // Subtle teal fill
                         stroke = "#00695C"; // Subtle teal boundary
-                        strokeWidth = 4.5;
+                        strokeWidth = 5;
                       } else if (showPlotBoundaries) {
-                        fill = isMatching ? "rgba(0, 105, 92, 0.12)" : "transparent";
-                        stroke = isMatching ? "rgba(0, 105, 92, 0.60)" : "rgba(0,0,0,0.15)";
-                        strokeWidth = 2;
+                        // Dev mode or boundary display
+                        if (plot.status === "Reserved") {
+                          fill = isMatching ? "rgba(214, 168, 79, 0.40)" : "transparent";
+                          stroke = isMatching ? "#B8860B" : "rgba(0,0,0,0.2)";
+                        } else if (plot.status === "Featured") {
+                          fill = isMatching ? "rgba(21, 158, 208, 0.40)" : "transparent";
+                          stroke = isMatching ? "#0284C7" : "rgba(0,0,0,0.2)";
+                        } else {
+                          fill = isMatching ? "rgba(0, 105, 92, 0.40)" : "transparent";
+                          stroke = isMatching ? "#004D40" : "rgba(0,0,0,0.2)";
+                        }
+                        strokeWidth = 3.5;
                       }
 
                       return (
