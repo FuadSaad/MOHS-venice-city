@@ -5,72 +5,19 @@ import Image from "next/image";
 import { MapPin, LayoutGrid, Maximize2, X, Compass, ExternalLink } from "lucide-react";
 
 function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
-  const [[x, y], setXY] = useState([0, 0]);
-  const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
-  const [showMagnifier, setShowMagnifier] = useState(false);
-
-  const magnifierHeight = 250;
-  const magnifierWidth = 250;
-  const zoomLevel = 2.5;
+  const [isZoomed, setIsZoomed] = useState(false);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-[#E8F5F3]/30 overflow-hidden cursor-crosshair">
+    <div 
+      className={`relative w-full h-full bg-[#E8F5F3]/30 ${isZoomed ? 'overflow-auto cursor-zoom-out' : 'flex items-center justify-center overflow-hidden cursor-zoom-in'}`}
+      onClick={() => setIsZoomed(!isZoomed)}
+      title={isZoomed ? "Click to zoom out" : "Click to zoom in"}
+    >
       <img
         src={src}
         alt={alt}
-        className="max-w-full max-h-full object-contain"
-        onMouseEnter={(e) => {
-          const elem = e.currentTarget;
-          const { width, height } = elem.getBoundingClientRect();
-          setSize([width, height]);
-          setShowMagnifier(true);
-        }}
-        onMouseMove={(e) => {
-          const elem = e.currentTarget;
-          // Get the position of the IMAGE itself, not the container
-          const { top, left, width, height } = elem.getBoundingClientRect();
-          
-          // Calculate mouse position relative to the image
-          let mouseX = e.clientX - left;
-          let mouseY = e.clientY - top;
-          
-          // Constrain within image bounds so magnifier doesn't glitch outside
-          mouseX = Math.max(0, Math.min(mouseX, width));
-          mouseY = Math.max(0, Math.min(mouseY, height));
-          
-          // Set x,y for the magnifier div position (relative to viewport/container if we use clientX but let's use standard positioning)
-          setXY([e.clientX - left, e.clientY - top]);
-        }}
-        onMouseLeave={() => {
-          setShowMagnifier(false);
-        }}
+        className={isZoomed ? "max-w-none w-auto h-auto object-none" : "max-w-full max-h-full object-contain transition-transform duration-300"}
       />
-      
-      {showMagnifier && (
-        <div
-          style={{
-            position: "absolute",
-            pointerEvents: "none",
-            height: `${magnifierHeight}px`,
-            width: `${magnifierWidth}px`,
-            // Center the magnifier on the mouse
-            top: `calc(50% - ${imgHeight / 2}px + ${y}px - ${magnifierHeight / 2}px)`,
-            left: `calc(50% - ${imgWidth / 2}px + ${x}px - ${magnifierWidth / 2}px)`,
-            opacity: "1", 
-            border: "2px solid #00695C",
-            backgroundColor: "white",
-            backgroundImage: `url('${src}')`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: `${imgWidth * zoomLevel}px ${imgHeight * zoomLevel}px`,
-            // Shift background by zoom amount, plus offset to center the magnifying lens
-            backgroundPositionX: `${-x * zoomLevel + magnifierWidth / 2}px`,
-            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-            borderRadius: "12px",
-            zIndex: 100
-          }}
-        />
-      )}
     </div>
   );
 }
