@@ -4,6 +4,7 @@ import { PropertyItem } from "@/types/property";
 import PropertyCard from "@/components/property/PropertyCard";
 import { ShieldCheck, Search, Filter } from "lucide-react";
 import Link from "next/link";
+import HorizontalFilterBar from "@/components/property/HorizontalFilterBar";
 
 export const revalidate = 0;
 
@@ -57,18 +58,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
           </p>
         </div>
 
-        {/* Filter Buttons matching screenshot */}
-        <div className="mb-8 bg-white p-2 rounded-2xl flex items-center shadow-sm border border-[#E2E7E5] max-w-fit gap-2">
-          <Link href="/properties" className="bg-[#00695C] text-white px-4 py-2 rounded-xl font-bold text-sm">
-            All Properties ({properties.length})
-          </Link>
-          <Link href="/plots" className="text-[#657278] hover:text-[#12262D] px-4 py-2 rounded-xl font-bold text-sm transition-colors flex items-center gap-1">
-            Residential Plots Only &rarr;
-          </Link>
-          <Link href="/flats" className="text-[#657278] hover:text-[#12262D] px-4 py-2 rounded-xl font-bold text-sm transition-colors flex items-center gap-1">
-            Flats / Apartments Only &rarr;
-          </Link>
-        </div>
+        {/* Horizontal Filter Bar matching screenshot */}
+        <HorizontalFilterBar />
 
 
         {/* Grid */}
