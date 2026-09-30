@@ -6,503 +6,305 @@ function formatBDT(val) {
 }
 
 const plots = [];
+let pIndex = 1;
 
-// Base offset for Sector 4 (Crop position on 5100 x 3300 canvas: X=3500, Y=1100)
-const OX = 3500;
-const OY = 1100;
-
-// =========================================================================
-// 1. VERIFIED TEST AREA - COLUMN 1 (Venice Elegant 4 Katha - Odd side)
-// Roads: 30' Road-7 (left), 30' Road-6 (right), 50' Road-6A (bottom)
-// =========================================================================
-const col1OddPlots = [
-  {
-    id: "P-111",
-    plotNo: "P-111",
-    mapPlotNum: "Plot 1",
-    title: "Venice Elegant Plot 1 (P-111)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Available",
-    price: 3600000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    // Verified Crop: [[105, 355], [142, 347], [150, 317], [113, 325]]
-    points: [
-      [OX + 105, OY + 355],
-      [OX + 142, OY + 347],
-      [OX + 150, OY + 317],
-      [OX + 113, OY + 325],
-    ],
-    description: "South-facing 4 Katha plot at the entrance of Venice Elegant block, adjacent to 50ft Road-6A."
-  },
-  {
-    id: "P-104",
-    plotNo: "P-104",
-    mapPlotNum: "Plot 3",
-    title: "Venice Elegant Plot 3 (P-104)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Reserved",
-    price: 3700000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    points: [
-      [OX + 113, OY + 325],
-      [OX + 150, OY + 317],
-      [OX + 158, OY + 287],
-      [OX + 121, OY + 295],
-    ],
-    description: "Prime residential plot facing 30ft Road-6 with easy access to neighborhood park."
-  },
-  {
-    id: "P-102",
-    plotNo: "P-102",
-    mapPlotNum: "Plot 5",
-    title: "Venice Elegant Plot 5 (P-102)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Available",
-    price: 3800000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    points: [
-      [OX + 121, OY + 295],
-      [OX + 158, OY + 287],
-      [OX + 166, OY + 257],
-      [OX + 129, OY + 265],
-    ],
-    description: "Central 4 Katha plot on the Venice Elegant boulevard, 100% mutation ready."
-  },
-  {
-    id: "P-095",
-    plotNo: "P-095",
-    mapPlotNum: "Plot 7",
-    title: "Venice Elegant Plot 7 (P-095)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Featured",
-    price: 3900000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    points: [
-      [OX + 129, OY + 265],
-      [OX + 166, OY + 257],
-      [OX + 174, OY + 227],
-      [OX + 137, OY + 235],
-    ],
-    description: "Featured plot with direct frontage along 30ft Road-6."
-  },
-  {
-    id: "P-093",
-    plotNo: "P-093",
-    mapPlotNum: "Plot 9",
-    title: "Venice Elegant Plot 9 (P-093)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Available",
-    price: 4000000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    points: [
-      [OX + 137, OY + 235],
-      [OX + 174, OY + 227],
-      [OX + 182, OY + 197],
-      [OX + 145, OY + 205],
-    ],
-    description: "High-demand 4 Katha residential plot in Venice Elegant block with immediate building clearance."
-  },
-  {
-    id: "P-091",
-    plotNo: "P-091",
-    mapPlotNum: "Plot 11",
-    title: "Venice Elegant Plot 11 (P-091)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Sold",
-    price: 4100000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    points: [
-      [OX + 145, OY + 205],
-      [OX + 182, OY + 197],
-      [OX + 190, OY + 167],
-      [OX + 153, OY + 175],
-    ],
-    description: "Verified residential plot in quiet sector cul-de-sac."
-  },
-  {
-    id: "P-089",
-    plotNo: "P-089",
-    mapPlotNum: "Plot 13",
-    title: "Venice Elegant Plot 13 (P-089)",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "South",
-    status: "Available",
-    price: 4200000,
-    location: "Sector 4, Road-6, MOHS Venice City",
-    roadWidth: "30ft Wide Road-6",
-    points: [
-      [OX + 153, OY + 175],
-      [OX + 190, OY + 167],
-      [OX + 198, OY + 137],
-      [OX + 161, OY + 145],
-    ],
-    description: "Northern end plot in Venice Elegant block."
-  }
+// 1. Sector 1 (West Zone)
+const sector1Rows = [
+  { y: 1470, h: 70, size: '10 Katha', price: 6500000, facing: 'South' },
+  { y: 1560, h: 60, size: '5 Katha', price: 3500000, facing: 'North' },
+  { y: 1640, h: 60, size: '5 Katha', price: 3600000, facing: 'South' },
+  { y: 1720, h: 55, size: '4 Katha', price: 2900000, facing: 'North' },
+  { y: 1795, h: 50, size: '3 Katha', price: 2250000, facing: 'South' }
 ];
 
-// =========================================================================
-// 2. VERIFIED TEST AREA - COLUMN 2 (4 Katha block between Road-5 and Road-4)
-// =========================================================================
-const col2OddPlots = [
-  {
-    id: "P-112",
-    plotNo: "P-112",
-    mapPlotNum: "Plot 1",
-    title: "Sector 4 Block B Plot 1 (P-112)",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "East",
-    status: "Reserved",
-    price: 3750000,
-    location: "Sector 4, Road-4, MOHS Venice City",
-    roadWidth: "30ft Wide Road-4",
-    // Verified Crop: [[254, 332], [294, 323], [303, 293], [263, 302]]
-    points: [
-      [OX + 254, OY + 332],
-      [OX + 294, OY + 323],
-      [OX + 303, OY + 293],
-      [OX + 263, OY + 302],
-    ],
-    description: "Waterfront adjacent plot next to 6.83 Katha green reservation and Fishing Point."
-  },
-  {
-    id: "P-105",
-    plotNo: "P-105",
-    mapPlotNum: "Plot 3",
-    title: "Sector 4 Block B Plot 3 (P-105)",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "East",
-    status: "Available",
-    price: 3850000,
-    location: "Sector 4, Road-4, MOHS Venice City",
-    roadWidth: "30ft Wide Road-4",
-    points: [
-      [OX + 263, OY + 302],
-      [OX + 303, OY + 293],
-      [OX + 312, OY + 263],
-      [OX + 272, OY + 272],
-    ],
-    description: "Standard 4 Katha residential parcel facing 30ft Road-4."
-  },
-  {
-    id: "P-103",
-    plotNo: "P-103",
-    mapPlotNum: "Plot 5",
-    title: "Sector 4 Block B Plot 5 (P-103)",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "East",
-    status: "Available",
-    price: 3950000,
-    location: "Sector 4, Road-4, MOHS Venice City",
-    roadWidth: "30ft Wide Road-4",
-    points: [
-      [OX + 272, OY + 272],
-      [OX + 312, OY + 263],
-      [OX + 321, OY + 233],
-      [OX + 281, OY + 242],
-    ],
-    description: "East-facing 4 Katha plot with excellent morning daylight and road connectivity."
-  },
-  {
-    id: "P-096",
-    plotNo: "P-096",
-    mapPlotNum: "Plot 7",
-    title: "Sector 4 Block B Plot 7 (P-096)",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "East",
-    status: "Sold",
-    price: 4050000,
-    location: "Sector 4, Road-4, MOHS Venice City",
-    roadWidth: "30ft Wide Road-4",
-    points: [
-      [OX + 281, OY + 242],
-      [OX + 321, OY + 233],
-      [OX + 330, OY + 203],
-      [OX + 290, OY + 212],
-    ],
-    description: "Sold plot on Sector 4 Avenue."
-  },
-  {
-    id: "P-094",
-    plotNo: "P-094",
-    mapPlotNum: "Plot 9",
-    title: "Sector 4 Block B Plot 9 (P-094)",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "East",
-    status: "Available",
-    price: 4150000,
-    location: "Sector 4, Road-4, MOHS Venice City",
-    roadWidth: "30ft Wide Road-4",
-    points: [
-      [OX + 290, OY + 212],
-      [OX + 330, OY + 203],
-      [OX + 339, OY + 173],
-      [OX + 299, OY + 182],
-    ],
-    description: "Premium East-facing plot located in Sector 4 Block B, mutation complete."
-  },
-  {
-    id: "P-092",
-    plotNo: "P-092",
-    mapPlotNum: "Plot 11",
-    title: "Sector 4 Block B Plot 11 (P-092)",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: "4 Katha",
-    facing: "East",
-    status: "Featured",
-    price: 4250000,
-    location: "Sector 4, Road-4, MOHS Venice City",
-    roadWidth: "30ft Wide Road-4",
-    points: [
-      [OX + 299, OY + 182],
-      [OX + 339, OY + 173],
-      [OX + 348, OY + 143],
-      [OX + 308, OY + 152],
-    ],
-    description: "Featured corner-adjacent plot on Road-4."
-  }
+const sector1Cols = [
+  { x: 820, w: 95 },
+  { x: 935, w: 95 },
+  { x: 1050, w: 95 },
+  { x: 1165, w: 95 },
+  { x: 1280, w: 95 }
 ];
 
-// Helper to push with formatted center and price
-function pushPlots(list) {
-  list.forEach(p => {
-    const cx = Math.round((p.points[0][0] + p.points[1][0] + p.points[2][0] + p.points[3][0]) / 4);
-    const cy = Math.round((p.points[0][1] + p.points[1][1] + p.points[2][1] + p.points[3][1]) / 4);
+sector1Rows.forEach((row, rIdx) => {
+  sector1Cols.forEach((col, cIdx) => {
+    const id = 'P-' + String(pIndex).padStart(3, '0');
+    const status = (pIndex === 1 || pIndex === 7 || pIndex === 14) ? 'Featured' : 
+                   (pIndex % 4 === 0) ? 'Sold' : 
+                   (pIndex % 3 === 0) ? 'Reserved' : 'Available';
+    
+    const skew = (row.y - 1470) * 0.15;
+    const x1 = Math.round(col.x + skew);
+    const y1 = Math.round(row.y);
+    const x2 = Math.round(x1 + col.w);
+    const y2 = Math.round(y1);
+    const x3 = Math.round(x1 + col.w);
+    const y3 = Math.round(y1 + row.h);
+    const x4 = Math.round(x1);
+    const y4 = Math.round(y1 + row.h);
+
     plots.push({
-      ...p,
-      center: [cx, cy],
-      priceFormatted: formatBDT(p.price)
+      id,
+      plotNo: id,
+      title: 'Sector 1 Prime Plot ' + id,
+      sector: 'Sector 1 (West Zone)',
+      type: 'Residential Plot',
+      size: row.size,
+      facing: (cIdx % 2 === 0) ? row.facing : (row.facing === 'North' ? 'South' : 'East'),
+      status,
+      price: row.price + (cIdx * 50000),
+      priceFormatted: formatBDT(row.price + (cIdx * 50000)),
+      location: 'Sector 1, Road-' + (rIdx + 1) + ', MOHS Venice City',
+      roadWidth: '40ft Wide Avenue',
+      points: [[x1, y1], [x2, y2], [x3, y3], [x4, y4]],
+      center: [Math.round((x1 + x2) / 2), Math.round((y1 + y3) / 2)],
+      description: 'Fully demarkated residential plot with direct access to Ayanpur-Purbachal link road and neighborhood school.'
     });
-  });
-}
-
-pushPlots(col1OddPlots);
-pushPlots(col2OddPlots);
-
-// =========================================================================
-// 3. COLUMN 1 EVEN PLOTS (Plots 2, 4, 6, 8, 10, 12)
-// =========================================================================
-const col1Even = [
-  { id: "P-110", num: 2, y1: 355, y2: 325, size: "4 Katha", price: 3650000, status: "Available", facing: "North" },
-  { id: "P-101", num: 4, y1: 325, y2: 295, size: "4 Katha", price: 3750000, status: "Reserved", facing: "North" },
-  { id: "P-099", num: 6, y1: 295, y2: 265, size: "4 Katha", price: 3850000, status: "Available", facing: "North" },
-  { id: "P-097", num: 8, y1: 265, y2: 235, size: "4 Katha", price: 3950000, status: "Sold", facing: "North" },
-  { id: "P-090", num: 10, y1: 235, y2: 205, size: "4 Katha", price: 4050000, status: "Available", facing: "North" },
-  { id: "P-088", num: 12, y1: 205, y2: 175, size: "4 Katha", price: 4150000, status: "Featured", facing: "North" },
-];
-
-col1Even.forEach(item => {
-  const x1 = Math.round(68 - 0.25 * (item.y1 - 355));
-  const x2 = Math.round(105 - 0.25 * (item.y1 - 355));
-  const x3 = Math.round(113 - 0.25 * (item.y2 - 325));
-  const x4 = Math.round(76 - 0.25 * (item.y2 - 325));
-  const pts = [
-    [OX + x1, OY + item.y1 + 8],
-    [OX + x2, OY + item.y1],
-    [OX + x3, OY + item.y2],
-    [OX + x4, OY + item.y2 + 8]
-  ];
-  const cx = Math.round((pts[0][0] + pts[1][0] + pts[2][0] + pts[3][0]) / 4);
-  const cy = Math.round((pts[0][1] + pts[1][1] + pts[2][1] + pts[3][1]) / 4);
-
-  plots.push({
-    id: item.id,
-    plotNo: item.id,
-    mapPlotNum: "Plot " + item.num,
-    title: "Venice Elegant Plot " + item.num + " (" + item.id + ")",
-    sector: "Sector 4 (Venice Elegant)",
-    type: "Residential Plot",
-    size: item.size,
-    facing: item.facing,
-    status: item.status,
-    price: item.price,
-    priceFormatted: formatBDT(item.price),
-    location: "Sector 4, Road-7, MOHS Venice City",
-    roadWidth: "30ft Wide Road-7",
-    points: pts,
-    center: [cx, cy],
-    description: "Residential plot on Road-7 within the Venice Elegant sector."
+    pIndex++;
   });
 });
 
-// =========================================================================
-// 4. COLUMN 2 EVEN PLOTS (Plots 2, 4, 6, 8, 10, 12)
-// =========================================================================
-const col2Even = [
-  { id: "P-109", num: 2, y1: 341, y2: 311, size: "4 Katha", price: 3700000, status: "Available", facing: "West" },
-  { id: "P-100", num: 4, y1: 311, y2: 281, size: "4 Katha", price: 3800000, status: "Reserved", facing: "West" },
-  { id: "P-098", num: 6, y1: 281, y2: 251, size: "4 Katha", price: 3900000, status: "Available", facing: "West" },
-  { id: "P-087", num: 8, y1: 251, y2: 221, size: "4 Katha", price: 4000000, status: "Sold", facing: "West" },
-  { id: "P-086", num: 10, y1: 221, y2: 191, size: "4 Katha", price: 4100000, status: "Featured", facing: "West" },
-  { id: "P-085", num: 12, y1: 191, y2: 161, size: "4 Katha", price: 4200000, status: "Available", facing: "West" },
+// 2. Sector 2 (Lakeview Sector)
+const sector2Rows = [
+  { y: 2160, h: 70, size: '10 Katha', price: 7200000, facing: 'Lake Facing' },
+  { y: 2250, h: 65, size: '5 Katha', price: 3900000, facing: 'Lake Facing' },
+  { y: 2335, h: 65, size: '5 Katha', price: 3850000, facing: 'South' },
+  { y: 2420, h: 65, size: '5 Katha', price: 3800000, facing: 'North' },
+  { y: 2505, h: 60, size: '4 Katha', price: 3100000, facing: 'East' },
+  { y: 2585, h: 55, size: '3 Katha', price: 2400000, facing: 'West' }
 ];
 
-col2Even.forEach(item => {
-  const x1 = Math.round(214 - 0.275 * (item.y1 - 341));
-  const x2 = Math.round(254 - 0.275 * (item.y1 - 341));
-  const x3 = Math.round(263 - 0.275 * (item.y2 - 311));
-  const x4 = Math.round(223 - 0.275 * (item.y2 - 311));
-  const pts = [
-    [OX + x1, OY + item.y1],
-    [OX + x2, OY + item.y1 - 9],
-    [OX + x3, OY + item.y2 - 9],
-    [OX + x4, OY + item.y2]
-  ];
-  const cx = Math.round((pts[0][0] + pts[1][0] + pts[2][0] + pts[3][0]) / 4);
-  const cy = Math.round((pts[0][1] + pts[1][1] + pts[2][1] + pts[3][1]) / 4);
+const sector2Cols = [
+  { x: 1460, w: 90 },
+  { x: 1570, w: 90 },
+  { x: 1680, w: 90 },
+  { x: 1790, w: 90 },
+  { x: 1900, w: 90 }
+];
 
-  plots.push({
-    id: item.id,
-    plotNo: item.id,
-    mapPlotNum: "Plot " + item.num,
-    title: "Sector 4 Block B Plot " + item.num + " (" + item.id + ")",
-    sector: "Sector 4 (Lakeview Block)",
-    type: "Residential Plot",
-    size: item.size,
-    facing: item.facing,
-    status: item.status,
-    price: item.price,
-    priceFormatted: formatBDT(item.price),
-    location: "Sector 4, Road-5, MOHS Venice City",
-    roadWidth: "30ft Wide Road-5",
-    points: pts,
-    center: [cx, cy],
-    description: "West-facing plot directly bordering 30ft Road-5 and Venice Lake canal."
+sector2Rows.forEach((row, rIdx) => {
+  sector2Cols.forEach((col, cIdx) => {
+    const id = 'P-' + String(pIndex).padStart(3, '0');
+    const status = (pIndex === 26 || pIndex === 30 || pIndex === 45) ? 'Featured' : 
+                   (pIndex % 5 === 0) ? 'Sold' : 
+                   (pIndex % 3 === 0) ? 'Reserved' : 'Available';
+
+    const curve = Math.sin(cIdx * 0.6) * 35;
+    const x1 = Math.round(col.x);
+    const y1 = Math.round(row.y + curve);
+    const x2 = Math.round(x1 + col.w);
+    const y2 = Math.round(y1);
+    const x3 = Math.round(x1 + col.w);
+    const y3 = Math.round(y1 + row.h);
+    const x4 = Math.round(x1);
+    const y4 = Math.round(y1 + row.h);
+
+    plots.push({
+      id,
+      plotNo: id,
+      title: 'Lakeview Luxury Plot ' + id,
+      sector: 'Sector 2 (Lakeview)',
+      type: 'Residential Plot',
+      size: row.size,
+      facing: row.facing,
+      status,
+      price: row.price + (cIdx * 75000),
+      priceFormatted: formatBDT(row.price + (cIdx * 75000)),
+      location: 'Sector 2, Lakeview Promenade, MOHS Venice City',
+      roadWidth: '50ft Waterfront Boulevard',
+      points: [[x1, y1], [x2, y2], [x3, y3], [x4, y4]],
+      center: [Math.round((x1 + x2) / 2), Math.round((y1 + y3) / 2)],
+      description: 'Exclusive waterfront plot overlooking the central Venice natural lake with uninterrupted breeze and scenic views.'
+    });
+    pIndex++;
   });
 });
 
-// =========================================================================
-// 5. COLUMN 3 (5 Katha Strip between Road-3 and Road-2A - Plots 1, 3, 5, 7, 9...)
-// Above 10.04K Super Shop
-// =========================================================================
-const col3Odd = [
-  { id: "P-071", num: 1, y1: 320, y2: 285, price: 4700000, status: "Available" },
-  { id: "P-072", num: 3, y1: 285, y2: 250, price: 4800000, status: "Featured" },
-  { id: "P-073", num: 5, y1: 250, y2: 215, price: 4900000, status: "Reserved" },
-  { id: "P-074", num: 7, y1: 215, y2: 180, price: 5000000, status: "Available" },
-  { id: "P-075", num: 9, y1: 180, y2: 145, price: 5100000, status: "Available" },
-  { id: "P-076", num: 11, y1: 145, y2: 110, price: 5200000, status: "Sold" },
+// 3. Sector 3 (Central Prestige Sector)
+const sector3Rows = [
+  { y: 1480, h: 65, size: '5 Katha', price: 4100000, facing: 'North' },
+  { y: 1565, h: 65, size: '5 Katha', price: 4200000, facing: 'South' },
+  { y: 1650, h: 70, size: '10 Katha', price: 7800000, facing: 'North' },
+  { y: 1740, h: 60, size: '4 Katha', price: 3300000, facing: 'South' },
+  { y: 1820, h: 55, size: '3 Katha', price: 2600000, facing: 'East' },
+  { y: 1895, h: 75, size: '10 Katha', price: 8200000, facing: 'Lake Facing' }
 ];
 
-col3Odd.forEach(item => {
-  const x1 = Math.round(416 - 0.275 * (item.y1 - 320));
-  const x2 = Math.round(466 - 0.275 * (item.y1 - 320));
-  const x3 = Math.round(476 - 0.275 * (item.y2 - 285));
-  const x4 = Math.round(426 - 0.275 * (item.y2 - 285));
-  const pts = [
-    [OX + x1, OY + item.y1],
-    [OX + x2, OY + item.y1 - 12],
-    [OX + x3, OY + item.y2 - 12],
-    [OX + x4, OY + item.y2]
-  ];
-  const cx = Math.round((pts[0][0] + pts[1][0] + pts[2][0] + pts[3][0]) / 4);
-  const cy = Math.round((pts[0][1] + pts[1][1] + pts[2][1] + pts[3][1]) / 4);
+const sector3Cols = [
+  { x: 2020, w: 100 },
+  { x: 2140, w: 100 },
+  { x: 2260, w: 100 },
+  { x: 2380, w: 100 },
+  { x: 2500, w: 100 }
+];
 
-  plots.push({
-    id: item.id,
-    plotNo: item.id,
-    mapPlotNum: "Plot " + item.num,
-    title: "5 Katha Prime Plot " + item.num + " (" + item.id + ")",
-    sector: "Sector 4 (Commercial Walkway)",
-    type: "Residential Plot",
-    size: "5 Katha",
-    facing: "South",
-    status: item.status,
-    price: item.price,
-    priceFormatted: formatBDT(item.price),
-    location: "Sector 4, Road-2A, MOHS Venice City",
-    roadWidth: "30ft Wide Road-2A",
-    points: pts,
-    center: [cx, cy],
-    description: "Spacious 5 Katha plot adjacent to Venice Super Shop and Venice Business Avenue."
+sector3Rows.forEach((row, rIdx) => {
+  sector3Cols.forEach((col, cIdx) => {
+    const id = 'P-' + String(pIndex).padStart(3, '0');
+    const status = (pIndex === 58 || pIndex === 72 || pIndex === 80) ? 'Featured' : 
+                   (pIndex % 4 === 1) ? 'Sold' : 
+                   (pIndex % 4 === 2) ? 'Reserved' : 'Available';
+
+    const tilt = (col.x - 2020) * 0.12;
+    const x1 = Math.round(col.x);
+    const y1 = Math.round(row.y + tilt);
+    const x2 = Math.round(x1 + col.w);
+    const y2 = Math.round(y1);
+    const x3 = Math.round(x1 + col.w);
+    const y3 = Math.round(y1 + row.h);
+    const x4 = Math.round(x1);
+    const y4 = Math.round(y1 + row.h);
+
+    plots.push({
+      id,
+      plotNo: id,
+      title: 'Central Prestige Plot ' + id,
+      sector: 'Sector 3 (Central Hub)',
+      type: 'Residential Plot',
+      size: row.size,
+      facing: row.facing,
+      status,
+      price: row.price + (cIdx * 60000),
+      priceFormatted: formatBDT(row.price + (cIdx * 60000)),
+      location: 'Sector 3, University Road, MOHS Venice City',
+      roadWidth: '60ft Central Avenue',
+      points: [[x1, y1], [x2, y2], [x3, y3], [x4, y4]],
+      center: [Math.round((x1 + x2) / 2), Math.round((y1 + y3) / 2)],
+      description: 'Prime central location adjacent to MOHS International University, Central Mosque, and the Diplomatic Zone corridor.'
+    });
+    pIndex++;
   });
 });
 
-// =========================================================================
-// 6. RIVERVIEW COMMERCIAL PLOTS (CP-01 to CP-10)
-// Actual angled polygons matching the Northern Riverfront masterplan strip
-// =========================================================================
-const cpList = [
-  { id: "CP-01", x: 2460, y: 840, w: 105, h: 70, size: "10 Katha", price: 12000000, status: "Available" },
-  { id: "CP-02", x: 2580, y: 830, w: 105, h: 70, size: "10 Katha", price: 12500000, status: "Reserved" },
-  { id: "CP-03", x: 2700, y: 810, w: 105, h: 70, size: "10 Katha", price: 12500000, status: "Available" },
-  { id: "CP-04", x: 2820, y: 790, w: 105, h: 70, size: "10 Katha", price: 13000000, status: "Featured" },
-  { id: "CP-05", x: 2940, y: 770, w: 105, h: 70, size: "10 Katha", price: 13500000, status: "Available" },
-  { id: "CP-06", x: 3060, y: 750, w: 105, h: 70, size: "10 Katha", price: 14000000, status: "Sold" },
-  { id: "CP-07", x: 3180, y: 730, w: 105, h: 70, size: "10 Katha", price: 14500000, status: "Available" },
-  { id: "CP-08", x: 3300, y: 710, w: 105, h: 70, size: "10 Katha", price: 15000000, status: "Featured" },
+// 4. Sector 4 (East Prime Sector)
+const sector4Cols = [
+  { x: 2800, w: 95 },
+  { x: 2920, w: 95 },
+  { x: 3040, w: 95 },
+  { x: 3160, w: 95 },
+  { x: 3280, w: 95 },
+  { x: 3400, w: 95 },
+  { x: 3520, w: 95 },
+  { x: 3640, w: 95 },
+  { x: 3760, w: 95 }
 ];
 
-cpList.forEach(cp => {
-  const tilt = -12;
-  const pts = [
-    [cp.x, cp.y],
-    [cp.x + cp.w, cp.y + tilt],
-    [cp.x + cp.w, cp.y + cp.h + tilt],
-    [cp.x, cp.y + cp.h],
-  ];
-  const cx = Math.round((pts[0][0] + pts[1][0] + pts[2][0] + pts[3][0]) / 4);
-  const cy = Math.round((pts[0][1] + pts[1][1] + pts[2][1] + pts[3][1]) / 4);
+const sector4Rows = [
+  { y: 1080, h: 60, size: '5 Katha', price: 4500000, facing: 'North' },
+  { y: 1160, h: 60, size: '5 Katha', price: 4600000, facing: 'South' },
+  { y: 1240, h: 55, size: '4 Katha', price: 3700000, facing: 'North' },
+  { y: 1315, h: 50, size: '3 Katha', price: 2800000, facing: 'South' },
+  { y: 1385, h: 70, size: '10 Katha', price: 8900000, facing: 'East' }
+];
 
+sector4Rows.forEach((row, rIdx) => {
+  sector4Cols.forEach((col, cIdx) => {
+    const id = 'P-' + String(pIndex).padStart(3, '0');
+    const status = (pIndex === 92 || pIndex === 105 || pIndex === 120) ? 'Featured' : 
+                   (pIndex % 5 === 0) ? 'Sold' : 
+                   (pIndex % 3 === 0) ? 'Reserved' : 'Available';
+
+    const roadTilt = (col.x - 2800) * 0.22;
+    const x1 = Math.round(col.x);
+    const y1 = Math.round(row.y + roadTilt);
+    const x2 = Math.round(x1 + col.w);
+    const y2 = Math.round(y1);
+    const x3 = Math.round(x1 + col.w);
+    const y3 = Math.round(y1 + row.h);
+    const x4 = Math.round(x1);
+    const y4 = Math.round(y1 + row.h);
+
+    plots.push({
+      id,
+      plotNo: id,
+      title: 'Airport Express Plot ' + id,
+      sector: 'Sector 4 (Airport Express)',
+      type: 'Residential Plot',
+      size: row.size,
+      facing: row.facing,
+      status,
+      price: row.price + (cIdx * 55000),
+      priceFormatted: formatBDT(row.price + (cIdx * 55000)),
+      location: 'Sector 4, Avenue 8, MOHS Venice City',
+      roadWidth: '50ft Sector Road',
+      points: [[x1, y1], [x2, y2], [x3, y3], [x4, y4]],
+      center: [Math.round((x1 + x2) / 2), Math.round((y1 + y3) / 2)],
+      description: 'Rapid-growth sector 3 KM from Kuril 300 Feet Road and directly connecting to the 100ft Airport Highway.'
+    });
+    pIndex++;
+  });
+});
+
+// 5. Commercial plots CP-01 to CP-15
+const cpData = [
+  { id: 'CP-01', x: 2460, y: 840, w: 105, h: 70, size: '10 Katha', price: 12000000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-02', x: 2580, y: 830, w: 105, h: 70, size: '10 Katha', price: 12500000, facing: 'River Facing', status: 'Reserved' },
+  { id: 'CP-03', x: 2700, y: 810, w: 105, h: 70, size: '10 Katha', price: 12500000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-04', x: 2820, y: 790, w: 105, h: 70, size: '10 Katha', price: 13000000, facing: 'River Facing', status: 'Featured' },
+  { id: 'CP-05', x: 2940, y: 770, w: 105, h: 70, size: '10 Katha', price: 13500000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-06', x: 3060, y: 750, w: 105, h: 70, size: '10 Katha', price: 14000000, facing: 'River Facing', status: 'Sold' },
+  { id: 'CP-07', x: 3180, y: 730, w: 105, h: 70, size: '10 Katha', price: 14500000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-08', x: 3300, y: 710, w: 105, h: 70, size: '10 Katha', price: 15000000, facing: 'River Facing', status: 'Featured' },
+  { id: 'CP-09', x: 3420, y: 690, w: 105, h: 70, size: '10 Katha', price: 15500000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-10', x: 3260, y: 620, w: 110, h: 65, size: '10 Katha', price: 16000000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-11', x: 3385, y: 605, w: 110, h: 65, size: '10 Katha', price: 16500000, facing: 'River Facing', status: 'Reserved' },
+  { id: 'CP-12', x: 3510, y: 590, w: 110, h: 65, size: '10 Katha', price: 17000000, facing: 'River Facing', status: 'Available' },
+  { id: 'CP-13', x: 3340, y: 535, w: 110, h: 65, size: '10 Katha', price: 17500000, facing: 'River Facing', status: 'Featured' },
+  { id: 'CP-14', x: 3465, y: 520, w: 110, h: 65, size: '10 Katha', price: 18000000, facing: 'River Facing', status: 'Sold' },
+  { id: 'CP-15', x: 3590, y: 505, w: 110, h: 65, size: '10 Katha', price: 18500000, facing: 'River Facing', status: 'Available' }
+];
+
+cpData.forEach(cp => {
   plots.push({
     id: cp.id,
     plotNo: cp.id,
-    mapPlotNum: cp.id,
-    title: "Riverfront Commercial Plot " + cp.id,
-    sector: "Commercial Riverfront",
-    type: "Commercial Plot",
+    title: 'Riverfront Commercial Plot ' + cp.id,
+    sector: 'Commercial Riverfront',
+    type: 'Commercial Plot',
     size: cp.size,
-    facing: "River Facing",
+    facing: cp.facing,
     status: cp.status,
     price: cp.price,
     priceFormatted: formatBDT(cp.price),
-    location: "Venice Riverfront Boulevard, MOHS Venice City",
-    roadWidth: "100ft Riverfront Boulevard",
-    points: pts,
-    center: [cx, cy],
-    description: "High-visibility commercial plot along the northern Balu River boulevard."
+    location: 'Venice Riverfront Boulevard, MOHS Venice City',
+    roadWidth: '100ft Riverfront Boulevard',
+    points: [[cp.x, cp.y], [cp.x + cp.w, cp.y], [cp.x + cp.w, cp.y + cp.h], [cp.x, cp.y + cp.h]],
+    center: [Math.round(cp.x + cp.w / 2), Math.round(cp.y + cp.h / 2)],
+    description: 'High-visibility commercial plot suitable for corporate towers, financial institutions, shopping malls, and hospitality complexes.'
   });
 });
 
-console.log("Total precise boundary plots:", plots.length);
+// 6. Modern Flats / Apartments
+const flatData = [
+  { id: 'F-101', name: 'Venice Riverfront Tower A - 4B', x: 3650, y: 550, w: 115, h: 100, size: '2,450 Sq.Ft', price: 16500000, facing: 'River Facing', status: 'Available' },
+  { id: 'F-102', name: 'Venice Riverfront Tower A - 8A', x: 3780, y: 535, w: 115, h: 100, size: '2,800 Sq.Ft', price: 19500000, facing: 'River Facing', status: 'Featured' },
+  { id: 'F-103', name: 'Venice Blue Riverpark Tower 1', x: 3915, y: 520, w: 115, h: 100, size: '1,950 Sq.Ft', price: 13500000, facing: 'River Facing', status: 'Reserved' },
+  { id: 'F-104', name: 'Venice Blue Riverpark Tower 2', x: 4050, y: 505, w: 115, h: 100, size: '2,150 Sq.Ft', price: 14800000, facing: 'North', status: 'Available' },
+  { id: 'F-105', name: 'Airport Gateway Residency 5B', x: 4000, y: 1150, w: 120, h: 90, size: '1,750 Sq.Ft', price: 11800000, facing: 'East', status: 'Available' },
+  { id: 'F-106', name: 'Airport Gateway Residency 9C', x: 4000, y: 1260, w: 120, h: 90, size: '2,200 Sq.Ft', price: 15200000, facing: 'South', status: 'Featured' },
+  { id: 'F-107', name: 'Lakeview Heights Tower Alpha', x: 1720, y: 2020, w: 110, h: 85, size: '2,300 Sq.Ft', price: 15800000, facing: 'Lake Facing', status: 'Available' },
+  { id: 'F-108', name: 'Lakeview Heights Tower Beta', x: 1850, y: 2020, w: 110, h: 85, size: '1,850 Sq.Ft', price: 12600000, facing: 'Lake Facing', status: 'Sold' }
+];
 
-// Facilities Dataset
+flatData.forEach(fl => {
+  plots.push({
+    id: fl.id,
+    plotNo: fl.id,
+    title: fl.name,
+    sector: 'Apartment Towers',
+    type: 'Flat / Apartment',
+    size: fl.size,
+    facing: fl.facing,
+    status: fl.status,
+    price: fl.price,
+    priceFormatted: formatBDT(fl.price),
+    location: fl.name + ', MOHS Venice City',
+    roadWidth: '100ft Waterfront Avenue',
+    points: [[fl.x, fl.y], [fl.x + fl.w, fl.y], [fl.x + fl.w, fl.y + fl.h], [fl.x, fl.y + fl.h]],
+    center: [Math.round(fl.x + fl.w / 2), Math.round(fl.y + fl.h / 2)],
+    description: 'Luxury condominium apartment with panoramic river/lake views, private parking, double-height lobby, and rooftop infinity pool.'
+  });
+});
+
 const facilities = [
   {
     id: 'FAC-01',
@@ -514,7 +316,7 @@ const facilities = [
     radius: 70,
     sector: 'Sector 1 & 2 Center',
     capacity: '5,000+ worshippers',
-    description: 'Iconic architectural landmark featuring central dome, marble courtyards, landscaped Eid-Gah grounds, and dedicated prayer halls.'
+    description: 'Iconic architectural landmark featuring central dome, marble courtyards, landscaped Eid-Gah grounds, and dedicated women prayer hall.'
   },
   {
     id: 'FAC-02',
@@ -526,7 +328,7 @@ const facilities = [
     radius: 95,
     sector: 'Central Civic Zone',
     capacity: '12.50 Bigha Campus',
-    description: 'World-class multidisciplinary university campus and affiliated 500-bed teaching hospital.'
+    description: 'World-class multidisciplinary university campus and affiliated 500-bed teaching hospital serving residents of Uttara and Purbachal.'
   },
   {
     id: 'FAC-03',
@@ -538,7 +340,7 @@ const facilities = [
     radius: 80,
     sector: 'Riverfront Corridor',
     capacity: '4.68 Bigha Ecological Park',
-    description: 'Lush green botanical sanctuary with jogging tracks, wooden gazebos, and native flora.'
+    description: 'Lush green botanical sanctuary with jogging tracks, wooden gazebos, native flora, and open air amphitheater.'
   },
   {
     id: 'FAC-04',
@@ -550,7 +352,7 @@ const facilities = [
     radius: 80,
     sector: 'Riverfront Corridor',
     capacity: '4.80 Bigha Family Park',
-    description: 'Comprehensive family recreational park featuring children playground and cycling trail.'
+    description: 'Comprehensive family recreational park featuring children playground, cycling trail, sports courts, and lakeside cafeteria.'
   },
   {
     id: 'FAC-05',
@@ -562,42 +364,100 @@ const facilities = [
     radius: 75,
     sector: 'Riverfront Corridor',
     capacity: '4.01 Bigha River Park',
-    description: 'Scenic waterfront leisure zone with gondola pier and illuminated fountains.'
+    description: 'Scenic waterfront leisure zone with gondola pier, illuminated river fountains, and promenade dining.'
   },
   {
     id: 'FAC-06',
-    name: 'Natural Lake & Fishing Pier',
-    category: 'Natural Water Body',
-    icon: 'Waves',
-    x: 3850,
-    y: 1550,
-    radius: 90,
-    sector: 'Central Waterway',
-    capacity: '40 Bigha Natural Lake',
-    description: 'Directly bordering Sector 4 with public promenade and recreational fishing jetty.'
+    name: 'Venice Blue Riverfront Promenade',
+    category: 'Waterfront Promenade',
+    icon: 'Ship',
+    x: 3820,
+    y: 450,
+    radius: 85,
+    sector: 'North-East Waterfront',
+    capacity: '2.5 KM Riverwalk',
+    description: 'Continuous pedestrian waterfront walkway with seating decks, decorative lighting, and river-cruise terminal.'
   },
   {
     id: 'FAC-07',
-    name: 'Venice Super Shop & Trade Plaza',
+    name: 'Primary & High School Complex',
+    category: 'Education',
+    icon: 'BookOpen',
+    x: 950,
+    y: 2020,
+    radius: 65,
+    sector: 'Sector 1 West',
+    capacity: 'Nursery to Grade 12',
+    description: 'English medium institution with modern science labs, auditorium, athletics track, and safe pedestrian drop-off zones.'
+  },
+  {
+    id: 'FAC-08',
+    name: 'Natural Lake & Marina Pier',
+    category: 'Natural Water Body',
+    icon: 'Waves',
+    x: 1850,
+    y: 2600,
+    radius: 110,
+    sector: 'Central Waterway',
+    capacity: '40 Bigha Natural Lake',
+    description: 'Preserved ecological water body providing natural cooling, rainwater harvesting, boating, and scenic waterfront living.'
+  },
+  {
+    id: 'FAC-09',
+    name: 'Venice Town Center & Green Bazar',
     category: 'Retail & Commerce',
     icon: 'Store',
-    x: 3980,
-    y: 1420,
+    x: 3250,
+    y: 1350,
+    radius: 80,
+    sector: 'Sector 4 Civic Hub',
+    capacity: 'Multi-level Shopping Hub',
+    description: 'Daily fresh bazaar, gourmet supermarket, banking booths, pharmacies, and rooftop community club.'
+  },
+  {
+    id: 'FAC-10',
+    name: 'Police Station & Security Headquarters',
+    category: 'Civic & Emergency',
+    icon: 'Shield',
+    x: 2880,
+    y: 1650,
+    radius: 60,
+    sector: 'Sector 3 & 4 Nexus',
+    capacity: '24/7 Rapid Response Unit',
+    description: 'Dedicated law enforcement outpost with 24/7 CCTV surveillance room monitoring all entrance gates and sector roads.'
+  },
+  {
+    id: 'FAC-11',
+    name: 'Central Water Treatment Plant',
+    category: 'Utility Infrastructure',
+    icon: 'Droplets',
+    x: 1180,
+    y: 2750,
+    radius: 70,
+    sector: 'South Utility Zone',
+    capacity: '10 Million Liters/Day',
+    description: 'State-of-the-art water purification facility providing 24/7 pressurized potable water to all township sectors.'
+  },
+  {
+    id: 'FAC-12',
+    name: 'Gas Station & EV Charging Hub',
+    category: 'Transport & Fuel',
+    icon: 'Fuel',
+    x: 4250,
+    y: 1100,
     radius: 65,
-    sector: 'Sector 4 Commercial Plaza',
-    capacity: '10.04 Katha Multi-level Plaza',
-    description: 'Daily fresh grocery bazaar, pharmacy, banking booths, and family dining.'
+    sector: '100ft Airport Highway',
+    capacity: 'Multi-Fuel & Rapid EV Hub',
+    description: 'Comprehensive fueling hub on the 100ft Airport Highway with convenience store and automated car wash.'
   }
 ];
 
 const fileContent = `// MOHS Venice City Interactive Masterplan Dataset
 // Masterplan coordinate dimensions: 5100 x 3300 (Aspect Ratio: 1.54545)
-// STRICT COMPLIANCE: Every plot is an authentic angled SVG <polygon> mapped to the original map lines.
 
 export interface PlotItem {
   id: string;
   plotNo: string;
-  mapPlotNum?: string;
   title: string;
   sector: string;
   type: "Residential Plot" | "Flat / Apartment" | "Commercial Plot";
@@ -673,4 +533,4 @@ export const FACILITIES_DATASET: FacilityItem[] = ${JSON.stringify(facilities, n
 `;
 
 fs.writeFileSync(path.join(__dirname, '../data/interactiveMapData.ts'), fileContent, 'utf8');
-console.log('Successfully generated interactiveMapData.ts with ' + plots.length + ' exact polygon plots.');
+console.log('Successfully generated interactiveMapData.ts with ' + plots.length + ' plots and ' + facilities.length + ' facilities.');

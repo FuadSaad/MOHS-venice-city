@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   TransformWrapper,
@@ -19,12 +19,24 @@ import {
   Compass,
   CheckCircle2,
   Calendar,
+  Phone,
   Info,
   X,
   Share2,
-  Code,
-  Target,
+  ExternalLink,
+  ChevronRight,
+  Filter,
   Eye,
+  EyeOff,
+  GraduationCap,
+  Trees,
+  Waves,
+  Ship,
+  BookOpen,
+  Store,
+  Shield,
+  Droplets,
+  Fuel,
 } from "lucide-react";
 import {
   PLOT_DATASET,
@@ -36,11 +48,6 @@ import {
 } from "@/data/interactiveMapData";
 import SiteVisitModal from "@/components/property/SiteVisitModal";
 import EnquiryModal from "@/components/property/EnquiryModal";
-
-// Canvas dimensions: exactly half of SVG viewBox (6600x10200)
-// This guarantees exact 1 SVG unit = 0.5px math with ZERO layout ambiguity!
-const CANVAS_WIDTH = 3300;
-const CANVAS_HEIGHT = 5100;
 
 export default function InteractiveMapViewer() {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
@@ -61,9 +68,8 @@ export default function InteractiveMapViewer() {
 
   // Map view layers & controls
   const [showLegend, setShowLegend] = useState<boolean>(true);
-  const [showFacilities, setShowFacilities] = useState<boolean>(false);
-  // Development Mode (Requirement 14: "Show Plot Boundaries") - ON by default so plots are immediately visible!
-  const [showPlotBoundaries, setShowPlotBoundaries] = useState<boolean>(true);
+  const [showFacilities, setShowFacilities] = useState<boolean>(true);
+  const [showLabels, setShowLabels] = useState<boolean>(true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
 
@@ -74,17 +80,25 @@ export default function InteractiveMapViewer() {
   // Filter matching calculation
   const { matchingPlotIds, matchingPlots } = useMemo(() => {
     const matching = PLOT_DATASET.filter((plot) => {
+      // Type filter
       if (typeFilter !== "ALL" && plot.type !== typeFilter) return false;
-      if (sizeFilter !== "ALL" && !plot.size.toLowerCase().includes(sizeFilter.toLowerCase())) return false;
+      // Size filter
+      if (sizeFilter !== "ALL") {
+        if (!plot.size.toLowerCase().includes(sizeFilter.toLowerCase())) return false;
+      }
+      // Status filter
       if (statusFilter !== "ALL" && plot.status !== statusFilter) return false;
-      if (facingFilter !== "ALL" && !plot.facing.toLowerCase().includes(facingFilter.toLowerCase())) return false;
+      // Facing filter
+      if (facingFilter !== "ALL") {
+        if (!plot.facing.toLowerCase().includes(facingFilter.toLowerCase())) return false;
+      }
+      // Search query (plotNo or title or sector)
       if (searchQuery.trim()) {
         const q = searchQuery.trim().toLowerCase();
         const matchNo = plot.plotNo.toLowerCase().includes(q);
-        const matchMapNum = plot.mapPlotNum?.toLowerCase().includes(q);
         const matchTitle = plot.title.toLowerCase().includes(q);
         const matchSector = plot.sector.toLowerCase().includes(q);
-        if (!matchNo && !matchTitle && !matchSector && !matchMapNum) return false;
+        if (!matchNo && !matchTitle && !matchSector) return false;
       }
       return true;
     });
@@ -95,60 +109,7 @@ export default function InteractiveMapViewer() {
     };
   }, [typeFilter, sizeFilter, statusFilter, facingFilter, searchQuery]);
 
-  // Container viewport dimensions helper (immune to inner 5100px canvas expansion)
-  const getContainerDimensions = useCallback(() => {
-    if (!containerRef.current) {
-      return {
-        width: typeof window !== "undefined" ? window.innerWidth : 1600,
-        height: typeof window !== "undefined" ? window.innerHeight - 150 : 750,
-      };
-    }
-    const rect = containerRef.current.getBoundingClientRect();
-    const w = rect.width > 0 ? rect.width : (typeof window !== "undefined" ? window.innerWidth : 1600);
-    // CRITICAL: Ensure height is the real viewport height, NOT the 5100px canvas height!
-    const fallbackH = typeof window !== "undefined" ? window.innerHeight - 150 : 750;
-    const h = rect.height > 0 && rect.height < 2000 ? rect.height : fallbackH;
-    return { width: w, height: h };
-  }, []);
-
-  // Exact Mathematical Coordinate Zoom Function
-  // Translates (cx, cy) in 6600x10200 SVG system to dead center of screen
-  const zoomToCoords = useCallback((cx: number, cy: number, scale = 1.7, animTime = 400) => {
-    if (!transformRef.current) return;
-    const { width: containerW, height: containerH } = getContainerDimensions();
-
-    const pixelX = cx * 0.5;
-    const pixelY = cy * 0.5;
-
-    const targetX = containerW / 2 - pixelX * scale;
-    const targetY = containerH / 2 - pixelY * scale;
-
-    transformRef.current.setTransform(targetX, targetY, scale, animTime);
-  }, [getContainerDimensions]);
-
-  // Zoom to a specific plot
-  const zoomToPlot = useCallback((plot: PlotItem, animTime = 500) => {
-    zoomToCoords(plot.center[0], plot.center[1], 2.2, animTime);
-  }, [zoomToCoords]);
-
-  // Focus directly on the verified prototype test area (P-093, P-094, P-102, P-103, P-111)
-  const focusTestArea = useCallback((animTime = 500) => {
-    zoomToCoords(3915, 7410, 1.7, animTime);
-  }, [zoomToCoords]);
-
-  // Zoom out to see the entire masterplan from above
-  const viewFullMasterplan = useCallback(() => {
-    if (!transformRef.current) return;
-    const { width: containerW, height: containerH } = getContainerDimensions();
-
-    const scale = Math.min(containerW / CANVAS_WIDTH, containerH / CANVAS_HEIGHT) * 0.95;
-    const targetX = (containerW - CANVAS_WIDTH * scale) / 2;
-    const targetY = (containerH - CANVAS_HEIGHT * scale) / 2;
-
-    transformRef.current.setTransform(targetX, targetY, scale, 600);
-  }, [getContainerDimensions]);
-
-  // Handle URL query param or initial center on mount
+  // Handle URL query param on mount (e.g. ?plot=P-005)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -158,25 +119,34 @@ export default function InteractiveMapViewer() {
           (p) => p.id.toLowerCase() === plotParam.toLowerCase() || p.plotNo.toLowerCase() === plotParam.toLowerCase()
         );
         if (found) {
-          setSelectedPlot(found);
-          const t1 = setTimeout(() => zoomToPlot(found, 0), 60);
-          const t2 = setTimeout(() => zoomToPlot(found, 0), 250);
-          return () => {
-            clearTimeout(t1);
-            clearTimeout(t2);
-          };
+          handleSelectPlot(found);
         }
       }
-
-      // Default: focus test area immediately and after initial render pass
-      const t1 = setTimeout(() => focusTestArea(0), 60);
-      const t2 = setTimeout(() => focusTestArea(0), 250);
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-      };
     }
-  }, [focusTestArea, zoomToPlot]);
+  }, []);
+
+  // Zoom to a specific plot coordinates
+  const zoomToPlot = (plot: PlotItem) => {
+    if (!transformRef.current || !containerRef.current) return;
+    const [cx, cy] = plot.center;
+    const container = containerRef.current;
+    const containerW = container.clientWidth;
+    const containerH = container.clientHeight;
+
+    const scale = 2.4;
+    // Calculate translation so (cx, cy) is centered in container
+    // scaledX = cx * (containerW / MAP_DIMENSIONS.width)
+    // scaledY = cy * (containerH / MAP_DIMENSIONS.height)
+    // viewBox mapping:
+    const normX = cx / MAP_DIMENSIONS.width;
+    const normY = cy / MAP_DIMENSIONS.height;
+
+    // React-zoom-pan-pinch works on inner rendered size
+    const targetX = -(normX * containerW * scale - containerW / 2);
+    const targetY = -(normY * containerH * scale - containerH / 2);
+
+    transformRef.current.setTransform(targetX, targetY, scale, 600);
+  };
 
   const handleSelectPlot = (plot: PlotItem) => {
     setSelectedPlot(plot);
@@ -187,7 +157,18 @@ export default function InteractiveMapViewer() {
   const handleSelectFacility = (fac: FacilityItem) => {
     setSelectedFacility(fac);
     setSelectedPlot(null);
-    zoomToCoords(fac.x, fac.y, 2.0, 500);
+
+    if (transformRef.current && containerRef.current) {
+      const container = containerRef.current;
+      const containerW = container.clientWidth;
+      const containerH = container.clientHeight;
+      const scale = 2.2;
+      const normX = fac.x / MAP_DIMENSIONS.width;
+      const normY = fac.y / MAP_DIMENSIONS.height;
+      const targetX = -(normX * containerW * scale - containerW / 2);
+      const targetY = -(normY * containerH * scale - containerH / 2);
+      transformRef.current.setTransform(targetX, targetY, scale, 600);
+    }
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -195,7 +176,7 @@ export default function InteractiveMapViewer() {
     if (!searchQuery.trim()) return;
     const q = searchQuery.trim().toLowerCase();
     const found = PLOT_DATASET.find(
-      (p) => p.plotNo.toLowerCase() === q || p.id.toLowerCase() === q || p.mapPlotNum?.toLowerCase() === q
+      (p) => p.plotNo.toLowerCase() === q || p.id.toLowerCase() === q
     ) || matchingPlots[0];
 
     if (found) {
@@ -230,10 +211,38 @@ export default function InteractiveMapViewer() {
     }
   };
 
+  // Helper for facility icons
+  const renderFacilityIcon = (iconName: string) => {
+    switch (iconName) {
+      case "Mosque":
+        return <Compass className="w-4 h-4" />;
+      case "GraduationCap":
+        return <GraduationCap className="w-4 h-4" />;
+      case "Trees":
+        return <Trees className="w-4 h-4" />;
+      case "Waves":
+        return <Waves className="w-4 h-4" />;
+      case "Ship":
+        return <Ship className="w-4 h-4" />;
+      case "BookOpen":
+        return <BookOpen className="w-4 h-4" />;
+      case "Store":
+        return <Store className="w-4 h-4" />;
+      case "Shield":
+        return <Shield className="w-4 h-4" />;
+      case "Droplets":
+        return <Droplets className="w-4 h-4" />;
+      case "Fuel":
+        return <Fuel className="w-4 h-4" />;
+      default:
+        return <MapPin className="w-4 h-4" />;
+    }
+  };
+
   return (
     <div className="bg-[#F5F8F8] min-h-screen flex flex-col">
       {/* 1. Header Section */}
-      <div className="bg-white border-b border-[#E2E7E5] py-4 sm:py-5 shadow-xs">
+      <div className="bg-white border-b border-[#E2E7E5] py-6 sm:py-8 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -244,59 +253,44 @@ export default function InteractiveMapViewer() {
                 <span>/</span>
                 <span className="text-[#00695C] font-bold">Interactive Map</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading tracking-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#12262D] font-heading tracking-tight">
                 Interactive Property Map
               </h1>
-              <p className="text-xs sm:text-sm text-[#657278] mt-0.5">
-                Explore available plots, apartments and community facilities with precise vector plot boundaries.
+              <p className="text-xs sm:text-sm text-[#657278] mt-1">
+                Explore available plots, apartments and community facilities across all sectors of MOHS Venice City.
               </p>
             </div>
 
-            {/* Quick Action Buttons */}
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
-              {/* Focus Verified Test Area Button */}
-              <button
-                onClick={() => focusTestArea(500)}
-                className="px-3.5 py-2 bg-[#E8F5F3] hover:bg-emerald-100 text-[#00695C] border border-[#00695C]/30 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
-                title="Focus directly on verified test plots P-093, P-094, P-102, P-103, P-111"
-              >
-                <Target className="w-3.5 h-3.5 text-[#00695C]" />
-                <span>Sector 4 Plots (P-093, P-094...)</span>
-              </button>
-
-              {/* View Full Masterplan Button */}
-              <button
-                onClick={viewFullMasterplan}
-                className="px-3.5 py-2 bg-white hover:bg-slate-50 text-[#12262D] border border-[#E2E7E5] rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
-                title="Zoom out to see the entire masterplan project overview"
-              >
-                <Eye className="w-3.5 h-3.5 text-[#657278]" />
-                <span>Full Map</span>
-              </button>
-
-              {/* Dev Mode: Show Plot Boundaries (Requirement 14) */}
-              <button
-                onClick={() => setShowPlotBoundaries(!showPlotBoundaries)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border shadow-xs ${
-                  showPlotBoundaries
-                    ? "bg-[#12262D] text-white border-[#12262D]"
-                    : "bg-white hover:bg-slate-100 text-[#12262D] border-[#E2E7E5]"
-                }`}
-                title="Toggle visual SVG plot boundaries and labels on/off"
-              >
-                <Code className="w-3.5 h-3.5 text-[#D6A84F]" />
-                <span>Plot Outlines: {showPlotBoundaries ? "ON" : "OFF"}</span>
-              </button>
+            {/* Quick Stats Banner */}
+            <div className="flex items-center gap-2 sm:gap-3 bg-[#F5F8F8] p-2 sm:p-2.5 rounded-2xl border border-[#E2E7E5] shrink-0">
+              <div className="px-3 py-1.5 bg-white rounded-xl border border-[#E2E7E5] shadow-xs text-center">
+                <div className="text-xs text-[#657278] font-medium">Total Plots</div>
+                <div className="text-base sm:text-lg font-extrabold text-[#12262D]">
+                  {PLOT_DATASET.length}+
+                </div>
+              </div>
+              <div className="px-3 py-1.5 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
+                <div className="text-xs text-emerald-700 font-medium">Available</div>
+                <div className="text-base sm:text-lg font-extrabold text-emerald-800">
+                  {PLOT_DATASET.filter((p) => p.status === "Available").length}
+                </div>
+              </div>
+              <div className="px-3 py-1.5 bg-white rounded-xl border border-[#E2E7E5] shadow-xs text-center">
+                <div className="text-xs text-[#657278] font-medium">Facilities</div>
+                <div className="text-base sm:text-lg font-extrabold text-[#00695C]">
+                  {FACILITIES_DATASET.length} Hubs
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* 2. Filter & Search Bar */}
-      <div className="bg-white border-b border-[#E2E7E5] py-3 shadow-xs sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-          {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2">
+      <div className="bg-white border-b border-[#E2E7E5] py-3.5 px-4 sm:px-6 lg:px-8 sticky top-16 z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+          {/* Dropdown Filters */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 flex-1 overflow-x-auto pb-1 lg:pb-0">
             {/* Property Type */}
             <div className="flex items-center gap-1.5 bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-2.5 py-1.5 text-xs">
               <span className="font-bold text-[#657278]">Type:</span>
@@ -357,6 +351,8 @@ export default function InteractiveMapViewer() {
                 <option value="South">South</option>
                 <option value="East">East</option>
                 <option value="West">West</option>
+                <option value="Lake">Lake Facing</option>
+                <option value="River">River Facing</option>
               </select>
             </div>
 
@@ -373,7 +369,7 @@ export default function InteractiveMapViewer() {
 
             {/* Matching Count Badge */}
             <div className="text-xs font-bold text-[#00695C] bg-[#E8F5F3] px-3 py-1.5 rounded-xl border border-[#00695C]/20 whitespace-nowrap">
-              {matchingPlots.length} Plots Matching
+              {matchingPlots.length} Properties Matching
             </div>
           </div>
 
@@ -385,7 +381,7 @@ export default function InteractiveMapViewer() {
             <Search className="w-4 h-4 text-[#657278]" />
             <input
               type="text"
-              placeholder="Search Plot (e.g. P-093, P-102)..."
+              placeholder="Search by Plot No. (e.g. P-045, CP-04)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent text-xs font-bold text-[#12262D] placeholder-[#657278] focus:outline-none w-full"
@@ -406,27 +402,18 @@ export default function InteractiveMapViewer() {
       {/* 3. Main Map Canvas Area */}
       <div
         ref={containerRef}
-        className="relative w-full h-[calc(100vh-140px)] min-h-[580px] max-h-[calc(100vh-140px)] overflow-hidden bg-[#1E292E]"
+        className="flex-1 relative w-full overflow-hidden bg-[#0F1E24] min-h-[620px] sm:min-h-[720px] lg:min-h-[780px] flex items-center justify-center"
       >
         <TransformWrapper
           ref={transformRef}
-          initialScale={1.7}
-          initialPositionX={-2528}
-          initialPositionY={-5948}
-          minScale={0.15}
-          maxScale={8}
-          centerOnInit={false}
-          wheel={{ step: 0.15 }}
+          initialScale={1}
+          minScale={0.7}
+          maxScale={6}
+          centerOnInit={true}
+          wheel={{ step: 0.12 }}
           pinch={{ step: 5 }}
           doubleClick={{ mode: "zoomIn", step: 0.8 }}
           limitToBounds={false}
-          onInit={(ref) => {
-            const w = typeof window !== "undefined" ? window.innerWidth : 1600;
-            const h = typeof window !== "undefined" ? (window.innerHeight - 150) : 750;
-            const targetX = w / 2 - (3915 * 0.5) * 1.7;
-            const targetY = h / 2 - (7410 * 0.5) * 1.7;
-            ref.setTransform(targetX, targetY, 1.7, 0);
-          }}
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <>
@@ -448,18 +435,11 @@ export default function InteractiveMapViewer() {
                     <Minus className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => focusTestArea(400)}
+                    onClick={() => resetTransform(400)}
                     className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
-                    title="Reset to Sector 4 Plots"
+                    title="Reset View"
                   >
                     <RotateCcw className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={viewFullMasterplan}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
-                    title="View Full Masterplan"
-                  >
-                    <Eye className="w-4 h-4" />
                   </button>
                   <button
                     onClick={toggleFullscreen}
@@ -470,14 +450,27 @@ export default function InteractiveMapViewer() {
                   </button>
                 </div>
 
-                {/* Quick Target Sector 4 Button */}
-                <button
-                  onClick={() => focusTestArea(500)}
-                  className="bg-white/95 backdrop-blur-md hover:bg-emerald-50 text-[#00695C] p-2.5 rounded-2xl shadow-xl border border-[#E2E7E5] transition-colors flex items-center justify-center group"
-                  title="Target Sector 4 Prototype Plots"
-                >
-                  <Target className="w-4 h-4 text-[#00695C] group-hover:scale-110 transition-transform" />
-                </button>
+                {/* Layer Toggles */}
+                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#E2E7E5] p-1.5 flex flex-col gap-1">
+                  <button
+                    onClick={() => setShowFacilities(!showFacilities)}
+                    className={`p-2.5 rounded-xl transition-colors flex items-center justify-center ${
+                      showFacilities ? "bg-[#00695C] text-white" : "text-[#657278] hover:bg-slate-100"
+                    }`}
+                    title={showFacilities ? "Hide Facilities" : "Show Facilities"}
+                  >
+                    <Compass className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setShowLegend(!showLegend)}
+                    className={`p-2.5 rounded-xl transition-colors flex items-center justify-center border-t border-[#E2E7E5] ${
+                      showLegend ? "bg-[#159ED0] text-white" : "text-[#657278] hover:bg-slate-100"
+                    }`}
+                    title={showLegend ? "Hide Legend" : "Show Legend"}
+                  >
+                    <Layers className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Floating Legend (Bottom Left) */}
@@ -486,7 +479,7 @@ export default function InteractiveMapViewer() {
                   <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-[#E2E7E5]">
                     <div className="flex items-center gap-1.5 text-xs font-extrabold text-[#12262D] font-heading">
                       <Layers className="w-3.5 h-3.5 text-[#00695C]" />
-                      <span>Plot Legend</span>
+                      <span>Map Legend</span>
                     </div>
                     <button
                       onClick={() => setShowLegend(false)}
@@ -512,102 +505,96 @@ export default function InteractiveMapViewer() {
                       <span className="w-3 h-3 rounded-md bg-[#159ED0] shadow-xs" />
                       <span>Featured</span>
                     </div>
-                  </div>
-                  <div className="mt-2 pt-1.5 border-t border-[#E2E7E5] text-[10px] text-[#657278]">
-                    Click on any individual plot boundary to inspect details.
+                    <div className="flex items-center gap-2 col-span-2 pt-1 border-t border-[#E2E7E5]/60 text-[11px] text-[#657278]">
+                      <span className="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-xs" />
+                      <span>Civic Amenities & Parks</span>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* The Pan-Zoom Vector SVG Canvas with Fixed Exact Dimensions */}
+              {/* The Actual Pan-Zoom Canvas */}
               <TransformComponent
-                wrapperClass="!w-full !h-full overflow-hidden cursor-grab active:cursor-grabbing"
-                contentClass="!w-auto !h-auto"
-                wrapperStyle={{ width: "100%", height: "100%" }}
+                wrapperClass="!w-full !h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
+                contentClass="!w-full !h-full flex items-center justify-center"
               >
                 <div
-                  className="relative select-none bg-white shadow-2xl"
+                  className="relative select-none"
                   style={{
-                    width: `${CANVAS_WIDTH}px`,
-                    height: `${CANVAS_HEIGHT}px`,
-                    position: "relative",
+                    width: "100%",
+                    maxWidth: "5100px",
+                    aspectRatio: "5100 / 3300",
                   }}
                 >
+                  {/* Base Original Masterplan Image */}
+                  <img
+                    src="/images/map/masterplan.jpg"
+                    alt="MOHS Venice City Official Masterplan"
+                    className="w-full h-full object-contain pointer-events-none block"
+                    draggable={false}
+                  />
+
+                  {/* SVG Overlay Layer */}
                   <svg
-                    viewBox="0 0 6600 10200"
-                    style={{
-                      width: `${CANVAS_WIDTH}px`,
-                      height: `${CANVAS_HEIGHT}px`,
-                      display: "block",
-                    }}
-                    className="pointer-events-auto"
+                    viewBox="0 0 5100 3300"
+                    className="absolute inset-0 w-full h-full pointer-events-auto"
+                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                   >
                     <defs>
                       {/* Glow filter for selected plot */}
-                      <filter id="plot-glow" x="-30%" y="-30%" width="160%" height="160%">
+                      <filter id="plot-glow" x="-20%" y="-20%" width="140%" height="140%">
                         <feGaussianBlur stdDeviation="8" result="blur" />
                         <feComposite in="SourceGraphic" in2="blur" operator="over" />
                       </filter>
+                      {/* Subtle hover shadow */}
+                      <filter id="hover-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="6" floodOpacity="0.3" />
+                      </filter>
                     </defs>
 
-                    {/* Architectural Paper White Base */}
-                    <rect x="0" y="0" width="6600" height="10200" fill="#FFFFFF" />
-
-                    {/* 1. Base Masterplan Vector SVG (100% Vector Quality, No Rasterization) */}
-                    <image
-                      href="/images/map/MOHS-Venice-City-Project-Map-02.svg"
-                      width="6600"
-                      height="10200"
-                      preserveAspectRatio="xMidYMid meet"
-                      className="pointer-events-none block"
-                    />
-
-                    {/* 2. Interactive Vector Plot Paths (<path id="..." d="..." class="plot" />) */}
+                    {/* Plots Polygons */}
                     {PLOT_DATASET.map((plot) => {
                       const isMatching = matchingPlotIds.has(plot.id);
                       const isSelected = selectedPlot?.id === plot.id;
                       const isHovered = hoveredPlot?.id === plot.id;
+                      const statusColor = STATUS_COLORS[plot.status];
 
-                      let fill = "transparent";
-                      let stroke = "transparent";
-                      let strokeWidth = 0;
+                      // Compute dynamic styles based on match, hover, selection
+                      let fillOpacity = 0.32;
+                      let strokeColor = statusColor.stroke;
+                      let strokeWidth = 2;
                       let filter = undefined;
 
-                      if (isSelected) {
-                        fill = "rgba(214, 168, 79, 0.50)"; // Gold highlight
-                        stroke = "#D6A84F"; // Gold boundary
-                        strokeWidth = 6;
+                      if (!isMatching) {
+                        fillOpacity = 0.05;
+                        strokeColor = "rgba(0,0,0,0.15)";
+                        strokeWidth = 1;
+                      } else if (isSelected) {
+                        fillOpacity = 0.85;
+                        strokeColor = "#D6A84F"; // Gold highlight
+                        strokeWidth = 8;
                         filter = "url(#plot-glow)";
                       } else if (isHovered) {
-                        fill = "rgba(0, 105, 92, 0.45)"; // Subtle teal fill
-                        stroke = "#00695C"; // Subtle teal boundary
+                        fillOpacity = 0.65;
+                        strokeColor = "#159ED0"; // Cyan hover
                         strokeWidth = 5;
-                      } else if (showPlotBoundaries) {
-                        // Dev mode or boundary display
-                        if (plot.status === "Reserved") {
-                          fill = isMatching ? "rgba(214, 168, 79, 0.40)" : "transparent";
-                          stroke = isMatching ? "#B8860B" : "rgba(0,0,0,0.2)";
-                        } else if (plot.status === "Featured") {
-                          fill = isMatching ? "rgba(21, 158, 208, 0.40)" : "transparent";
-                          stroke = isMatching ? "#0284C7" : "rgba(0,0,0,0.2)";
-                        } else {
-                          fill = isMatching ? "rgba(0, 105, 92, 0.40)" : "transparent";
-                          stroke = isMatching ? "#004D40" : "rgba(0,0,0,0.2)";
-                        }
-                        strokeWidth = 3.5;
+                        filter = "url(#hover-shadow)";
                       }
 
+                      const pointsString = plot.points
+                        .map(([px, py]) => `${px},${py}`)
+                        .join(" ");
+
                       return (
-                        <g key={plot.id} className="cursor-pointer">
-                          {/* Authentic Angled Boundary Vector Path */}
-                          <path
-                            id={plot.id}
-                            d={plot.d}
-                            fill={fill}
-                            stroke={stroke}
+                        <g key={plot.id}>
+                          <polygon
+                            points={pointsString}
+                            fill={statusColor.fill}
+                            fillOpacity={fillOpacity}
+                            stroke={strokeColor}
                             strokeWidth={strokeWidth}
                             strokeLinejoin="round"
-                            className="transition-colors duration-150"
+                            className="transition-all duration-150 cursor-pointer"
                             filter={filter}
                             onClick={() => handleSelectPlot(plot)}
                             onMouseEnter={(e) => {
@@ -623,20 +610,21 @@ export default function InteractiveMapViewer() {
                             }}
                           />
 
-                          {/* Development Mode: Show Plot ID inside centroid */}
-                          {(showPlotBoundaries || isSelected || isHovered) && (
+                          {/* Plot ID Label inside centroid */}
+                          {showLabels && isMatching && (
                             <text
                               x={plot.center[0]}
-                              y={plot.center[1] + 6}
+                              y={plot.center[1] + 5}
                               textAnchor="middle"
                               fill="#FFFFFF"
-                              stroke="rgba(0,0,0,0.85)"
-                              strokeWidth={5}
+                              stroke="rgba(0,0,0,0.7)"
+                              strokeWidth={3}
                               paintOrder="stroke"
-                              fontSize={isSelected ? 26 : 20}
+                              fontSize={16}
                               fontWeight="bold"
                               fontFamily="sans-serif"
-                              className="pointer-events-none select-none transition-all"
+                              className="pointer-events-none select-none transition-opacity"
+                              opacity={isSelected || isHovered ? 1 : 0.85}
                             >
                               {plot.plotNo}
                             </text>
@@ -645,39 +633,56 @@ export default function InteractiveMapViewer() {
                       );
                     })}
 
-                    {/* Facilities Markers */}
+                    {/* Community Facilities Layer */}
                     {showFacilities &&
-                      FACILITIES_DATASET.map((fac) => (
-                        <g
-                          key={fac.id}
-                          className="cursor-pointer"
-                          onClick={() => handleSelectFacility(fac)}
-                        >
-                          <circle
-                            cx={fac.x}
-                            cy={fac.y}
-                            r={fac.radius}
-                            fill="#159ED0"
-                            fillOpacity={0.25}
-                            stroke="#159ED0"
-                            strokeWidth={4}
-                          />
-                          <circle cx={fac.x} cy={fac.y} r={14} fill="#159ED0" />
-                          <text
-                            x={fac.x}
-                            y={fac.y - fac.radius - 10}
-                            textAnchor="middle"
-                            fill="#12262D"
-                            stroke="#FFFFFF"
-                            strokeWidth={6}
-                            paintOrder="stroke"
-                            fontSize={22}
-                            fontWeight="bold"
+                      FACILITIES_DATASET.map((fac) => {
+                        const isFacSelected = selectedFacility?.id === fac.id;
+                        return (
+                          <g
+                            key={fac.id}
+                            className="cursor-pointer group"
+                            onClick={() => handleSelectFacility(fac)}
                           >
-                            {fac.name}
-                          </text>
-                        </g>
-                      ))}
+                            {/* Pulsing ring */}
+                            <circle
+                              cx={fac.x}
+                              cy={fac.y}
+                              r={fac.radius}
+                              fill="none"
+                              stroke="#7C3AED"
+                              strokeWidth={3}
+                              strokeDasharray="6 4"
+                              opacity={0.8}
+                              className="animate-pulse"
+                            />
+                            {/* Inner circle badge */}
+                            <circle
+                              cx={fac.x}
+                              cy={fac.y}
+                              r={isFacSelected ? 36 : 28}
+                              fill={isFacSelected ? "#D6A84F" : "#7C3AED"}
+                              stroke="#FFFFFF"
+                              strokeWidth={4}
+                              className="transition-all duration-200"
+                            />
+                            {/* Facility label */}
+                            <text
+                              x={fac.x}
+                              y={fac.y + fac.radius + 20}
+                              textAnchor="middle"
+                              fill="#FFFFFF"
+                              stroke="#12262D"
+                              strokeWidth={4}
+                              paintOrder="stroke"
+                              fontSize={18}
+                              fontWeight="bold"
+                              className="pointer-events-none select-none"
+                            >
+                              {fac.name}
+                            </text>
+                          </g>
+                        );
+                      })}
                   </svg>
                 </div>
               </TransformComponent>
@@ -685,16 +690,14 @@ export default function InteractiveMapViewer() {
           )}
         </TransformWrapper>
 
-        {/* 4. Hover Tooltip (follows cursor on hover) */}
+        {/* 4. Hover Tooltip (follows cursor) */}
         {hoveredPlot && tooltipPos && (
           <div
             className="fixed pointer-events-none z-50 transform -translate-x-1/2 -translate-y-full mb-3 bg-[#12262D]/95 text-white backdrop-blur-md px-3.5 py-2.5 rounded-xl shadow-2xl border border-white/20 text-xs animate-fade-in"
             style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y - 12}px` }}
           >
             <div className="flex items-center justify-between gap-3 mb-1">
-              <span className="font-extrabold text-[#D6A84F] text-sm">
-                Plot {hoveredPlot.plotNo}
-              </span>
+              <span className="font-extrabold text-[#D6A84F] text-sm">{hoveredPlot.plotNo}</span>
               <span
                 className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                   STATUS_COLORS[hoveredPlot.status].badgeBg
@@ -703,12 +706,8 @@ export default function InteractiveMapViewer() {
                 {hoveredPlot.status}
               </span>
             </div>
-            <div className="text-[11px] text-slate-300 font-medium">
-              {hoveredPlot.size} • {hoveredPlot.facing} Facing
-            </div>
-            <div className="text-xs font-bold text-emerald-400 mt-1">
-              {hoveredPlot.priceFormatted}
-            </div>
+            <div className="text-[11px] text-slate-300 font-medium">{hoveredPlot.size} • {hoveredPlot.facing}</div>
+            <div className="text-xs font-bold text-emerald-400 mt-1">{hoveredPlot.priceFormatted}</div>
           </div>
         )}
 
@@ -741,7 +740,7 @@ export default function InteractiveMapViewer() {
 
             {/* Plot Information Grid */}
             <div className="py-4 space-y-3">
-              <div className="bg-[#F5F8F8] p-3.5 rounded-2xl border border-[#E2E7E5] space-y-2">
+              <div className="bg-[#F5F8F8] p-3 rounded-2xl border border-[#E2E7E5] space-y-2">
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-[#657278] font-medium">Property Type:</span>
                   <span className="font-bold text-[#12262D]">{selectedPlot.type}</span>
@@ -766,19 +765,13 @@ export default function InteractiveMapViewer() {
                     {selectedPlot.sector}
                   </span>
                 </div>
-                {selectedPlot.mapPlotNum && (
-                  <div className="flex justify-between items-center text-xs pt-1 border-t border-[#E2E7E5]/70">
-                    <span className="text-[#657278] font-medium">Map Sector Label:</span>
-                    <span className="font-bold text-[#00695C]">{selectedPlot.mapPlotNum}</span>
-                  </div>
-                )}
               </div>
 
               {/* Price Banner */}
               <div className="p-3 bg-gradient-to-r from-[#00695C] to-[#087FA8] rounded-2xl text-white shadow-sm flex items-center justify-between">
                 <div>
                   <div className="text-[10px] uppercase font-bold text-emerald-100 tracking-wider">
-                    Price
+                    Total Estimated Price
                   </div>
                   <div className="text-xl font-extrabold font-heading">
                     {selectedPlot.priceFormatted}
@@ -797,7 +790,7 @@ export default function InteractiveMapViewer() {
               {/* Legal Verification Tag */}
               <div className="flex items-center gap-1.5 text-xs font-semibold text-[#00695C] bg-[#E8F5F3] p-2 rounded-xl border border-[#00695C]/20">
                 <CheckCircle2 className="w-4 h-4 text-[#D6A84F] shrink-0" />
-                <span>100% Verified Legal Title & Individual Khatiyan</span>
+                <span>100% Verified Legal Title & Ready Mutation</span>
               </div>
             </div>
 
@@ -831,20 +824,89 @@ export default function InteractiveMapViewer() {
             </div>
           </div>
         )}
+
+        {/* 6. Facility Details Card (When a facility marker is selected) */}
+        {selectedFacility && (
+          <div className="absolute bottom-4 right-4 sm:top-4 sm:bottom-auto w-[calc(100%-2rem)] sm:w-96 bg-white/98 backdrop-blur-lg rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-[#E2E7E5] p-5 z-40 animate-slide-up sm:animate-fade-in">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2E7E5]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                  {renderFacilityIcon(selectedFacility.icon)}
+                </div>
+                <div>
+                  <h4 className="text-sm font-extrabold text-[#12262D] font-heading leading-tight">
+                    {selectedFacility.name}
+                  </h4>
+                  <span className="text-[11px] text-purple-700 font-bold">
+                    {selectedFacility.category}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedFacility(null)}
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-[#657278] hover:text-[#12262D]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="py-4 space-y-3">
+              <div className="bg-[#F5F8F8] p-3 rounded-2xl border border-[#E2E7E5] space-y-2 text-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-[#657278] font-medium">Sector Zone:</span>
+                  <span className="font-bold text-[#12262D]">{selectedFacility.sector}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#657278] font-medium">Capacity / Size:</span>
+                  <span className="font-bold text-[#00695C]">{selectedFacility.capacity}</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-[#657278] leading-relaxed">
+                {selectedFacility.description}
+              </p>
+            </div>
+
+            <div className="pt-2 border-t border-[#E2E7E5]">
+              <button
+                onClick={() => setIsVisitModalOpen(true)}
+                className="w-full py-2.5 px-3 bg-[#00695C] hover:bg-[#005B50] text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-md"
+              >
+                <Calendar className="w-3.5 h-3.5 text-[#D6A84F]" />
+                <span>Tour This Zone During Site Visit</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 6. Modals */}
+      {/* 7. Bottom Masterplan Accuracy & Disclaimer Banner */}
+      <div className="bg-[#12262D] text-slate-300 py-3 px-4 sm:px-6 lg:px-8 text-xs border-t border-white/10">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+          <div className="flex items-center gap-2">
+            <Info className="w-4 h-4 text-[#D6A84F] shrink-0" />
+            <span>
+              <strong>Note:</strong> Masterplan visual guide. Boundaries and plot allocations are subject to official registered layout mutations.
+            </span>
+          </div>
+          <div className="text-emerald-300 font-bold shrink-0">
+            Helpline: +880 1711-000000 (Physical Tours Available 7 Days)
+          </div>
+        </div>
+      </div>
+
+      {/* 8. Modals */}
       <SiteVisitModal
         isOpen={isVisitModalOpen}
         onClose={() => setIsVisitModalOpen(false)}
-        propertyTitle={selectedPlot ? `Plot ${selectedPlot.plotNo} (${selectedPlot.mapPlotNum || ""}) - ${selectedPlot.size}` : "MOHS Venice City Project Tour"}
-        propertyId={selectedPlot?.id}
+        propertyTitle={selectedPlot ? `Plot ${selectedPlot.plotNo} - ${selectedPlot.size}` : selectedFacility?.name || "MOHS Venice City Project Tour"}
+        propertyId={selectedPlot?.id || selectedFacility?.id}
       />
 
       <EnquiryModal
         isOpen={isEnquiryModalOpen}
         onClose={() => setIsEnquiryModalOpen(false)}
-        propertyTitle={selectedPlot ? `Plot ${selectedPlot.plotNo} (${selectedPlot.mapPlotNum || ""}) - ${selectedPlot.size}` : "MOHS Venice City Masterplan"}
+        propertyTitle={selectedPlot ? `Plot ${selectedPlot.plotNo} - ${selectedPlot.size}` : "MOHS Venice City Masterplan"}
         propertyId={selectedPlot?.id}
         propertyType={selectedPlot?.type}
       />
