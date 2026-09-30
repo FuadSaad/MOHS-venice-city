@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import prisma from "@/lib/prisma";
 import HeroSection from "@/components/home/HeroSection";
 import StatsSection from "@/components/home/StatsSection";
@@ -42,9 +42,28 @@ export default async function HomePage() {
       {/* 1. Hero Section with Floating Search */}
       <HeroSection />
 
-      {/* Interest-Free Ecosystem Banner */}
-      <div className="bg-[#00695C] text-white py-3 text-center text-sm sm:text-base font-semibold tracking-wide border-y border-[#005B50]">
-        An Interest-Free Business Ecosystem
+      {/* Interest-Free Ecosystem Banner with Water Wave Animation */}
+      <div className="relative overflow-hidden bg-[#00695C] text-white py-3 sm:py-4 text-center text-sm sm:text-base font-bold tracking-wide border-y border-[#005B50]">
+        {/* Animated Water Wave Layers */}
+        <div className="absolute inset-0 w-[200%] h-full flex opacity-20 animate-slide-wave">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-[50%] h-full fill-white">
+            <path d="M0,60 C150,100 350,20 600,60 C850,100 1050,20 1200,60 L1200,120 L0,120 Z"></path>
+          </svg>
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-[50%] h-full fill-white">
+            <path d="M0,60 C150,100 350,20 600,60 C850,100 1050,20 1200,60 L1200,120 L0,120 Z"></path>
+          </svg>
+        </div>
+        
+        <div className="absolute inset-0 w-[200%] h-full flex opacity-10 animate-slide-wave-slow">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-[50%] h-full fill-white">
+            <path d="M0,60 C150,20 350,100 600,60 C850,20 1050,100 1200,60 L1200,120 L0,120 Z"></path>
+          </svg>
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-[50%] h-full fill-white">
+            <path d="M0,60 C150,20 350,100 600,60 C850,20 1050,100 1200,60 L1200,120 L0,120 Z"></path>
+          </svg>
+        </div>
+
+        <span className="relative z-10 drop-shadow-md">An Interest-Free Business Ecosystem</span>
       </div>
 
       {/* 6. Location & Layout Map Interactive Showcase */}

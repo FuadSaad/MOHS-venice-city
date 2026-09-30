@@ -1,7 +1,9 @@
 import React from "react";
 import AdminSettingsClient from "@/components/admin/AdminSettingsClient";
-import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import { getSessionAdmin } from "@/lib/auth";
+import { hasPermission } from "@/lib/rbac";
 import AccessDenied from "@/components/admin/AccessDenied";
+import { getWebsiteSettings } from "@/lib/settings";
 
 export const revalidate = 0;
 
@@ -11,6 +13,8 @@ export default async function AdminSettingsPage() {
     return <AccessDenied moduleName="Website Settings" />;
   }
 
+  const settings = await getWebsiteSettings();
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
@@ -18,11 +22,11 @@ export default async function AdminSettingsPage() {
           Website & Corporate Settings
         </h1>
         <p className="text-xs sm:text-sm text-[#657278] mt-1">
-          Configure public company details, hotlines, and address coordinates.
+          Configure real-time company details, hotlines, and address coordinates stored in the database.
         </p>
       </div>
 
-      <AdminSettingsClient />
+      <AdminSettingsClient initialSettings={settings} />
     </div>
   );
 }

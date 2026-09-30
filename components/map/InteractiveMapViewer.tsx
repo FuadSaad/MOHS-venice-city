@@ -49,9 +49,27 @@ import {
 import SiteVisitModal from "@/components/property/SiteVisitModal";
 import EnquiryModal from "@/components/property/EnquiryModal";
 
-export default function InteractiveMapViewer() {
+export default function InteractiveMapViewer({ dbPlots = [] }: { dbPlots?: any[] }) {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Merge static PLOT_DATASET with live dbPlots
+  const mergedDataset = useMemo(() => {
+    if (!dbPlots || dbPlots.length === 0) return PLOT_DATASET;
+    
+    return PLOT_DATASET.map(plot => {
+      const liveData = dbPlots.find(p => p.slug === plot.id.toLowerCase());
+      if (liveData) {
+        return {
+          ...plot,
+          status: liveData.status.charAt(0).toUpperCase() + liveData.status.slice(1).toLowerCase(),
+          price: liveData.price,
+          priceFormatted: liveData.priceFormatted || plot.priceFormatted,
+        };
+      }
+      return plot;
+    });
+  }, [dbPlots]);
 
   // Selection states
   const [selectedPlot, setSelectedPlot] = useState<PlotItem | null>(null);
@@ -79,7 +97,7 @@ export default function InteractiveMapViewer() {
 
   // Filter matching calculation
   const { matchingPlotIds, matchingPlots } = useMemo(() => {
-    const matching = PLOT_DATASET.filter((plot) => {
+    const matching = mergedDataset.filter((plot) => {
       // Type filter
       if (typeFilter !== "ALL" && plot.type !== typeFilter) return false;
       // Size filter
@@ -115,7 +133,7 @@ export default function InteractiveMapViewer() {
       const params = new URLSearchParams(window.location.search);
       const plotParam = params.get("plot");
       if (plotParam) {
-        const found = PLOT_DATASET.find(
+        const found = mergedDataset.find(
           (p) => p.id.toLowerCase() === plotParam.toLowerCase() || p.plotNo.toLowerCase() === plotParam.toLowerCase()
         );
         if (found) {
@@ -175,7 +193,7 @@ export default function InteractiveMapViewer() {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     const q = searchQuery.trim().toLowerCase();
-    const found = PLOT_DATASET.find(
+    const found = mergedDataset.find(
       (p) => p.plotNo.toLowerCase() === q || p.id.toLowerCase() === q
     ) || matchingPlots[0];
 
@@ -266,13 +284,13 @@ export default function InteractiveMapViewer() {
               <div className="px-3 py-1.5 bg-white rounded-xl border border-[#E2E7E5] shadow-xs text-center">
                 <div className="text-xs text-[#657278] font-medium">Total Plots</div>
                 <div className="text-base sm:text-lg font-extrabold text-[#12262D]">
-                  {PLOT_DATASET.length}+
+                  {mergedDataset.length}+
                 </div>
               </div>
               <div className="px-3 py-1.5 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
                 <div className="text-xs text-emerald-700 font-medium">Available</div>
                 <div className="text-base sm:text-lg font-extrabold text-emerald-800">
-                  {PLOT_DATASET.filter((p) => p.status === "Available").length}
+                  {mergedDataset.filter((p) => p.status === "Available").length}
                 </div>
               </div>
               <div className="px-3 py-1.5 bg-white rounded-xl border border-[#E2E7E5] shadow-xs text-center">
@@ -413,7 +431,7 @@ export default function InteractiveMapViewer() {
           wheel={{ step: 0.12 }}
           pinch={{ step: 5 }}
           doubleClick={{ mode: "zoomIn", step: 0.8 }}
-          limitToBounds={false}
+          limitToBounds={true}
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <>
@@ -553,7 +571,7 @@ export default function InteractiveMapViewer() {
                     </defs>
 
                     {/* Plots Polygons */}
-                    {PLOT_DATASET.map((plot) => {
+                    {mergedDataset.map((plot) => {
                       const isMatching = matchingPlotIds.has(plot.id);
                       const isSelected = selectedPlot?.id === plot.id;
                       const isHovered = hoveredPlot?.id === plot.id;

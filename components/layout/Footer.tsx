@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -13,8 +13,10 @@ import {
   Instagram,
   ArrowRight,
 } from "lucide-react";
+import { getWebsiteSettings } from "@/lib/settings";
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await getWebsiteSettings();
   return (
     <footer className="bg-[#005B50] text-white pt-16 pb-10 border-t border-[#00695C]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

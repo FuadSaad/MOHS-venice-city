@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 // GET /api/properties/[id]
 export async function GET(
@@ -83,12 +84,25 @@ export async function PUT(
         featuredImage: body.featuredImage !== undefined ? body.featuredImage : undefined,
         layoutMapUrl: body.layoutMapUrl !== undefined ? body.layoutMapUrl : undefined,
         locationMapUrl: body.locationMapUrl !== undefined ? body.locationMapUrl : undefined,
+        features: body.features ? {
+          deleteMany: {},
+          create: body.features.map((f: string) => ({ name: f, category: "GENERAL" }))
+        } : undefined,
+        images: body.images ? {
+          deleteMany: {},
+          create: body.images.map((url: string, index: number) => ({ url, sortOrder: index }))
+        } : undefined,
       },
       include: {
         images: true,
         features: true,
       },
     });
+
+    revalidatePath("/");
+    revalidatePath("/properties");
+    revalidatePath(`/properties/${updated.slug}`);
+    revalidatePath("/admin/properties");
 
     return NextResponse.json({ success: true, data: updated });
   } catch (error: any) {

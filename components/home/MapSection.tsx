@@ -31,7 +31,7 @@ function MapZoomViewer({ src, alt }: { src: string; alt: string }) {
         wheel={{ step: 0.15 }}
         pinch={{ step: 5 }}
         doubleClick={{ step: 0.7 }}
-        limitToBounds={false}
+        limitToBounds={true}
       >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
@@ -116,29 +116,29 @@ export default function MapSection() {
           </div>
         </Reveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-8">
           {/* Location Map Card */}
           <Reveal delay={0.1}>
             <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col h-full hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
-            <div className="p-6 border-b border-[#E2E7E5] flex-grow">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-1.5 text-[#00695C] text-xs font-bold uppercase tracking-wider">
-                  <MapPin className="w-4 h-4" /> REGIONAL CONNECTIVITY
+            <div className="p-3 sm:p-6 border-b border-[#E2E7E5] flex-grow">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 sm:mb-4 gap-2">
+                <div className="flex items-center gap-1.5 text-[#00695C] text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4" /> REGIONAL
                 </div>
-                <span className="text-xs text-[#657278] font-medium bg-[#F5F8F8] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
+                <span className="text-[9px] sm:text-xs text-[#657278] font-medium bg-[#F5F8F8] px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-[#E2E7E5] truncate max-w-full">
                   Uttara - Purbachal Link
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#12262D] mb-2 font-heading">
+              <h3 className="text-sm sm:text-xl font-bold text-[#12262D] mb-1.5 sm:mb-2 font-heading">
                 Location Map
               </h3>
-              <p className="text-sm text-[#657278] leading-relaxed">
+              <p className="text-[10px] sm:text-sm text-[#657278] leading-tight sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                 Find us easily. 15 minutes from Hazrat Shahjalal International Airport, 10 minutes from Uttara Sector 18, and connected to the 300ft Expressway.
               </p>
             </div>
             
             {/* Location Preview Image */}
-            <div className="relative aspect-[16/9] mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
+            <div className="relative aspect-[16/9] mx-3 sm:mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
               <Image
                 src={locationMapImage}
                 alt="MOHS Venice City Location Map"
@@ -157,13 +157,13 @@ export default function MapSection() {
               </button>
             </div>
 
-            <div className="p-6 pt-4">
+            <div className="p-3 sm:p-6 pt-3 sm:pt-4">
               <button 
                 onClick={() => setActiveModal("LOCATION")}
-                className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2 px-2 sm:py-2.5 sm:px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors text-center"
               >
-                <span>View Full Location Map</span>
-                <ExternalLink className="w-4 h-4" />
+                <span>View Full Map</span>
+                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
               </button>
             </div>
           </div>
@@ -172,25 +172,25 @@ export default function MapSection() {
           {/* Layout Map Card */}
           <Reveal delay={0.2}>
           <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col h-full hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
-            <div className="p-6 border-b border-[#E2E7E5] flex-grow">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-1.5 text-[#00695C] text-xs font-bold uppercase tracking-wider">
-                  <LayoutGrid className="w-4 h-4" /> MASTER TOWN PLANNING
+            <div className="p-3 sm:p-6 border-b border-[#E2E7E5] flex-grow">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 sm:mb-4 gap-2">
+                <div className="flex items-center gap-1.5 text-[#00695C] text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                  <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4" /> MASTER PLAN
                 </div>
-                <span className="text-xs text-[#657278] font-medium bg-[#F5F8F8] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
+                <span className="text-[9px] sm:text-xs text-[#657278] font-medium bg-[#F5F8F8] px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-[#E2E7E5] truncate max-w-full">
                   Sector 1, 2, 3 & VIP Zone
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#12262D] mb-2 font-heading">
-                Township Layout Map
+              <h3 className="text-sm sm:text-xl font-bold text-[#12262D] mb-1.5 sm:mb-2 font-heading">
+                Township Layout
               </h3>
-              <p className="text-sm text-[#657278] leading-relaxed">
+              <p className="text-[10px] sm:text-sm text-[#657278] leading-tight sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                 Explore the detailed project sector layout, designated canal network, central commercial zone, and 40ft-80ft arterial road networks.
               </p>
             </div>
             
             {/* Layout Preview Image */}
-            <div className="relative aspect-[16/9] mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
+            <div className="relative aspect-[16/9] mx-3 sm:mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
               <Image
                 src={layoutMapImage}
                 alt="MOHS Venice City Layout Masterplan"
@@ -209,13 +209,13 @@ export default function MapSection() {
               </button>
             </div>
 
-            <div className="p-6 pt-4">
+            <div className="p-3 sm:p-6 pt-3 sm:pt-4">
               <button
                 onClick={() => setActiveModal("LAYOUT")}
-                className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2 px-2 sm:py-2.5 sm:px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors text-center"
               >
-                <span>View Detailed Layout Map</span>
-                <ExternalLink className="w-4 h-4" />
+                <span>View Detailed Map</span>
+                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
               </button>
             </div>
           </div>
