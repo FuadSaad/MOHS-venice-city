@@ -28,7 +28,7 @@ import {
   Star,
   Settings,
 } from "lucide-react";
-import { ADMIN_MODULES } from "@/lib/auth";
+import { ADMIN_MODULES } from "@/lib/rbac";
 
 interface AdminUser {
   id: string;

@@ -19,7 +19,7 @@ import {
   ShieldCheck,
   Shield,
 } from "lucide-react";
-import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/auth";
+import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/rbac";
 
 interface NavItem {
   label: string;

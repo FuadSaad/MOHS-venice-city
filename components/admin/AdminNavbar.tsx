@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { User, Plus, ShieldCheck, Shield } from "lucide-react";
-import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/auth";
+import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/rbac";
 
 export default function AdminNavbar({ admin }: { admin?: AdminPayload | null }) {
   const isSuper = isSuperAdmin(admin);
