@@ -62,12 +62,7 @@ export default function Navbar() {
               <PhoneCall className="w-3 h-3 text-[#C99A3D]" />
               <span>Hotline: +880 1711-000000</span>
             </a>
-            <Link
-              href="/admin/login"
-              className="hover:text-emerald-300 transition-colors flex items-center gap-1 text-white/80"
-            >
-              <User className="w-3 h-3" /> Admin Portal
-            </Link>
+
           </div>
         </div>
       </div>
@@ -358,13 +353,7 @@ export default function Navbar() {
               <Calendar className="w-4 h-4 text-[#C99A3D]" />
               <span>Schedule Site Visit</span>
             </button>
-            <Link
-              href="/admin/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center text-xs font-medium text-[#657278] hover:text-[#17232B] py-2 mt-2"
-            >
-              Admin Portal
-            </Link>
+
           </div>
         </div>
       )}
