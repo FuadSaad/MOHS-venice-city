@@ -45,7 +45,7 @@ export default function Navbar() {
       }`}
     >
       {/* Top micro bar for trust & quick contact */}
-      <div className="bg-[#17232B] text-white/90 text-xs py-1.5 px-4 hidden sm:block border-b border-white/10">
+      <div className="bg-[#12262D] text-white/90 text-xs py-1.5 px-4 hidden sm:block border-b border-white/10">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
@@ -59,7 +59,7 @@ export default function Navbar() {
               href="tel:+8801711000000"
               className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors"
             >
-              <PhoneCall className="w-3 h-3 text-[#C99A3D]" />
+              <PhoneCall className="w-3 h-3 text-[#D6A84F]" />
               <span>Hotline: +880 1711-000000</span>
             </a>
 
@@ -88,48 +88,48 @@ export default function Navbar() {
             <Link
               href="/"
               className={`text-[15px] font-medium transition-colors relative py-1 ${
-                isActive('/') ? "text-[#006B5B] font-semibold" : "text-[#17232B] hover:text-[#006B5B]"
+                isActive('/') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
               Home
-              {isActive('/') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006B5B] rounded-full" />}
+              {isActive('/') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
 
             {/* Properties Dropdown */}
             <div className="relative group">
               <button 
                 className={`flex items-center gap-1 text-[15px] font-medium transition-colors relative py-1 ${
-                  isPropertiesActive ? "text-[#006B5B] font-semibold" : "text-[#17232B] hover:text-[#006B5B]"
+                  isPropertiesActive ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
                 }`}
               >
                 Properties
                 <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-                {isPropertiesActive && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006B5B] rounded-full" />}
+                {isPropertiesActive && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
               </button>
               
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 w-[280px] z-50">
                 <div className="bg-white rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-100 p-2.5 flex flex-col gap-1">
                   <Link 
                     href="/plots" 
-                    className="flex items-start gap-3.5 p-3 rounded-lg hover:bg-[#E8F5F1] group/item transition-colors"
+                    className="flex items-start gap-3.5 p-3 rounded-lg hover:bg-[#E8F5F3] group/item transition-colors"
                   >
-                    <div className="mt-0.5 bg-[#F7F8F6] group-hover/item:bg-white p-2 rounded-md transition-colors">
-                      <Map className="w-5 h-5 text-[#657278] group-hover/item:text-[#006B5B] transition-colors" />
+                    <div className="mt-0.5 bg-[#F5F8F8] group-hover/item:bg-white p-2 rounded-md transition-colors">
+                      <Map className="w-5 h-5 text-[#657278] group-hover/item:text-[#00695C] transition-colors" />
                     </div>
                     <div>
-                      <div className="text-[15px] font-semibold text-[#17232B] group-hover/item:text-[#006B5B] transition-colors">Plots</div>
+                      <div className="text-[15px] font-semibold text-[#12262D] group-hover/item:text-[#00695C] transition-colors">Plots</div>
                       <div className="text-[13px] text-[#657278] mt-0.5">Residential & Commercial Plots</div>
                     </div>
                   </Link>
                   <Link 
                     href="/flats" 
-                    className="flex items-start gap-3.5 p-3 rounded-lg hover:bg-[#E8F5F1] group/item transition-colors"
+                    className="flex items-start gap-3.5 p-3 rounded-lg hover:bg-[#E8F5F3] group/item transition-colors"
                   >
-                    <div className="mt-0.5 bg-[#F7F8F6] group-hover/item:bg-white p-2 rounded-md transition-colors">
-                      <Building2 className="w-5 h-5 text-[#657278] group-hover/item:text-[#006B5B] transition-colors" />
+                    <div className="mt-0.5 bg-[#F5F8F8] group-hover/item:bg-white p-2 rounded-md transition-colors">
+                      <Building2 className="w-5 h-5 text-[#657278] group-hover/item:text-[#00695C] transition-colors" />
                     </div>
                     <div>
-                      <div className="text-[15px] font-semibold text-[#17232B] group-hover/item:text-[#006B5B] transition-colors">Flats</div>
+                      <div className="text-[15px] font-semibold text-[#12262D] group-hover/item:text-[#00695C] transition-colors">Flats</div>
                       <div className="text-[13px] text-[#657278] mt-0.5">Modern Flats & Apartments</div>
                     </div>
                   </Link>
@@ -140,51 +140,52 @@ export default function Navbar() {
             <Link
               href="/projects"
               className={`text-[15px] font-medium transition-colors relative py-1 ${
-                isActive('/projects') ? "text-[#006B5B] font-semibold" : "text-[#17232B] hover:text-[#006B5B]"
+                isActive('/projects') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
               Projects
-              {isActive('/projects') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006B5B] rounded-full" />}
+              {isActive('/projects') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
 
             <Link
               href="/gallery"
               className={`text-[15px] font-medium transition-colors relative py-1 ${
-                isActive('/gallery') ? "text-[#006B5B] font-semibold" : "text-[#17232B] hover:text-[#006B5B]"
+                isActive('/gallery') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
               Gallery
-              {isActive('/gallery') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006B5B] rounded-full" />}
+              {isActive('/gallery') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
 
-            <a
-              href="/demo-brochure.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[15px] font-medium text-[#006B5B] hover:text-[#004F45] transition-colors flex items-center gap-1.5"
+            <Link
+              href="/brochure"
+              className={`text-[15px] font-medium transition-colors relative py-1 flex items-center gap-1.5 ${
+                isActive('/brochure') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
+              }`}
             >
               <FileText className="w-4 h-4" />
               <span>Brochure</span>
-            </a>
+              {isActive('/brochure') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
+            </Link>
 
             <Link
               href="/about"
               className={`text-[15px] font-medium transition-colors relative py-1 ${
-                isActive('/about') ? "text-[#006B5B] font-semibold" : "text-[#17232B] hover:text-[#006B5B]"
+                isActive('/about') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
               About Us
-              {isActive('/about') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006B5B] rounded-full" />}
+              {isActive('/about') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
 
             <Link
               href="/contact"
               className={`text-[15px] font-medium transition-colors relative py-1 ${
-                isActive('/contact') ? "text-[#006B5B] font-semibold" : "text-[#17232B] hover:text-[#006B5B]"
+                isActive('/contact') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
               Contact
-              {isActive('/contact') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006B5B] rounded-full" />}
+              {isActive('/contact') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
           </nav>
 
@@ -194,17 +195,17 @@ export default function Navbar() {
               href="https://biniyog-club-nine.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[14px] font-bold text-[#006B5B] hover:text-[#004F45] bg-[#E8F5F1] hover:bg-emerald-100 border border-[#006B5B]/20 px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5"
+              className="text-[14px] font-bold text-[#00695C] hover:text-[#005B50] bg-[#E8F5F3] hover:bg-emerald-100 border border-[#00695C]/20 px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5"
             >
-              <TrendingUp className="w-4 h-4 text-[#006B5B]" />
+              <TrendingUp className="w-4 h-4 text-[#00695C]" />
               <span>Invest</span>
-              <ExternalLink className="w-3 h-3 text-[#006B5B]/70" />
+              <ExternalLink className="w-3 h-3 text-[#00695C]/70" />
             </a>
             <button
               onClick={() => setIsVisitModalOpen(true)}
-              className="bg-[#006B5B] hover:bg-[#004F45] text-white text-[14px] font-medium px-5 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2"
+              className="bg-[#00695C] hover:bg-[#005B50] text-white text-[14px] font-medium px-5 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2"
             >
-              <Calendar className="w-4 h-4 text-[#C99A3D]" />
+              <Calendar className="w-4 h-4 text-[#D6A84F]" />
               <span>Schedule Site Visit</span>
             </button>
           </div>
@@ -215,14 +216,14 @@ export default function Navbar() {
               href="https://biniyog-club-nine.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#E8F5F1] text-[#006B5B] border border-[#006B5B]/20 text-xs font-bold px-2.5 py-1.5 rounded-md flex items-center gap-1"
+              className="bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/20 text-xs font-bold px-2.5 py-1.5 rounded-md flex items-center gap-1"
             >
               <TrendingUp className="w-3.5 h-3.5" />
               <span>Invest</span>
             </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-[#17232B] hover:bg-slate-100 transition-colors"
+              className="p-2 rounded-lg text-[#12262D] hover:bg-slate-100 transition-colors"
               aria-label="Toggle navigation"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -239,7 +240,7 @@ export default function Navbar() {
               href="/"
               onClick={() => setMobileMenuOpen(false)}
               className={`px-3 py-3 rounded-md text-base font-medium ${
-                isActive("/") ? "bg-[#E8F5F1] text-[#006B5B] font-semibold" : "text-[#17232B] hover:bg-slate-50"
+                isActive("/") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
               }`}
             >
               Home
@@ -250,7 +251,7 @@ export default function Navbar() {
               <button 
                 onClick={() => setPropertiesOpen(!propertiesOpen)}
                 className={`w-full flex items-center justify-between px-3 py-3 rounded-md text-base font-medium ${
-                  isPropertiesActive ? "bg-[#E8F5F1] text-[#006B5B] font-semibold" : "text-[#17232B] hover:bg-slate-50"
+                  isPropertiesActive ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
                 }`}
               >
                 <span>Properties</span>
@@ -263,7 +264,7 @@ export default function Navbar() {
                     href="/plots"
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium ${
-                      isActive("/plots") ? "text-[#006B5B] font-semibold" : "text-[#657278] hover:text-[#006B5B] hover:bg-white"
+                      isActive("/plots") ? "text-[#00695C] font-semibold" : "text-[#657278] hover:text-[#00695C] hover:bg-white"
                     }`}
                   >
                     <Map className="w-4 h-4" />
@@ -273,7 +274,7 @@ export default function Navbar() {
                     href="/flats"
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium ${
-                      isActive("/flats") ? "text-[#006B5B] font-semibold" : "text-[#657278] hover:text-[#006B5B] hover:bg-white"
+                      isActive("/flats") ? "text-[#00695C] font-semibold" : "text-[#657278] hover:text-[#00695C] hover:bg-white"
                     }`}
                   >
                     <Building2 className="w-4 h-4" />
@@ -287,7 +288,7 @@ export default function Navbar() {
               href="/projects"
               onClick={() => setMobileMenuOpen(false)}
               className={`px-3 py-3 rounded-md text-base font-medium ${
-                isActive("/projects") ? "bg-[#E8F5F1] text-[#006B5B] font-semibold" : "text-[#17232B] hover:bg-slate-50"
+                isActive("/projects") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
               }`}
             >
               Projects
@@ -296,26 +297,26 @@ export default function Navbar() {
               href="/gallery"
               onClick={() => setMobileMenuOpen(false)}
               className={`px-3 py-3 rounded-md text-base font-medium ${
-                isActive("/gallery") ? "bg-[#E8F5F1] text-[#006B5B] font-semibold" : "text-[#17232B] hover:bg-slate-50"
+                isActive("/gallery") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
               }`}
             >
               Gallery
             </Link>
-            <a
-              href="/demo-brochure.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/brochure"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-3 rounded-md text-base font-medium flex items-center gap-2 text-[#006B5B] hover:bg-slate-50"
+              className={`px-3 py-3 rounded-md text-base font-medium flex items-center gap-2 ${
+                isActive("/brochure") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
+              }`}
             >
               <FileText className="w-5 h-5" />
               <span>Brochure</span>
-            </a>
+            </Link>
             <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
               className={`px-3 py-3 rounded-md text-base font-medium ${
-                isActive("/about") ? "bg-[#E8F5F1] text-[#006B5B] font-semibold" : "text-[#17232B] hover:bg-slate-50"
+                isActive("/about") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
               }`}
             >
               About Us
@@ -324,7 +325,7 @@ export default function Navbar() {
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}
               className={`px-3 py-3 rounded-md text-base font-medium ${
-                isActive("/contact") ? "bg-[#E8F5F1] text-[#006B5B] font-semibold" : "text-[#17232B] hover:bg-slate-50"
+                isActive("/contact") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
               }`}
             >
               Contact
@@ -337,20 +338,20 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center text-[15px] font-bold text-[#006B5B] hover:text-[#004F45] bg-[#E8F5F1] py-3 rounded-lg border border-[#006B5B]/20 flex items-center justify-center gap-2 shadow-xs"
+              className="w-full text-center text-[15px] font-bold text-[#00695C] hover:text-[#005B50] bg-[#E8F5F3] py-3 rounded-lg border border-[#00695C]/20 flex items-center justify-center gap-2 shadow-xs"
             >
-              <TrendingUp className="w-4 h-4 text-[#006B5B]" />
+              <TrendingUp className="w-4 h-4 text-[#00695C]" />
               <span>Invest (Biniyog Club)</span>
-              <ExternalLink className="w-3.5 h-3.5 text-[#006B5B]/70" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#00695C]/70" />
             </a>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 setIsVisitModalOpen(true);
               }}
-              className="w-full bg-[#006B5B] text-white text-center font-medium py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-[#00695C] text-white text-center font-medium py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm"
             >
-              <Calendar className="w-4 h-4 text-[#C99A3D]" />
+              <Calendar className="w-4 h-4 text-[#D6A84F]" />
               <span>Schedule Site Visit</span>
             </button>
 
