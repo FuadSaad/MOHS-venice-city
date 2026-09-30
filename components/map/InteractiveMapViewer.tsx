@@ -62,7 +62,7 @@ export default function InteractiveMapViewer({ dbPlots = [] }: { dbPlots?: any[]
       if (liveData) {
         return {
           ...plot,
-          status: liveData.status.charAt(0).toUpperCase() + liveData.status.slice(1).toLowerCase(),
+          status: (liveData.status.charAt(0).toUpperCase() + liveData.status.slice(1).toLowerCase()) as PlotItem["status"],
           price: liveData.price,
           priceFormatted: liveData.priceFormatted || plot.priceFormatted,
         };
