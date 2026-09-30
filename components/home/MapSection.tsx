@@ -82,7 +82,7 @@ export default function MapSection() {
   const layoutMapImage = "/images/layout-map-v2.png";
 
   return (
-    <section className="py-16 sm:py-24 bg-white border-b border-[#E2E7E5]">
+    <section className="pt-16 sm:pt-24 pb-4 sm:pb-6 bg-white border-b border-[#E2E7E5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#12262D] font-heading tracking-tight">
