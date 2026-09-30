@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { PropertyItem } from "@/types/property";
 import PropertyCard from "@/components/property/PropertyCard";
-import Reveal from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 interface FeaturedPropertiesProps {
   initialProperties: PropertyItem[];

@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Star, MessageSquareQuote, CheckCircle2 } from "lucide-react";
 import { ReviewItem } from "@/types/property";
-import Reveal from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 interface CustomerReviewsProps {
   reviews: ReviewItem[];

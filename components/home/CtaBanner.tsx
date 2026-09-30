@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Calendar, PhoneCall, ArrowRight, ShieldCheck } from "lucide-react";
-import Reveal from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 export default function CtaBanner() {
   return (

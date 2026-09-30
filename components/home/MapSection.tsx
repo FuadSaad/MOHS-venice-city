@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { MapPin, LayoutGrid, Maximize2, X, Compass, ExternalLink } from "lucide-react";
-import Reveal from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -147,7 +147,6 @@ export default function MapSection() {
                 <span>View Full Location Map</span>
                 <ExternalLink className="w-4 h-4" />
               </button>
-            </div>
             </div>
           </div>
           </Reveal>

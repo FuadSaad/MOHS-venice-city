@@ -1,6 +1,6 @@
 import React from "react";
 import { Award, ShieldCheck, Users, Map, CheckCircle } from "lucide-react";
-import Reveal from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 export default function StatsSection() {
   const stats = [
