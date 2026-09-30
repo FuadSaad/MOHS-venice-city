@@ -68,11 +68,11 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20 gap-2 xl:gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-56 h-20 sm:w-64 sm:h-24 flex items-center">
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="relative w-44 h-16 sm:w-52 sm:h-20 flex items-center">
               <Image
                 src="/images/logo.png"
                 alt="MOHS Venice City Logo"
@@ -84,10 +84,10 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav className="hidden lg:flex items-center gap-3.5 xl:gap-5 2xl:gap-6 shrink-0">
             <Link
               href="/"
-              className={`text-[15px] font-medium transition-colors relative py-1 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 ${
                 isActive('/') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
@@ -98,7 +98,7 @@ export default function Navbar() {
             {/* Properties Dropdown */}
             <div className="relative group">
               <button 
-                className={`flex items-center gap-1 text-[15px] font-medium transition-colors relative py-1 ${
+                className={`flex items-center gap-1 text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 ${
                   isPropertiesActive ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
                 }`}
               >
@@ -139,7 +139,7 @@ export default function Navbar() {
 
             <Link
               href="/projects"
-              className={`text-[15px] font-medium transition-colors relative py-1 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 ${
                 isActive('/projects') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
@@ -149,18 +149,18 @@ export default function Navbar() {
 
             <Link
               href="/interactive-map"
-              className={`text-[15px] font-medium transition-colors relative py-1 flex items-center gap-1.5 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 flex items-center gap-1.5 ${
                 isActive('/interactive-map') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
               <Compass className="w-4 h-4 text-[#D6A84F]" />
-              <span>Interactive Map</span>
+              <span>Map</span>
               {isActive('/interactive-map') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
 
             <Link
               href="/gallery"
-              className={`text-[15px] font-medium transition-colors relative py-1 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 ${
                 isActive('/gallery') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
@@ -170,7 +170,7 @@ export default function Navbar() {
 
             <Link
               href="/brochure"
-              className={`text-[15px] font-medium transition-colors relative py-1 flex items-center gap-1.5 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 flex items-center gap-1.5 ${
                 isActive('/brochure') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
@@ -181,7 +181,7 @@ export default function Navbar() {
 
             <Link
               href="/about"
-              className={`text-[15px] font-medium transition-colors relative py-1 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 ${
                 isActive('/about') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
@@ -191,7 +191,7 @@ export default function Navbar() {
 
             <Link
               href="/contact"
-              className={`text-[15px] font-medium transition-colors relative py-1 ${
+              className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-colors relative py-1 ${
                 isActive('/contact') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
               }`}
             >
@@ -201,20 +201,20 @@ export default function Navbar() {
           </nav>
 
           {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 shrink-0">
             <a
               href="https://biniyog-club-nine.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[14px] font-bold text-[#00695C] hover:text-[#005B50] bg-[#E8F5F3] hover:bg-emerald-100 border border-[#00695C]/20 px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5"
+              className="text-[13px] xl:text-[14px] font-bold text-[#00695C] hover:text-[#005B50] bg-[#E8F5F3] hover:bg-emerald-100 border border-[#00695C]/20 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap"
             >
-              <TrendingUp className="w-4 h-4 text-[#00695C]" />
+              <TrendingUp className="w-3.5 h-3.5 text-[#00695C]" />
               <span>Invest</span>
               <ExternalLink className="w-3 h-3 text-[#00695C]/70" />
             </a>
             <button
               onClick={() => setIsVisitModalOpen(true)}
-              className="bg-[#00695C] hover:bg-[#005B50] text-white text-[14px] font-medium px-5 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2"
+              className="bg-[#00695C] hover:bg-[#005B50] text-white text-[13px] xl:text-[14px] font-semibold px-3.5 xl:px-4 py-2 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap"
             >
               <Calendar className="w-4 h-4 text-[#D6A84F]" />
               <span>Schedule Site Visit</span>
@@ -312,7 +312,7 @@ export default function Navbar() {
               }`}
             >
               <Compass className="w-5 h-5 text-[#D6A84F]" />
-              <span>Interactive Map</span>
+              <span>Map</span>
             </Link>
             <Link
               href="/gallery"
