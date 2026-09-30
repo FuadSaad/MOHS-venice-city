@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Property {
+  id              String            @id @default(cuid())
+  title           String
+  slug            String            @unique
+  propertyType    String            // "PLOT" or "FLAT"
+  status          String            @default("AVAILABLE") // "AVAILABLE", "SOLD", "RESERVED", "HIDDEN"
+  location        String            // e.g. "Uttara - Purbachal Link Road", "Sector 3"
+  address         String?
+  price           Float             // e.g. 7500000 (BDT 75 Lakh)
+  priceFormatted  String            // e.g. "৳ 75,00,000"
+  description     String
+  overview        String?
+  isFeatured      Boolean           @default(false)
+  isReady         Boolean           @default(true)
+  isCorner        Boolean           @default(false)
+  
+  // Specific to PLOT
+  plotKatha       Float?            // e.g. 3, 5, 10
+  plotRoadWidth   String?           // e.g. "40 Feet", "60 Feet Avenue"
+  facing          String?           // "South", "North", "East", "West", "North-East", etc.
+  landCategory    String?           // "Residential", "Commercial Plot"
+  sectorBlock     String?           // "Block-A", "Block-B", "Sector 1"
+
+  // Specific to FLAT
+  flatSizeSqft    Int?              // e.g. 1450, 2100
+  bedrooms        Int?              // e.g. 3, 4
+  bathrooms       Int?              // e.g. 3, 4
+  floorNumber     String?           // e.g. "7th Floor (Type A)"
+  parkingAvailable Boolean?         @default(true)
+  handoverStatus  String?           // "Ready to Move", "Under Construction", "Handover Dec 2026"
+
+  // Images & Maps
+  featuredImage   String
+  layoutMapUrl    String?
+  locationMapUrl  String?
+  brochureUrl     String?
+  latitude        Float?
+  longitude       Float?
+
+  projectId       String?
+  project         Project?          @relation(fields: [projectId], references: [id])
+
+  images          PropertyImage[]
+  features        PropertyFeature[]
+  enquiries       Enquiry[]
+  siteVisits      SiteVisit[]
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url        String
+  caption    String?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model PropertyFeature {
+  id         String   @id @default(cuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name       String   // e.g. "100% Boundary Demarcated", "Sui Generis Lake View", "Gas Line Connection"
+  category   String   @default("GENERAL") // "SPEC", "AMENITY", "LOCATION"
+}
+
+model Project {
+  id             String     @id @default(cuid())
+  title          String     // "MOHS Venice City Mega Township"
+  slug           String     @unique
+  tagline        String?    // "Waterfront Living in Uttara-Purbachal Extension"
+  description    String
+  location       String     // "Uttara-Purbachal Corridor, Dhaka"
+  totalArea      String?    // "620 Bigha Planned Green City"
+  heroImage      String
+  layoutMapUrl   String?
+  locationMapUrl String?
+  brochureUrl    String?
+  isFeatured     Boolean    @default(true)
+  properties     Property[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model GalleryItem {
+  id        String   @id @default(cuid())
+  title     String
+  category  String   // "PROJECTS", "PLOTS", "FLATS", "AMENITIES", "LOCATION", "CONSTRUCTION"
+  imageUrl  String
+  caption   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Enquiry {
+  id                String    @id @default(cuid())
+  name              String
+  phone             String
+  email             String?
+  propertyId        String?
+  property          Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  propertyType      String?   // "PLOT", "FLAT", "ANY"
+  preferredLocation String?
+  budget            String?
+  message           String
+  status            String    @default("NEW") // "NEW", "CONTACTED", "RESOLVED"
+  createdAt         DateTime  @default(now())
+}
+
+model SiteVisit {
+  id            String    @id @default(cuid())
+  name          String
+  phone         String
+  email         String?
+  propertyId    String?
+  property      Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  preferredDate String    // YYYY-MM-DD
+  preferredTime String    // "Morning (10:00 AM - 12:00 PM)", etc.
+  message       String?
+  status        String    @default("PENDING") // "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"
+  createdAt     DateTime  @default(now())
+}
+
+model Review {
+  id                String   @id @default(cuid())
+  name              String
+  roleOrLocation    String   // "Plot Owner, Sector 3" / "Apartment Buyer, Block B"
+  rating            Int      @default(5)
+  comment           String
+  avatarUrl         String?
+  propertyPurchased String?  // "5 Katha Lake-Facing Plot"
+  isApproved        Boolean  @default(true)
+  createdAt         DateTime @default(now())
+}
+
+model WebsiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
