@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SiteVisitModal from "@/components/property/SiteVisitModal";
-import { Menu, X, PhoneCall, Calendar, ShieldCheck, User, TrendingUp, ExternalLink, ChevronDown, Map, Building2, FileText } from "lucide-react";
+import { Menu, X, PhoneCall, Calendar, ShieldCheck, User, TrendingUp, ExternalLink, ChevronDown, Map, Building2, FileText, Compass } from "lucide-react";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -145,6 +145,17 @@ export default function Navbar() {
             >
               Projects
               {isActive('/projects') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
+            </Link>
+
+            <Link
+              href="/interactive-map"
+              className={`text-[15px] font-medium transition-colors relative py-1 flex items-center gap-1.5 ${
+                isActive('/interactive-map') ? "text-[#00695C] font-semibold" : "text-[#12262D] hover:text-[#00695C]"
+              }`}
+            >
+              <Compass className="w-4 h-4 text-[#D6A84F]" />
+              <span>Interactive Map</span>
+              {isActive('/interactive-map') && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00695C] rounded-full" />}
             </Link>
 
             <Link
@@ -292,6 +303,16 @@ export default function Navbar() {
               }`}
             >
               Projects
+            </Link>
+            <Link
+              href="/interactive-map"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`px-3 py-3 rounded-md text-base font-medium flex items-center gap-2 ${
+                isActive("/interactive-map") ? "bg-[#E8F5F3] text-[#00695C] font-semibold" : "text-[#12262D] hover:bg-slate-50"
+              }`}
+            >
+              <Compass className="w-5 h-5 text-[#D6A84F]" />
+              <span>Interactive Map</span>
             </Link>
             <Link
               href="/gallery"
