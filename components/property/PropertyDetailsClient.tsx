@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -67,22 +67,22 @@ export default function PropertyDetailsClient({
   };
 
   return (
-    <div className="py-8 sm:py-12 bg-[#F7F8F6]">
+    <div className="py-8 sm:py-12 bg-[#F5F8F8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-xs text-[#657278] mb-6">
-          <Link href="/" className="hover:text-[#17232B]">
+          <Link href="/" className="hover:text-[#12262D]">
             Home
           </Link>
           <span>/</span>
           <Link
             href={isPlot ? "/plots" : "/flats"}
-            className="hover:text-[#17232B]"
+            className="hover:text-[#12262D]"
           >
             {isPlot ? "Residential Plots" : "Modern Flats"}
           </Link>
           <span>/</span>
-          <span className="text-[#17232B] font-semibold truncate max-w-xs sm:max-w-md">
+          <span className="text-[#12262D] font-semibold truncate max-w-xs sm:max-w-md">
             {property.title}
           </span>
         </nav>
@@ -103,7 +103,7 @@ export default function PropertyDetailsClient({
               <div className="absolute top-4 left-4 flex items-center gap-2">
                 <span
                   className={`px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider text-white shadow-sm ${
-                    isPlot ? "bg-[#006B5B]" : "bg-[#17232B]"
+                    isPlot ? "bg-[#00695C]" : "bg-[#12262D]"
                   }`}
                 >
                   {isPlot ? "Residential Plot" : "Apartment / Flat"}
@@ -126,7 +126,7 @@ export default function PropertyDetailsClient({
                     onClick={() => setSelectedImage(imgUrl)}
                     className={`relative w-24 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
                       selectedImage === imgUrl
-                        ? "border-[#006B5B] shadow-sm scale-102"
+                        ? "border-[#00695C] shadow-sm scale-102"
                         : "border-[#E2E7E5] opacity-75 hover:opacity-100"
                     }`}
                   >
@@ -146,7 +146,7 @@ export default function PropertyDetailsClient({
           <div className="lg:col-span-5 bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E7E5] shadow-soft space-y-6">
             <div>
               <div className="flex items-center justify-between text-xs text-[#657278] mb-2 font-medium">
-                <span className="flex items-center gap-1.5 text-[#006B5B]">
+                <span className="flex items-center gap-1.5 text-[#00695C]">
                   <MapPin className="w-3.5 h-3.5" />
                   {property.location}
                 </span>
@@ -155,7 +155,7 @@ export default function PropertyDetailsClient({
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17232B] font-heading tracking-tight leading-snug">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading tracking-tight leading-snug">
                 {property.title}
               </h1>
 
@@ -167,16 +167,16 @@ export default function PropertyDetailsClient({
             </div>
 
             {/* Price Highlight */}
-            <div className="p-4 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5] flex items-baseline justify-between">
+            <div className="p-4 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5] flex items-baseline justify-between">
               <div>
                 <p className="text-xs text-[#657278] font-medium">Listing Price</p>
-                <p className="text-2xl sm:text-3xl font-extrabold font-heading text-[#006B5B]">
+                <p className="text-2xl sm:text-3xl font-extrabold font-heading text-[#00695C]">
                   {formatBDTFull(property.price)}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-xs text-[#657278]">Ownership</p>
-                <p className="text-xs font-bold text-[#17232B]">Immediate Namzari</p>
+                <p className="text-xs font-bold text-[#12262D]">Immediate Namzari</p>
               </div>
             </div>
 
@@ -184,54 +184,54 @@ export default function PropertyDetailsClient({
             <div className="grid grid-cols-2 gap-3 text-xs">
               {isPlot ? (
                 <>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Plot Size</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.plotKatha} Katha
                     </p>
                   </div>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Road Width</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.plotRoadWidth || "40 Feet"}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Facing</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.facing || "South"}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Corner Status</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.isCorner ? "Yes (Dual Road)" : "Standard"}
                     </p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Apartment Size</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.flatSizeSqft} Sq Ft
                     </p>
                   </div>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Bedrooms / Baths</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.bedrooms} Bed / {property.bathrooms} Bath
                     </p>
                   </div>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Floor</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.floorNumber || "Mid Level"}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+                  <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
                     <span className="text-[#657278]">Parking</span>
-                    <p className="text-sm font-bold text-[#17232B] mt-0.5">
+                    <p className="text-sm font-bold text-[#12262D] mt-0.5">
                       {property.parkingAvailable ? "Covered Basement" : "Available"}
                     </p>
                   </div>
@@ -244,18 +244,18 @@ export default function PropertyDetailsClient({
               <button
                 type="button"
                 onClick={() => setEnquiryOpen(true)}
-                className="w-full bg-[#006B5B] hover:bg-[#004F45] text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
+                className="w-full bg-[#00695C] hover:bg-[#005B50] text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
               >
-                <Send className="w-4 h-4 text-[#C99A3D]" />
+                <Send className="w-4 h-4 text-[#D6A84F]" />
                 <span>Enquire About This Property</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setSiteVisitOpen(true)}
-                className="w-full bg-[#F7F8F6] hover:bg-[#E8F5F1] text-[#006B5B] border border-[#006B5B]/30 font-bold py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm"
+                className="w-full bg-[#F5F8F8] hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 font-bold py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm"
               >
-                <Calendar className="w-4 h-4 text-[#C99A3D]" />
+                <Calendar className="w-4 h-4 text-[#D6A84F]" />
                 <span>Schedule a Site Visit</span>
               </button>
 
@@ -263,17 +263,17 @@ export default function PropertyDetailsClient({
                 <button
                   type="button"
                   onClick={handleDownloadBrochure}
-                  className="py-2.5 px-3 bg-white hover:bg-slate-50 border border-[#E2E7E5] rounded-xl text-xs font-semibold text-[#17232B] flex items-center justify-center gap-1.5 transition-colors"
+                  className="py-2.5 px-3 bg-white hover:bg-slate-50 border border-[#E2E7E5] rounded-xl text-xs font-semibold text-[#12262D] flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Download className="w-3.5 h-3.5 text-[#006B5B]" />
+                  <Download className="w-3.5 h-3.5 text-[#00695C]" />
                   <span>Brochure / Print</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="py-2.5 px-3 bg-white hover:bg-slate-50 border border-[#E2E7E5] rounded-xl text-xs font-semibold text-[#17232B] flex items-center justify-center gap-1.5 transition-colors"
+                  className="py-2.5 px-3 bg-white hover:bg-slate-50 border border-[#E2E7E5] rounded-xl text-xs font-semibold text-[#12262D] flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Share2 className="w-3.5 h-3.5 text-[#006B5B]" />
+                  <Share2 className="w-3.5 h-3.5 text-[#00695C]" />
                   <span>{copied ? "Link Copied!" : "Share Property"}</span>
                 </button>
               </div>
@@ -284,7 +284,7 @@ export default function PropertyDetailsClient({
               Prefer to talk now? Call{" "}
               <a
                 href="tel:+8801711000000"
-                className="font-bold text-[#006B5B] hover:underline"
+                className="font-bold text-[#00695C] hover:underline"
               >
                 +880 1711-000000
               </a>
@@ -297,14 +297,14 @@ export default function PropertyDetailsClient({
           <div className="lg:col-span-8 space-y-10">
             {/* Overview */}
             <div className="bg-white rounded-2xl p-7 border border-[#E2E7E5] shadow-soft">
-              <h2 className="text-xl font-bold text-[#17232B] font-heading mb-4 pb-3 border-b border-[#E2E7E5]">
+              <h2 className="text-xl font-bold text-[#12262D] font-heading mb-4 pb-3 border-b border-[#E2E7E5]">
                 Property Overview
               </h2>
-              <p className="text-sm sm:text-base text-[#17232B]/85 leading-relaxed whitespace-pre-line">
+              <p className="text-sm sm:text-base text-[#12262D]/85 leading-relaxed whitespace-pre-line">
                 {property.description}
               </p>
               {property.overview && (
-                <p className="text-sm sm:text-base text-[#17232B]/85 leading-relaxed mt-4 whitespace-pre-line">
+                <p className="text-sm sm:text-base text-[#12262D]/85 leading-relaxed mt-4 whitespace-pre-line">
                   {property.overview}
                 </p>
               )}
@@ -312,9 +312,9 @@ export default function PropertyDetailsClient({
 
             {/* Features & Amenities */}
             <div className="bg-white rounded-2xl p-7 border border-[#E2E7E5] shadow-soft">
-              <h2 className="text-xl font-bold text-[#17232B] font-heading mb-4 pb-3 border-b border-[#E2E7E5] flex items-center justify-between">
+              <h2 className="text-xl font-bold text-[#12262D] font-heading mb-4 pb-3 border-b border-[#E2E7E5] flex items-center justify-between">
                 <span>Features & Specifications</span>
-                <span className="text-xs text-[#006B5B] font-semibold">Verified</span>
+                <span className="text-xs text-[#00695C] font-semibold">Verified</span>
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -322,20 +322,20 @@ export default function PropertyDetailsClient({
                   property.features.map((feat) => (
                     <div
                       key={feat.id}
-                      className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]/80 text-sm text-[#17232B]"
+                      className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]/80 text-sm text-[#12262D]"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-[#006B5B] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#00695C] shrink-0" />
                       <span className="font-medium">{feat.name}</span>
                     </div>
                   ))
                 ) : (
                   <>
-                    <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]/80 text-sm text-[#17232B]">
-                      <CheckCircle2 className="w-4 h-4 text-[#006B5B] shrink-0" />
+                    <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]/80 text-sm text-[#12262D]">
+                      <CheckCircle2 className="w-4 h-4 text-[#00695C] shrink-0" />
                       <span className="font-medium">Direct Road Access & Clear Boundary</span>
                     </div>
-                    <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]/80 text-sm text-[#17232B]">
-                      <CheckCircle2 className="w-4 h-4 text-[#006B5B] shrink-0" />
+                    <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]/80 text-sm text-[#12262D]">
+                      <CheckCircle2 className="w-4 h-4 text-[#00695C] shrink-0" />
                       <span className="font-medium">100% High Land (No filling required)</span>
                     </div>
                   </>
@@ -345,36 +345,36 @@ export default function PropertyDetailsClient({
 
             {/* Location Advantages */}
             <div className="bg-white rounded-2xl p-7 border border-[#E2E7E5] shadow-soft">
-              <h2 className="text-xl font-bold text-[#17232B] font-heading mb-4 pb-3 border-b border-[#E2E7E5]">
+              <h2 className="text-xl font-bold text-[#12262D] font-heading mb-4 pb-3 border-b border-[#E2E7E5]">
                 Location Advantages & Connectivity
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-[#17232B]">
-                <div className="p-4 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]">
-                  <p className="font-bold text-[#006B5B] text-xs uppercase mb-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-[#12262D]">
+                <div className="p-4 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]">
+                  <p className="font-bold text-[#00695C] text-xs uppercase mb-1">
                     Air & Metro Access
                   </p>
                   <p className="text-sm">
                     15 Minutes to Hazrat Shahjalal International Airport & 10 minutes to MRT Line 6 station.
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]">
-                  <p className="font-bold text-[#006B5B] text-xs uppercase mb-1">
+                <div className="p-4 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]">
+                  <p className="font-bold text-[#00695C] text-xs uppercase mb-1">
                     Expressway Connection
                   </p>
                   <p className="text-sm">
                     Direct access to Purbachal 300 Feet Expressway, connecting swiftly to Gulshan & Banani.
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]">
-                  <p className="font-bold text-[#006B5B] text-xs uppercase mb-1">
+                <div className="p-4 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]">
+                  <p className="font-bold text-[#00695C] text-xs uppercase mb-1">
                     Education & Healthcare
                   </p>
                   <p className="text-sm">
                     Near leading international schools, medical colleges, and specialty hospitals.
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-[#F7F8F6] border border-[#E2E7E5]">
-                  <p className="font-bold text-[#006B5B] text-xs uppercase mb-1">
+                <div className="p-4 rounded-xl bg-[#F5F8F8] border border-[#E2E7E5]">
+                  <p className="font-bold text-[#00695C] text-xs uppercase mb-1">
                     Township Environment
                   </p>
                   <p className="text-sm">
@@ -386,7 +386,7 @@ export default function PropertyDetailsClient({
 
             {/* Maps Section */}
             <div className="bg-white rounded-2xl p-7 border border-[#E2E7E5] shadow-soft">
-              <h2 className="text-xl font-bold text-[#17232B] font-heading mb-4 pb-3 border-b border-[#E2E7E5]">
+              <h2 className="text-xl font-bold text-[#12262D] font-heading mb-4 pb-3 border-b border-[#E2E7E5]">
                 Project Location & Sector Layout Plan
               </h2>
 
@@ -405,7 +405,7 @@ export default function PropertyDetailsClient({
                           "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80"
                         )
                       }
-                      className="px-3 py-1.5 bg-white text-xs font-bold rounded-lg text-[#17232B] shadow flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-white text-xs font-bold rounded-lg text-[#12262D] shadow flex items-center gap-1.5"
                     >
                       <Maximize2 className="w-3.5 h-3.5" /> View Location Map
                     </button>
@@ -426,7 +426,7 @@ export default function PropertyDetailsClient({
                           "https://images.unsplash.com/photo-1524813686514-a57563d77d61?auto=format&fit=crop&w=1600&q=80"
                         )
                       }
-                      className="px-3 py-1.5 bg-white text-xs font-bold rounded-lg text-[#17232B] shadow flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-white text-xs font-bold rounded-lg text-[#12262D] shadow flex items-center gap-1.5"
                     >
                       <Maximize2 className="w-3.5 h-3.5" /> View Layout Plan
                     </button>
@@ -438,9 +438,9 @@ export default function PropertyDetailsClient({
 
           {/* Right Sticky Sidebar: Quick Enquiry Card */}
           <div className="lg:col-span-4 sticky top-28 space-y-6">
-            <div className="bg-[#17232B] text-white rounded-2xl p-6 sm:p-7 shadow-card space-y-4">
+            <div className="bg-[#12262D] text-white rounded-2xl p-6 sm:p-7 shadow-card space-y-4">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                <ShieldCheck className="w-4 h-4 text-[#C99A3D]" />
+                <ShieldCheck className="w-4 h-4 text-[#D6A84F]" />
                 Direct Consultant Contact
               </div>
               <h3 className="text-xl font-bold font-heading">
@@ -454,9 +454,9 @@ export default function PropertyDetailsClient({
               <button
                 type="button"
                 onClick={() => setEnquiryOpen(true)}
-                className="w-full bg-[#006B5B] hover:bg-[#004F45] text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 shadow"
+                className="w-full bg-[#00695C] hover:bg-[#005B50] text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 shadow"
               >
-                <Send className="w-4 h-4 text-[#C99A3D]" />
+                <Send className="w-4 h-4 text-[#D6A84F]" />
                 <span>Send Quick Enquiry</span>
               </button>
 
@@ -465,7 +465,7 @@ export default function PropertyDetailsClient({
                 onClick={() => setSiteVisitOpen(true)}
                 className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 px-4 rounded-xl text-sm border border-white/20 flex items-center justify-center gap-2"
               >
-                <Calendar className="w-4 h-4 text-[#C99A3D]" />
+                <Calendar className="w-4 h-4 text-[#D6A84F]" />
                 <span>Book Site Tour</span>
               </button>
             </div>
@@ -477,7 +477,7 @@ export default function PropertyDetailsClient({
           <div className="pt-8 border-t border-[#E2E7E5]">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h3 className="text-2xl font-extrabold text-[#17232B] font-heading">
+                <h3 className="text-2xl font-extrabold text-[#12262D] font-heading">
                   Similar Properties You May Like
                 </h3>
                 <p className="text-sm text-[#657278] mt-1">
@@ -486,7 +486,7 @@ export default function PropertyDetailsClient({
               </div>
               <Link
                 href={isPlot ? "/plots" : "/flats"}
-                className="text-xs sm:text-sm font-bold text-[#006B5B] hover:text-[#004F45] flex items-center gap-1"
+                className="text-xs sm:text-sm font-bold text-[#00695C] hover:text-[#005B50] flex items-center gap-1"
               >
                 <span>View More</span>
                 <ArrowRight className="w-4 h-4" />
@@ -504,23 +504,23 @@ export default function PropertyDetailsClient({
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute top-2 left-2 px-2.5 py-0.5 rounded text-[11px] font-bold text-white bg-[#006B5B]">
+                      <div className="absolute top-2 left-2 px-2.5 py-0.5 rounded text-[11px] font-bold text-white bg-[#00695C]">
                         {item.propertyType}
                       </div>
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-between">
                       <div>
                         <p className="text-xs text-[#657278] mb-1">{item.location}</p>
-                        <h4 className="text-sm font-bold text-[#17232B] group-hover:text-[#006B5B] line-clamp-1 font-heading">
+                        <h4 className="text-sm font-bold text-[#12262D] group-hover:text-[#00695C] line-clamp-1 font-heading">
                           {item.title}
                         </h4>
-                        <p className="text-base font-extrabold text-[#006B5B] mt-2 font-heading">
+                        <p className="text-base font-extrabold text-[#00695C] mt-2 font-heading">
                           {formatBDTFull(item.price)}
                         </p>
                       </div>
                       <Link
                         href={`/properties/${item.slug}`}
-                        className="mt-3 pt-2 border-t border-[#E2E7E5] text-xs font-bold text-[#006B5B] flex items-center justify-between"
+                        className="mt-3 pt-2 border-t border-[#E2E7E5] text-xs font-bold text-[#00695C] flex items-center justify-between"
                       >
                         <span>View Details</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -555,7 +555,7 @@ export default function PropertyDetailsClient({
           <div className="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl relative">
             <button
               onClick={() => setMapZoomModal(null)}
-              className="absolute top-4 right-4 z-10 bg-white/90 p-2 rounded-full text-[#17232B]"
+              className="absolute top-4 right-4 z-10 bg-white/90 p-2 rounded-full text-[#12262D]"
             >
               ✕
             </button>

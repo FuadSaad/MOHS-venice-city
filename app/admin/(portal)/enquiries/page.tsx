@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import prisma from "@/lib/prisma";
 import AdminEnquiriesClient from "@/components/admin/AdminEnquiriesClient";
 import { EnquiryItem } from "@/types/property";
@@ -18,7 +18,7 @@ export default async function AdminEnquiriesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-[#17232B] font-heading">
+        <h1 className="text-2xl font-extrabold text-[#12262D] font-heading">
           Prospective Buyer Enquiries
         </h1>
         <p className="text-xs sm:text-sm text-[#657278] mt-1">

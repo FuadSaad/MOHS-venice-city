@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import prisma from "@/lib/prisma";
 import AdminPropertiesClient from "@/components/admin/AdminPropertiesClient";
 import { PropertyItem } from "@/types/property";
@@ -19,7 +19,7 @@ export default async function AdminPropertiesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-[#17232B] font-heading">
+        <h1 className="text-2xl font-extrabold text-[#12262D] font-heading">
           Property Inventory Management
         </h1>
         <p className="text-xs sm:text-sm text-[#657278] mt-1">

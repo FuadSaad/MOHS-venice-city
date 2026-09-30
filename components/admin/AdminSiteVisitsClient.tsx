@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { Calendar, Clock, Phone, Mail, CheckCircle2, User, Search } from "lucide-react";
@@ -30,8 +30,8 @@ export default function AdminSiteVisitsClient({
               onClick={() => setStatusFilter(st)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${
                 statusFilter === st
-                  ? "bg-[#006B5B] text-white"
-                  : "bg-[#F7F8F6] text-[#657278] hover:text-[#17232B]"
+                  ? "bg-[#00695C] text-white"
+                  : "bg-[#F5F8F8] text-[#657278] hover:text-[#12262D]"
               }`}
             >
               {st}
@@ -49,7 +49,7 @@ export default function AdminSiteVisitsClient({
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="font-bold text-base text-[#17232B] font-heading">
+                <span className="font-bold text-base text-[#12262D] font-heading">
                   {item.name}
                 </span>
                 <span
@@ -63,13 +63,13 @@ export default function AdminSiteVisitsClient({
                 </span>
               </div>
 
-              <div className="p-3 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5] text-xs space-y-2 mb-3">
-                <div className="flex items-center gap-2 text-[#006B5B] font-bold">
-                  <Calendar className="w-4 h-4 text-[#C99A3D]" />
+              <div className="p-3 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5] text-xs space-y-2 mb-3">
+                <div className="flex items-center gap-2 text-[#00695C] font-bold">
+                  <Calendar className="w-4 h-4 text-[#D6A84F]" />
                   <span>{item.preferredDate}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[#657278]">
-                  <Clock className="w-4 h-4 text-[#006B5B]" />
+                  <Clock className="w-4 h-4 text-[#00695C]" />
                   <span>{item.preferredTime}</span>
                 </div>
               </div>
@@ -77,13 +77,13 @@ export default function AdminSiteVisitsClient({
               <div className="text-xs space-y-1 text-[#657278]">
                 <p>
                   Phone:{" "}
-                  <a href={`tel:${item.phone}`} className="font-bold text-[#17232B] hover:underline">
+                  <a href={`tel:${item.phone}`} className="font-bold text-[#12262D] hover:underline">
                     {item.phone}
                   </a>
                 </p>
                 {item.email && <p>Email: {item.email}</p>}
                 {item.message && (
-                  <p className="mt-2 text-[#17232B] italic">"{item.message}"</p>
+                  <p className="mt-2 text-[#12262D] italic">"{item.message}"</p>
                 )}
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function AdminSiteVisitsClient({
               </span>
               <a
                 href={`tel:${item.phone}`}
-                className="font-bold text-[#006B5B] hover:underline"
+                className="font-bold text-[#00695C] hover:underline"
               >
                 Call Visitor →
               </a>

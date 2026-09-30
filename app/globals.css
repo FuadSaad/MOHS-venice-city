@@ -1,16 +1,16 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary-green: #006B5B;
-  --dark-green: #004F45;
-  --deep-navy: #17232B;
-  --gold-accent: #C99A3D;
-  --light-green: #E8F5F1;
-  --soft-bg: #F7F8F6;
+  --primary-green: #00695C;
+  --dark-green: #005B50;
+  --deep-navy: #12262D;
+  --gold-accent: #D6A84F;
+  --light-green: #E8F5F3;
+  --soft-bg: #F5F8F8;
   --white: #FFFFFF;
-  --main-text: #17232B;
+  --main-text: #12262D;
   --secondary-text: #657278;
   --border: #E2E7E5;
 }
@@ -44,18 +44,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #006B5B;
+  background: #00695C;
 }
 
 /* Smooth transitions */
 .btn-primary {
-  @apply bg-[#006B5B] hover:bg-[#004F45] text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 inline-flex items-center justify-center gap-2;
+  @apply bg-[#00695C] hover:bg-[#005B50] text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 inline-flex items-center justify-center gap-2;
 }
 
 .btn-secondary {
-  @apply bg-white hover:bg-[#E8F5F1] text-[#006B5B] border border-[#006B5B]/30 font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 inline-flex items-center justify-center gap-2;
+  @apply bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 inline-flex items-center justify-center gap-2;
 }
 
 .btn-outline {
-  @apply bg-transparent hover:bg-slate-100 text-[#17232B] border border-[#E2E7E5] font-medium px-4 py-2 rounded-lg transition-colors duration-200 inline-flex items-center justify-center gap-2;
+  @apply bg-transparent hover:bg-slate-100 text-[#12262D] border border-[#E2E7E5] font-medium px-4 py-2 rounded-lg transition-colors duration-200 inline-flex items-center justify-center gap-2;
 }

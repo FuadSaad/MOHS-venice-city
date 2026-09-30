@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -45,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${manrope.variable}`}>
-      <body className="min-h-screen flex flex-col bg-[#F7F8F6] text-[#17232B] antialiased">
+      <body className="min-h-screen flex flex-col bg-[#F5F8F8] text-[#12262D] antialiased">
         {children}
       </body>
     </html>

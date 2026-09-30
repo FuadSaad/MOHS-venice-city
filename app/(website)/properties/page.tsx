@@ -48,10 +48,6 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Banner */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5F3] text-[#00695C] text-xs font-bold uppercase tracking-wider mb-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#D6A84F]" />
-            MOHS VENICE CITY PROPERTY PORTFOLIO
-          </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#12262D] font-heading tracking-tight">
             All Verified Properties
           </h1>

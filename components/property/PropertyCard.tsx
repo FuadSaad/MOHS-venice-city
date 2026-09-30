@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -45,14 +45,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div className="absolute top-3 left-3 flex items-center gap-2">
           <span
             className={`px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider text-white shadow-sm ${
-              isPlot ? "bg-[#006B5B]" : "bg-[#17232B]"
+              isPlot ? "bg-[#00695C]" : "bg-[#12262D]"
             }`}
           >
             {isPlot ? "Residential Plot" : "Apartment / Flat"}
           </span>
           {property.isReady && (
             <span className="bg-emerald-600/90 text-white text-[11px] font-medium px-2 py-0.5 rounded shadow-sm flex items-center gap-1 backdrop-blur-sm">
-              <CheckCircle2 className="w-3 h-3 text-[#C99A3D]" /> Ready
+              <CheckCircle2 className="w-3 h-3 text-[#D6A84F]" /> Ready
             </span>
           )}
         </div>
@@ -87,25 +87,25 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div>
           {/* Location row */}
           <div className="flex items-center gap-1.5 text-xs text-[#657278] mb-2 font-medium">
-            <MapPin className="w-3.5 h-3.5 text-[#006B5B] shrink-0" />
+            <MapPin className="w-3.5 h-3.5 text-[#00695C] shrink-0" />
             <span className="truncate">{property.location}</span>
           </div>
 
           {/* Title */}
           <Link href={`/properties/${property.slug}`}>
-            <h3 className="text-base sm:text-lg font-bold text-[#17232B] hover:text-[#006B5B] transition-colors line-clamp-2 leading-snug mb-3 font-heading">
+            <h3 className="text-base sm:text-lg font-bold text-[#12262D] hover:text-[#00695C] transition-colors line-clamp-2 leading-snug mb-3 font-heading">
               {property.title}
             </h3>
           </Link>
 
           {/* Property Specific Specs */}
-          <div className="grid grid-cols-3 gap-2 py-3 px-3 bg-[#F7F8F6] rounded-lg border border-[#E2E7E5]/70 text-xs text-[#17232B] mb-4">
+          <div className="grid grid-cols-3 gap-2 py-3 px-3 bg-[#F5F8F8] rounded-lg border border-[#E2E7E5]/70 text-xs text-[#12262D] mb-4">
             {isPlot ? (
               <>
                 <div className="flex flex-col">
                   <span className="text-[#657278] text-[11px]">Size</span>
                   <span className="font-semibold flex items-center gap-1">
-                    <Maximize2 className="w-3 h-3 text-[#006B5B]" />
+                    <Maximize2 className="w-3 h-3 text-[#00695C]" />
                     {property.plotKatha} Katha
                   </span>
                 </div>
@@ -118,7 +118,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 <div className="flex flex-col">
                   <span className="text-[#657278] text-[11px]">Facing</span>
                   <span className="font-semibold flex items-center gap-1 truncate">
-                    <Compass className="w-3 h-3 text-[#006B5B]" />
+                    <Compass className="w-3 h-3 text-[#00695C]" />
                     {property.facing || "South"}
                   </span>
                 </div>
@@ -134,14 +134,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 <div className="flex flex-col">
                   <span className="text-[#657278] text-[11px]">Bed / Bath</span>
                   <span className="font-semibold flex items-center gap-1">
-                    <Bed className="w-3 h-3 text-[#006B5B]" />
+                    <Bed className="w-3 h-3 text-[#00695C]" />
                     {property.bedrooms}B / {property.bathrooms}B
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[#657278] text-[11px]">Parking</span>
                   <span className="font-semibold flex items-center gap-1">
-                    <Car className="w-3 h-3 text-[#006B5B]" />
+                    <Car className="w-3 h-3 text-[#00695C]" />
                     {property.parkingAvailable ? "Yes" : "N/A"}
                   </span>
                 </div>
@@ -157,7 +157,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           </span>
           <Link
             href={`/properties/${property.slug}`}
-            className="text-xs font-semibold text-[#006B5B] group-hover:text-[#004F45] flex items-center gap-1 transition-colors"
+            className="text-xs font-semibold text-[#00695C] group-hover:text-[#005B50] flex items-center gap-1 transition-colors"
           >
             <span>View Details</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />

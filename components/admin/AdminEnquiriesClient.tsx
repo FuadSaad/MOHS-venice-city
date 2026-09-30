@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { MessageSquare, Phone, Mail, CheckCircle2, Clock, Search, Trash2 } from "lucide-react";
@@ -39,8 +39,8 @@ export default function AdminEnquiriesClient({
               onClick={() => setStatusFilter(st)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors ${
                 statusFilter === st
-                  ? "bg-[#006B5B] text-white"
-                  : "bg-[#F7F8F6] text-[#657278] hover:text-[#17232B]"
+                  ? "bg-[#00695C] text-white"
+                  : "bg-[#F5F8F8] text-[#657278] hover:text-[#12262D]"
               }`}
             >
               {st}
@@ -55,7 +55,7 @@ export default function AdminEnquiriesClient({
             placeholder="Search by name, phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl pl-9 pr-3 py-1.5 text-xs text-[#17232B] outline-none"
+            className="bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl pl-9 pr-3 py-1.5 text-xs text-[#12262D] outline-none"
           />
         </div>
       </div>
@@ -65,10 +65,10 @@ export default function AdminEnquiriesClient({
         <div className="divide-y divide-[#E2E7E5]">
           {filtered.length > 0 ? (
             filtered.map((enq) => (
-              <div key={enq.id} className="p-5 hover:bg-[#F7F8F6] transition-colors">
+              <div key={enq.id} className="p-5 hover:bg-[#F5F8F8] transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-3">
-                    <span className="font-bold text-base text-[#17232B] font-heading">
+                    <span className="font-bold text-base text-[#12262D] font-heading">
                       {enq.name}
                     </span>
                     <span
@@ -88,26 +88,26 @@ export default function AdminEnquiriesClient({
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#657278] mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-[#006B5B]" />
-                    <a href={`tel:${enq.phone}`} className="font-bold text-[#17232B] hover:underline">
+                    <Phone className="w-3.5 h-3.5 text-[#00695C]" />
+                    <a href={`tel:${enq.phone}`} className="font-bold text-[#12262D] hover:underline">
                       {enq.phone}
                     </a>
                   </div>
                   {enq.email && (
                     <div className="flex items-center gap-1.5">
-                      <Mail className="w-3.5 h-3.5 text-[#006B5B]" />
+                      <Mail className="w-3.5 h-3.5 text-[#00695C]" />
                       <span>{enq.email}</span>
                     </div>
                   )}
                   {enq.budget && (
                     <div>
                       <span>Budget: </span>
-                      <strong className="text-[#006B5B]">{enq.budget}</strong>
+                      <strong className="text-[#00695C]">{enq.budget}</strong>
                     </div>
                   )}
                 </div>
 
-                <div className="bg-[#F7F8F6] p-3 rounded-xl border border-[#E2E7E5] text-xs text-[#17232B]">
+                <div className="bg-[#F5F8F8] p-3 rounded-xl border border-[#E2E7E5] text-xs text-[#12262D]">
                   <p className="font-semibold text-[11px] text-[#657278] mb-0.5">Buyer Message:</p>
                   <p className="whitespace-pre-line">{enq.message}</p>
                 </div>

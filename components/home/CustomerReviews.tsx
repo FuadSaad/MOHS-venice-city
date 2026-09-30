@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import Image from "next/image";
 import { Star, MessageSquareQuote, CheckCircle2 } from "lucide-react";
 import { ReviewItem } from "@/types/property";
@@ -9,10 +9,10 @@ interface CustomerReviewsProps {
 
 export default function CustomerReviews({ reviews }: CustomerReviewsProps) {
   return (
-    <section className="py-16 sm:py-24 bg-[#F7F8F6] border-b border-[#E2E7E5]">
+    <section className="py-16 sm:py-24 bg-[#F5F8F8] border-b border-[#E2E7E5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#17232B] font-heading tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#12262D] font-heading tracking-tight">
             Trusted by Property Buyers
           </h2>
           <p className="text-sm sm:text-base text-[#657278] mt-2">
@@ -27,20 +27,20 @@ export default function CustomerReviews({ reviews }: CustomerReviewsProps) {
               key={rev.id}
               className="bg-white rounded-2xl p-7 border border-[#E2E7E5] shadow-soft hover:shadow-card transition-all duration-300 flex flex-col justify-between relative"
             >
-              <div className="absolute top-6 right-6 text-[#E8F5F1]">
-                <MessageSquareQuote className="w-10 h-10 text-[#006B5B]/20" />
+              <div className="absolute top-6 right-6 text-[#E8F5F3]">
+                <MessageSquareQuote className="w-10 h-10 text-[#00695C]/20" />
               </div>
 
               <div>
                 {/* Rating Stars */}
-                <div className="flex items-center gap-1 text-[#C99A3D] mb-4">
+                <div className="flex items-center gap-1 text-[#D6A84F] mb-4">
                   {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#C99A3D]" />
+                    <Star key={i} className="w-4 h-4 fill-[#D6A84F]" />
                   ))}
                 </div>
 
                 {/* Comment */}
-                <p className="text-sm text-[#17232B] leading-relaxed italic mb-6">
+                <p className="text-sm text-[#12262D] leading-relaxed italic mb-6">
                   "{rev.comment}"
                 </p>
               </div>
@@ -59,12 +59,12 @@ export default function CustomerReviews({ reviews }: CustomerReviewsProps) {
                   />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-[#17232B] font-heading">
+                  <h4 className="text-sm font-bold text-[#12262D] font-heading">
                     {rev.name}
                   </h4>
                   <p className="text-xs text-[#657278]">{rev.roleOrLocation}</p>
                   {rev.propertyPurchased && (
-                    <p className="text-[11px] font-semibold text-[#006B5B] mt-0.5">
+                    <p className="text-[11px] font-semibold text-[#00695C] mt-0.5">
                       Purchased: {rev.propertyPurchased}
                     </p>
                   )}

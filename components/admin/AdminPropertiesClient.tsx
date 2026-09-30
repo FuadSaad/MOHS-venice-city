@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -73,13 +73,13 @@ export default function AdminPropertiesClient({
       {/* Top Filter and Actions Bar */}
       <div className="bg-white p-5 rounded-2xl border border-[#E2E7E5] shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex p-1 bg-[#F7F8F6] rounded-xl border border-[#E2E7E5]">
+          <div className="inline-flex p-1 bg-[#F5F8F8] rounded-xl border border-[#E2E7E5]">
             <button
               onClick={() => setFilterType("ALL")}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 filterType === "ALL"
-                  ? "bg-[#006B5B] text-white shadow-xs"
-                  : "text-[#657278] hover:text-[#17232B]"
+                  ? "bg-[#00695C] text-white shadow-xs"
+                  : "text-[#657278] hover:text-[#12262D]"
               }`}
             >
               All ({properties.length})
@@ -88,8 +88,8 @@ export default function AdminPropertiesClient({
               onClick={() => setFilterType("PLOT")}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 filterType === "PLOT"
-                  ? "bg-[#006B5B] text-white shadow-xs"
-                  : "text-[#657278] hover:text-[#17232B]"
+                  ? "bg-[#00695C] text-white shadow-xs"
+                  : "text-[#657278] hover:text-[#12262D]"
               }`}
             >
               Plots
@@ -98,8 +98,8 @@ export default function AdminPropertiesClient({
               onClick={() => setFilterType("FLAT")}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 filterType === "FLAT"
-                  ? "bg-[#006B5B] text-white shadow-xs"
-                  : "text-[#657278] hover:text-[#17232B]"
+                  ? "bg-[#00695C] text-white shadow-xs"
+                  : "text-[#657278] hover:text-[#12262D]"
               }`}
             >
               Flats
@@ -113,14 +113,14 @@ export default function AdminPropertiesClient({
               placeholder="Search properties..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl pl-9 pr-3 py-1.5 text-xs text-[#17232B] outline-none"
+              className="bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl pl-9 pr-3 py-1.5 text-xs text-[#12262D] outline-none"
             />
           </div>
         </div>
 
         <Link
           href="/admin/properties/new"
-          className="bg-[#006B5B] hover:bg-[#004F45] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-1.5 shrink-0"
+          className="bg-[#00695C] hover:bg-[#005B50] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-1.5 shrink-0"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Add New Property</span>
@@ -132,7 +132,7 @@ export default function AdminPropertiesClient({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#F7F8F6] border-b border-[#E2E7E5] text-[#657278] font-bold uppercase tracking-wider">
+              <tr className="bg-[#F5F8F8] border-b border-[#E2E7E5] text-[#657278] font-bold uppercase tracking-wider">
                 <th className="py-3.5 px-4">Property</th>
                 <th className="py-3.5 px-4">Type</th>
                 <th className="py-3.5 px-4">Location</th>
@@ -143,7 +143,7 @@ export default function AdminPropertiesClient({
             </thead>
             <tbody className="divide-y divide-[#E2E7E5]">
               {filtered.map((item) => (
-                <tr key={item.id} className="hover:bg-[#F7F8F6] transition-colors">
+                <tr key={item.id} className="hover:bg-[#F5F8F8] transition-colors">
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
                       <div className="relative w-12 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-[#E2E7E5]">
@@ -155,7 +155,7 @@ export default function AdminPropertiesClient({
                         />
                       </div>
                       <div>
-                        <p className="font-bold text-[#17232B] line-clamp-1 max-w-xs font-heading">
+                        <p className="font-bold text-[#12262D] line-clamp-1 max-w-xs font-heading">
                           {item.title}
                         </p>
                         <p className="text-[11px] text-[#657278]">
@@ -183,7 +183,7 @@ export default function AdminPropertiesClient({
                     {item.location}
                   </td>
 
-                  <td className="py-3.5 px-4 font-bold text-[#006B5B] font-heading">
+                  <td className="py-3.5 px-4 font-bold text-[#00695C] font-heading">
                     {formatBDTFull(item.price)}
                   </td>
 
@@ -211,7 +211,7 @@ export default function AdminPropertiesClient({
                       <Link
                         href={`/properties/${item.slug}`}
                         target="_blank"
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-[#006B5B] hover:bg-slate-100 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-[#00695C] hover:bg-slate-100 transition-colors"
                         title="View Public Page"
                       >
                         <ExternalLink className="w-4 h-4" />

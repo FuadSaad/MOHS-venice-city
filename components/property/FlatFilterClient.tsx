@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useMemo } from "react";
 import { Search, RotateCcw, Bed, Bath, Car, Maximize2, Building } from "lucide-react";
@@ -83,7 +83,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
               placeholder="Search apartment, tower, floor..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl pl-10 pr-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl pl-10 pr-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             />
           </div>
 
@@ -92,7 +92,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
             <select
               value={bedrooms}
               onChange={(e) => setBedrooms(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             >
               <option value="">All Bedrooms (BHK)</option>
               <option value="2">2 Bedrooms (Smart Living)</option>
@@ -106,7 +106,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
             <select
               value={bathrooms}
               onChange={(e) => setBathrooms(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             >
               <option value="">All Bathrooms</option>
               <option value="2">2 Bathrooms</option>
@@ -120,7 +120,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
             <select
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             >
               <option value="">Any Budget</option>
               <option value="0-8000000">Up to ৳ 80 Lakh</option>
@@ -138,7 +138,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
             <select
               value={handover}
               onChange={(e) => setHandover(e.target.value)}
-              className="bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs sm:text-sm text-[#17232B] outline-none"
+              className="bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs sm:text-sm text-[#12262D] outline-none"
             >
               <option value="">Any Handover Status</option>
               <option value="Ready">Ready for Handover</option>
@@ -146,12 +146,12 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
             </select>
 
             {/* Parking Only */}
-            <label className="inline-flex items-center gap-2 cursor-pointer bg-[#F7F8F6] px-3.5 py-2 rounded-xl border border-[#E2E7E5] text-xs font-semibold text-[#17232B] hover:bg-slate-100 transition-colors">
+            <label className="inline-flex items-center gap-2 cursor-pointer bg-[#F5F8F8] px-3.5 py-2 rounded-xl border border-[#E2E7E5] text-xs font-semibold text-[#12262D] hover:bg-slate-100 transition-colors">
               <input
                 type="checkbox"
                 checked={parkingOnly}
                 onChange={(e) => setParkingOnly(e.target.checked)}
-                className="w-4 h-4 text-[#006B5B] rounded accent-[#006B5B]"
+                className="w-4 h-4 text-[#00695C] rounded accent-[#00695C]"
               />
               <span>Includes Dedicated Car Parking</span>
             </label>
@@ -159,7 +159,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
 
           <div className="flex items-center gap-3">
             <span className="text-xs text-[#657278] font-medium">
-              Showing <strong className="text-[#17232B]">{filteredFlats.length}</strong> apartments
+              Showing <strong className="text-[#12262D]">{filteredFlats.length}</strong> apartments
             </span>
             {(search || bedrooms || bathrooms || parkingOnly || budget || handover) && (
               <button
@@ -183,7 +183,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
         </div>
       ) : (
         <div className="text-center py-20 bg-white rounded-2xl border border-[#E2E7E5] p-8">
-          <p className="text-base text-[#17232B] font-bold">
+          <p className="text-base text-[#12262D] font-bold">
             No flats or apartments match your chosen criteria.
           </p>
           <p className="text-sm text-[#657278] mt-1">
@@ -191,7 +191,7 @@ export default function FlatFilterClient({ initialFlats }: FlatFilterClientProps
           </p>
           <button
             onClick={handleReset}
-            className="mt-4 px-5 py-2 bg-[#006B5B] text-white rounded-xl text-sm font-semibold hover:bg-[#004F45] transition-colors"
+            className="mt-4 px-5 py-2 bg-[#00695C] text-white rounded-xl text-sm font-semibold hover:bg-[#005B50] transition-colors"
           >
             Clear All Filters
           </button>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-[#17232B] text-white flex flex-col shrink-0 min-h-screen border-r border-white/10">
+    <aside className="w-64 bg-[#12262D] text-white flex flex-col shrink-0 min-h-screen border-r border-white/10">
       {/* Brand header */}
       <div className="p-5 border-b border-white/10 flex items-center justify-between">
         <Link href="/admin" className="flex items-center gap-2">
@@ -60,7 +60,7 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      <div className="px-4 py-3 bg-[#004F45]/50 border-b border-white/5 text-xs text-emerald-300 font-semibold flex items-center justify-between">
+      <div className="px-4 py-3 bg-[#005B50]/50 border-b border-white/5 text-xs text-emerald-300 font-semibold flex items-center justify-between">
         <span>Admin Management Panel</span>
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
       </div>
@@ -76,11 +76,11 @@ export default function AdminSidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                 isActive
-                  ? "bg-[#006B5B] text-white shadow-sm"
+                  ? "bg-[#00695C] text-white shadow-sm"
                   : "text-slate-300 hover:text-white hover:bg-white/5"
               }`}
             >
-              <Icon className="w-4 h-4 text-[#C99A3D]" />
+              <Icon className="w-4 h-4 text-[#D6A84F]" />
               <span>{item.label}</span>
             </Link>
           );
@@ -95,7 +95,7 @@ export default function AdminSidebar() {
           className="flex items-center justify-between px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
         >
           <span>View Public Website</span>
-          <ExternalLink className="w-3.5 h-3.5 text-[#C99A3D]" />
+          <ExternalLink className="w-3.5 h-3.5 text-[#D6A84F]" />
         </Link>
 
         <button

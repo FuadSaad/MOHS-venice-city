@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -61,7 +61,7 @@ export default function AdminGalleryPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-extrabold text-[#17232B] font-heading">
+        <h1 className="text-2xl font-extrabold text-[#12262D] font-heading">
           Photo Gallery Management
         </h1>
         <p className="text-xs sm:text-sm text-[#657278] mt-1">
@@ -71,13 +71,13 @@ export default function AdminGalleryPage() {
 
       {/* Add New Photo Card */}
       <div className="bg-white p-6 rounded-2xl border border-[#E2E7E5] shadow-soft">
-        <h3 className="text-base font-bold text-[#17232B] font-heading mb-4 flex items-center gap-2">
-          <Plus className="w-4 h-4 text-[#006B5B]" /> Add New Photo
+        <h3 className="text-base font-bold text-[#12262D] font-heading mb-4 flex items-center gap-2">
+          <Plus className="w-4 h-4 text-[#00695C]" /> Add New Photo
         </h3>
 
         <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
           <div>
-            <label className="block text-xs font-bold text-[#17232B] mb-1">
+            <label className="block text-xs font-bold text-[#12262D] mb-1">
               Photo Title
             </label>
             <input
@@ -86,18 +86,18 @@ export default function AdminGalleryPage() {
               placeholder="e.g. Sector 3 High Ground"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#17232B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#17232B] mb-1">
+            <label className="block text-xs font-bold text-[#12262D] mb-1">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#17232B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none"
             >
               <option value="PROJECTS">Masterplan</option>
               <option value="PLOTS">Residential Plots</option>
@@ -109,7 +109,7 @@ export default function AdminGalleryPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#17232B] mb-1">
+            <label className="block text-xs font-bold text-[#12262D] mb-1">
               Image URL
             </label>
             <input
@@ -118,14 +118,14 @@ export default function AdminGalleryPage() {
               placeholder="https://images.unsplash.com/..."
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#17232B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-[#006B5B] hover:bg-[#004F45] disabled:bg-slate-400 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors"
+            className="w-full bg-[#00695C] hover:bg-[#005B50] disabled:bg-slate-400 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors"
           >
             {submitting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -151,12 +151,12 @@ export default function AdminGalleryPage() {
                 fill
                 className="object-cover"
               />
-              <span className="absolute top-2 left-2 bg-[#006B5B] text-white text-[10px] font-bold px-2 py-0.5 rounded">
+              <span className="absolute top-2 left-2 bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded">
                 {item.category}
               </span>
             </div>
             <div className="p-3">
-              <p className="font-bold text-xs text-[#17232B] truncate font-heading">
+              <p className="font-bold text-xs text-[#12262D] truncate font-heading">
                 {item.title}
               </p>
               {item.caption && (

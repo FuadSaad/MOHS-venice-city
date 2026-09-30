@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -16,7 +16,7 @@ export default function AdminNavbar({ adminEmail }: { adminEmail?: string }) {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/properties/new"
-          className="bg-[#006B5B] hover:bg-[#004F45] text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
+          className="bg-[#00695C] hover:bg-[#005B50] text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>New Property</span>
@@ -25,11 +25,11 @@ export default function AdminNavbar({ adminEmail }: { adminEmail?: string }) {
         <div className="h-6 w-px bg-slate-200" />
 
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#E8F5F1] text-[#006B5B] flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-full bg-[#E8F5F3] text-[#00695C] flex items-center justify-center font-bold text-xs">
             <User className="w-4 h-4" />
           </div>
           <div className="text-left hidden sm:block">
-            <p className="text-xs font-bold text-[#17232B]">Administrator</p>
+            <p className="text-xs font-bold text-[#12262D]">Administrator</p>
             <p className="text-[11px] text-[#657278]">{adminEmail || "admin@mohs.com"}</p>
           </div>
         </div>

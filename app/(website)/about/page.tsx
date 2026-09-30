@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -43,15 +43,11 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="py-10 sm:py-16 bg-[#F7F8F6]">
+    <div className="py-10 sm:py-16 bg-[#F5F8F8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Hero Banner */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5F1] text-[#006B5B] text-xs font-bold uppercase tracking-wider">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#C99A3D]" />
-            ABOUT MOHS VENICE CITY
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#17232B] font-heading tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#12262D] font-heading tracking-tight leading-tight">
             Your Trusted Partner in Premium Residential Property
           </h1>
           <p className="text-sm sm:text-base text-[#657278] leading-relaxed">
@@ -73,7 +69,7 @@ export default function AboutPage() {
           </div>
 
           <div className="lg:col-span-6 space-y-5">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#17232B] font-heading">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading">
               A Masterplanned Community at the Intersection of Uttara & Purbachal
             </h2>
             <p className="text-sm sm:text-base text-[#657278] leading-relaxed">
@@ -92,10 +88,10 @@ export default function AboutPage() {
             <div className="pt-2">
               <Link
                 href="/contact?type=visit"
-                className="inline-flex items-center gap-2 bg-[#006B5B] hover:bg-[#004F45] text-white font-bold px-6 py-3 rounded-xl text-sm transition-colors"
+                className="inline-flex items-center gap-2 bg-[#00695C] hover:bg-[#005B50] text-white font-bold px-6 py-3 rounded-xl text-sm transition-colors"
               >
                 <span>Book a Guided Site Tour</span>
-                <ArrowRight className="w-4 h-4 text-[#C99A3D]" />
+                <ArrowRight className="w-4 h-4 text-[#D6A84F]" />
               </Link>
             </div>
           </div>
@@ -104,7 +100,7 @@ export default function AboutPage() {
         {/* Core Pillars */}
         <div>
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#17232B] font-heading">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading">
               Our Core Commitments
             </h2>
             <p className="text-sm text-[#657278] mt-2">
@@ -121,10 +117,10 @@ export default function AboutPage() {
                   className="bg-white p-7 rounded-2xl border border-[#E2E7E5] shadow-soft flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-12 h-12 rounded-xl bg-[#E8F5F1] text-[#006B5B] flex items-center justify-center mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-[#E8F5F3] text-[#00695C] flex items-center justify-center mb-5">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-lg font-bold text-[#17232B] font-heading mb-2">
+                    <h3 className="text-lg font-bold text-[#12262D] font-heading mb-2">
                       {pil.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#657278] leading-relaxed">
@@ -138,9 +134,9 @@ export default function AboutPage() {
         </div>
 
         {/* Verification Guarantee Card */}
-        <div className="bg-[#17232B] text-white rounded-2xl p-8 sm:p-12 text-center space-y-5">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#006B5B] text-white mx-auto">
-            <CheckCircle2 className="w-8 h-8 text-[#C99A3D]" />
+        <div className="bg-[#12262D] text-white rounded-2xl p-8 sm:p-12 text-center space-y-5">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#00695C] text-white mx-auto">
+            <CheckCircle2 className="w-8 h-8 text-[#D6A84F]" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold font-heading">
             Our Document Verification Guarantee
@@ -153,10 +149,10 @@ export default function AboutPage() {
           <div className="pt-2">
             <Link
               href="/contact"
-              className="bg-[#006B5B] hover:bg-[#004F45] text-white font-bold px-8 py-3.5 rounded-xl text-sm inline-flex items-center gap-2"
+              className="bg-[#00695C] hover:bg-[#005B50] text-white font-bold px-8 py-3.5 rounded-xl text-sm inline-flex items-center gap-2"
             >
               <span>Speak to Our Property Counsel</span>
-              <ArrowRight className="w-4 h-4 text-[#C99A3D]" />
+              <ArrowRight className="w-4 h-4 text-[#D6A84F]" />
             </Link>
           </div>
         </div>

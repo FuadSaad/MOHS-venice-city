@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -16,7 +16,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#004F45] text-white pt-16 pb-10 border-t border-[#006B5B]">
+    <footer className="bg-[#005B50] text-white pt-16 pb-10 border-t border-[#00695C]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/15">
           {/* Col 1: Brand Info */}
@@ -38,7 +38,7 @@ export default function Footer() {
               documentation transparency.
             </p>
             <div className="flex items-center gap-2 text-xs text-emerald-200">
-              <ShieldCheck className="w-4 h-4 text-[#C99A3D]" />
+              <ShieldCheck className="w-4 h-4 text-[#D6A84F]" />
               <span>Dedicated strictly to Residential Plots & Living Flats</span>
             </div>
             {/* Social Icons */}
@@ -47,7 +47,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#006B5B] flex items-center justify-center text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00695C] flex items-center justify-center text-white transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="w-4 h-4" />
@@ -56,7 +56,7 @@ export default function Footer() {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#006B5B] flex items-center justify-center text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00695C] flex items-center justify-center text-white transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
@@ -65,7 +65,7 @@ export default function Footer() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#006B5B] flex items-center justify-center text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00695C] flex items-center justify-center text-white transition-colors"
                 aria-label="YouTube"
               >
                 <Youtube className="w-4 h-4" />
@@ -74,7 +74,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#006B5B] flex items-center justify-center text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#00695C] flex items-center justify-center text-white transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
@@ -84,43 +84,43 @@ export default function Footer() {
 
           {/* Col 2: Quick Links */}
           <div>
-            <h4 className="text-base font-semibold text-white tracking-wide uppercase text-xs mb-4 text-[#C99A3D]">
+            <h4 className="text-base font-semibold text-white tracking-wide uppercase text-xs mb-4 text-[#D6A84F]">
               Quick Links
             </h4>
             <ul className="space-y-2.5 text-sm text-white/80">
               <li>
                 <Link href="/" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> Home
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> Home
                 </Link>
               </li>
               <li>
                 <Link href="/plots" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> Residential Plots
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> Residential Plots
                 </Link>
               </li>
               <li>
                 <Link href="/flats" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> Modern Flats
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> Modern Flats
                 </Link>
               </li>
               <li>
                 <Link href="/projects" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> Township Projects
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> Township Projects
                 </Link>
               </li>
               <li>
                 <Link href="/gallery" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> Photo Gallery
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> Photo Gallery
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> About Us
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> About Us
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-[#C99A3D]" /> Contact & Enquiry
+                  <ArrowRight className="w-3 h-3 text-[#D6A84F]" /> Contact & Enquiry
                 </Link>
               </li>
             </ul>
@@ -128,7 +128,7 @@ export default function Footer() {
 
           {/* Col 3: Properties Focus */}
           <div>
-            <h4 className="text-base font-semibold text-white tracking-wide uppercase text-xs mb-4 text-[#C99A3D]">
+            <h4 className="text-base font-semibold text-white tracking-wide uppercase text-xs mb-4 text-[#D6A84F]">
               Our Properties
             </h4>
             <ul className="space-y-2.5 text-sm text-white/80">
@@ -167,28 +167,28 @@ export default function Footer() {
 
           {/* Col 4: Contact & Office */}
           <div>
-            <h4 className="text-base font-semibold text-white tracking-wide uppercase text-xs mb-4 text-[#C99A3D]">
+            <h4 className="text-base font-semibold text-white tracking-wide uppercase text-xs mb-4 text-[#D6A84F]">
               Contact Office
             </h4>
             <ul className="space-y-3 text-sm text-white/80">
               <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#C99A3D] shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-[#D6A84F] shrink-0 mt-0.5" />
                 <span>Uttara - Purbachal Link Road, Sector 3, Dhaka, Bangladesh</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#C99A3D] shrink-0" />
+                <Phone className="w-4 h-4 text-[#D6A84F] shrink-0" />
                 <a href="tel:+8801711000000" className="hover:text-white">
                   +880 1711-000000
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#C99A3D] shrink-0" />
+                <Mail className="w-4 h-4 text-[#D6A84F] shrink-0" />
                 <a href="mailto:info@mohsvenicecity.com" className="hover:text-white">
                   info@mohsvenicecity.com
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-[#C99A3D] shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-[#D6A84F] shrink-0 mt-0.5" />
                 <span>Sat - Thu: 9:00 AM - 7:00 PM (Fri open for site visits)</span>
               </li>
             </ul>
@@ -205,7 +205,7 @@ export default function Footer() {
             <Link href="/about" className="hover:text-white transition-colors">
               Terms & Conditions
             </Link>
-            <Link href="/admin/login" className="hover:text-[#C99A3D] transition-colors">
+            <Link href="/admin/login" className="hover:text-[#D6A84F] transition-colors">
               Admin Login
             </Link>
           </div>

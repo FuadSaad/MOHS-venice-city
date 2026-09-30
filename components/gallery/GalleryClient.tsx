@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -39,8 +39,8 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
             onClick={() => setActiveCategory(cat.value)}
             className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeCategory === cat.value
-                ? "bg-[#006B5B] text-white shadow-sm"
-                : "bg-white text-[#657278] hover:text-[#17232B] hover:bg-slate-50 border border-[#E2E7E5]"
+                ? "bg-[#00695C] text-white shadow-sm"
+                : "bg-white text-[#657278] hover:text-[#12262D] hover:bg-slate-50 border border-[#E2E7E5]"
             }`}
           >
             {cat.label}
@@ -68,7 +68,7 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
 
             {/* Badge */}
             <div className="absolute top-3 left-3">
-              <span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm text-[#006B5B] rounded-md text-[11px] font-bold uppercase tracking-wider shadow-xs">
+              <span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm text-[#00695C] rounded-md text-[11px] font-bold uppercase tracking-wider shadow-xs">
                 {item.category}
               </span>
             </div>
@@ -109,12 +109,12 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
             className="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl relative border border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b border-[#E2E7E5] bg-[#F7F8F6]">
+            <div className="flex items-center justify-between p-4 border-b border-[#E2E7E5] bg-[#F5F8F8]">
               <div>
-                <span className="text-[11px] font-bold text-[#006B5B] uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-[#00695C] uppercase tracking-wider">
                   {activeModalItem.category}
                 </span>
-                <h4 className="text-base font-bold text-[#17232B] font-heading">
+                <h4 className="text-base font-bold text-[#12262D] font-heading">
                   {activeModalItem.title}
                 </h4>
               </div>

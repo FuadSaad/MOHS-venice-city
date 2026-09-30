@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -138,7 +138,7 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
       <div className="flex items-center justify-between">
         <Link
           href="/admin/properties"
-          className="text-xs font-bold text-[#657278] hover:text-[#17232B] flex items-center gap-1.5"
+          className="text-xs font-bold text-[#657278] hover:text-[#12262D] flex items-center gap-1.5"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Properties List</span>
@@ -146,7 +146,7 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
         <button
           type="submit"
           disabled={loading}
-          className="bg-[#006B5B] hover:bg-[#004F45] disabled:bg-slate-400 text-white text-xs sm:text-sm font-bold px-6 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-2"
+          className="bg-[#00695C] hover:bg-[#005B50] disabled:bg-slate-400 text-white text-xs sm:text-sm font-bold px-6 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-2"
         >
           {loading ? (
             <>
@@ -170,13 +170,13 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
 
       {/* Basic Info Card */}
       <div className="bg-white p-7 rounded-2xl border border-[#E2E7E5] shadow-soft space-y-5">
-        <h3 className="text-base font-bold text-[#17232B] font-heading border-b border-[#E2E7E5] pb-3">
+        <h3 className="text-base font-bold text-[#12262D] font-heading border-b border-[#E2E7E5] pb-3">
           1. Basic Property Details
         </h3>
 
         {/* Property Type Toggle */}
         <div>
-          <label className="block text-xs font-bold text-[#17232B] uppercase mb-2">
+          <label className="block text-xs font-bold text-[#12262D] uppercase mb-2">
             Property Category <span className="text-rose-500">*</span>
           </label>
           <div className="grid grid-cols-2 gap-4 max-w-md">
@@ -185,8 +185,8 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
               onClick={() => setPropertyType("PLOT")}
               className={`py-3 px-4 rounded-xl border text-sm font-bold transition-all text-center ${
                 propertyType === "PLOT"
-                  ? "bg-[#006B5B] text-white border-[#006B5B] shadow-sm"
-                  : "bg-[#F7F8F6] text-[#657278] border-[#E2E7E5] hover:bg-slate-100"
+                  ? "bg-[#00695C] text-white border-[#00695C] shadow-sm"
+                  : "bg-[#F5F8F8] text-[#657278] border-[#E2E7E5] hover:bg-slate-100"
               }`}
             >
               Residential Plot
@@ -196,8 +196,8 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
               onClick={() => setPropertyType("FLAT")}
               className={`py-3 px-4 rounded-xl border text-sm font-bold transition-all text-center ${
                 propertyType === "FLAT"
-                  ? "bg-[#006B5B] text-white border-[#006B5B] shadow-sm"
-                  : "bg-[#F7F8F6] text-[#657278] border-[#E2E7E5] hover:bg-slate-100"
+                  ? "bg-[#00695C] text-white border-[#00695C] shadow-sm"
+                  : "bg-[#F5F8F8] text-[#657278] border-[#E2E7E5] hover:bg-slate-100"
               }`}
             >
               Flat / Apartment
@@ -206,7 +206,7 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+          <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
             Property Title <span className="text-rose-500">*</span>
           </label>
           <input
@@ -219,13 +219,13 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
             }
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+            <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
               Price (BDT Numeric) <span className="text-rose-500">*</span>
             </label>
             <input
@@ -234,18 +234,18 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
               placeholder="e.g. 7500000"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+            <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
               Availability Status
             </label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
             >
               <option value="AVAILABLE">AVAILABLE</option>
               <option value="RESERVED">RESERVED</option>
@@ -257,7 +257,7 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+            <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
               Township Sector / Location <span className="text-rose-500">*</span>
             </label>
             <input
@@ -266,12 +266,12 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
               placeholder="e.g. Sector 3, MOHS Venice City"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+            <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
               Road / Block Specific Address
             </label>
             <input
@@ -279,37 +279,37 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
               placeholder="e.g. Road 12, Block B, Sector 3"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
             />
           </div>
         </div>
 
         {/* Checkbox toggles */}
         <div className="flex flex-wrap items-center gap-6 pt-2">
-          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#17232B]">
+          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#12262D]">
             <input
               type="checkbox"
               checked={isFeatured}
               onChange={(e) => setIsFeatured(e.target.checked)}
-              className="w-4 h-4 rounded text-[#006B5B] accent-[#006B5B]"
+              className="w-4 h-4 rounded text-[#00695C] accent-[#00695C]"
             />
             <span>Mark as Featured</span>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#17232B]">
+          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#12262D]">
             <input
               type="checkbox"
               checked={isReady}
               onChange={(e) => setIsReady(e.target.checked)}
-              className="w-4 h-4 rounded text-[#006B5B] accent-[#006B5B]"
+              className="w-4 h-4 rounded text-[#00695C] accent-[#00695C]"
             />
             <span>Verified Ready Status</span>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#17232B]">
+          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#12262D]">
             <input
               type="checkbox"
               checked={isCorner}
               onChange={(e) => setIsCorner(e.target.checked)}
-              className="w-4 h-4 rounded text-[#006B5B] accent-[#006B5B]"
+              className="w-4 h-4 rounded text-[#00695C] accent-[#00695C]"
             />
             <span>Corner Plot / Corner Unit</span>
           </label>
@@ -318,14 +318,14 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
 
       {/* Category Specific Specs Card */}
       <div className="bg-white p-7 rounded-2xl border border-[#E2E7E5] shadow-soft space-y-5">
-        <h3 className="text-base font-bold text-[#17232B] font-heading border-b border-[#E2E7E5] pb-3">
+        <h3 className="text-base font-bold text-[#12262D] font-heading border-b border-[#E2E7E5] pb-3">
           2. {propertyType === "PLOT" ? "Residential Plot Specifications" : "Flat / Apartment Specifications"}
         </h3>
 
         {propertyType === "PLOT" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Size (Katha)
               </label>
               <input
@@ -334,11 +334,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. 5"
                 value={plotKatha}
                 onChange={(e) => setPlotKatha(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Road Width
               </label>
               <input
@@ -346,11 +346,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. 40 Feet"
                 value={plotRoadWidth}
                 onChange={(e) => setPlotRoadWidth(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Facing
               </label>
               <input
@@ -358,11 +358,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. South Facing"
                 value={facing}
                 onChange={(e) => setFacing(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Sector / Block
               </label>
               <input
@@ -370,14 +370,14 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. Block B"
                 value={sectorBlock}
                 onChange={(e) => setSectorBlock(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Size (Sq Ft)
               </label>
               <input
@@ -385,11 +385,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. 1450"
                 value={flatSizeSqft}
                 onChange={(e) => setFlatSizeSqft(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Bedrooms
               </label>
               <input
@@ -397,11 +397,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. 3"
                 value={bedrooms}
                 onChange={(e) => setBedrooms(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Bathrooms
               </label>
               <input
@@ -409,11 +409,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. 3"
                 value={bathrooms}
                 onChange={(e) => setBathrooms(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Floor Number
               </label>
               <input
@@ -421,11 +421,11 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. 7th Floor (Apartment 7B)"
                 value={floorNumber}
                 onChange={(e) => setFloorNumber(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+              <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
                 Handover Status
               </label>
               <input
@@ -433,16 +433,16 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
                 placeholder="e.g. Ready for Handover"
                 value={handoverStatus}
                 onChange={(e) => setHandoverStatus(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] outline-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] outline-none"
               />
             </div>
             <div className="flex items-center pt-5">
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#17232B]">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#12262D]">
                 <input
                   type="checkbox"
                   checked={parkingAvailable}
                   onChange={(e) => setParkingAvailable(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#006B5B] accent-[#006B5B]"
+                  className="w-4 h-4 rounded text-[#00695C] accent-[#00695C]"
                 />
                 <span>Includes Car Parking</span>
               </label>
@@ -453,12 +453,12 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
 
       {/* Description & Features Card */}
       <div className="bg-white p-7 rounded-2xl border border-[#E2E7E5] shadow-soft space-y-5">
-        <h3 className="text-base font-bold text-[#17232B] font-heading border-b border-[#E2E7E5] pb-3">
+        <h3 className="text-base font-bold text-[#12262D] font-heading border-b border-[#E2E7E5] pb-3">
           3. Descriptions & Features
         </h3>
 
         <div>
-          <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+          <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
             Detailed Description <span className="text-rose-500">*</span>
           </label>
           <textarea
@@ -466,31 +466,31 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl p-3 text-sm text-[#17232B] outline-none"
+            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl p-3 text-sm text-[#12262D] outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+          <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
             Features & Specs (One per line)
           </label>
           <textarea
             rows={4}
             value={featuresText}
             onChange={(e) => setFeaturesText(e.target.value)}
-            className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl p-3 text-sm text-[#17232B] outline-none font-mono text-xs"
+            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl p-3 text-sm text-[#12262D] outline-none font-mono text-xs"
           />
         </div>
       </div>
 
       {/* Images Card */}
       <div className="bg-white p-7 rounded-2xl border border-[#E2E7E5] shadow-soft space-y-5">
-        <h3 className="text-base font-bold text-[#17232B] font-heading border-b border-[#E2E7E5] pb-3">
+        <h3 className="text-base font-bold text-[#12262D] font-heading border-b border-[#E2E7E5] pb-3">
           4. Media & Image URLs
         </h3>
 
         <div>
-          <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+          <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
             Main Featured Image URL <span className="text-rose-500">*</span>
           </label>
           <input
@@ -498,19 +498,19 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
             required
             value={featuredImage}
             onChange={(e) => setFeaturedImage(e.target.value)}
-            className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#17232B] outline-none"
+            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-[#17232B] uppercase mb-1">
+          <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
             Additional Gallery Image URLs (One URL per line)
           </label>
           <textarea
             rows={3}
             value={extraImagesText}
             onChange={(e) => setExtraImagesText(e.target.value)}
-            className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl p-3 text-xs text-[#17232B] outline-none font-mono"
+            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl p-3 text-xs text-[#12262D] outline-none font-mono"
           />
         </div>
       </div>
@@ -526,7 +526,7 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
         <button
           type="submit"
           disabled={loading}
-          className="bg-[#006B5B] hover:bg-[#004F45] disabled:bg-slate-400 text-white text-xs sm:text-sm font-bold px-8 py-3 rounded-xl shadow-md transition-colors flex items-center gap-2"
+          className="bg-[#00695C] hover:bg-[#005B50] disabled:bg-slate-400 text-white text-xs sm:text-sm font-bold px-8 py-3 rounded-xl shadow-md transition-colors flex items-center gap-2"
         >
           {loading ? (
             <>

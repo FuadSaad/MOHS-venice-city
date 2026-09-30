@@ -10,12 +10,14 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          primary: "#006B5B",
-          dark: "#004F45",
-          navy: "#17232B",
-          gold: "#C99A3D",
-          light: "#E8F5F1",
-          soft: "#F7F8F6",
+          primary: "#00695C",
+          dark: "#005B50",
+          navy: "#12262D",
+          gold: "#D6A84F",
+          blue: "#159ED0",
+          ocean: "#087FA8",
+          light: "#E8F5F3",
+          soft: "#F5F8F8",
           border: "#E2E7E5",
           secondary: "#657278",
         },

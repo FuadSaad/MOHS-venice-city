@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import {
@@ -55,7 +55,7 @@ export default async function AdminDashboardPage() {
       value: totalProperties,
       desc: "Plots & Flats in Database",
       icon: Home,
-      color: "bg-emerald-50 text-[#006B5B] border-emerald-200",
+      color: "bg-emerald-50 text-[#00695C] border-emerald-200",
     },
     {
       title: "Available Plots",
@@ -99,7 +99,7 @@ export default async function AdminDashboardPage() {
       {/* Welcome Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E2E7E5] shadow-soft">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#17232B] font-heading">
+          <h1 className="text-2xl font-extrabold text-[#12262D] font-heading">
             MOHS Venice City Dashboard
           </h1>
           <p className="text-xs sm:text-sm text-[#657278] mt-1">
@@ -110,14 +110,14 @@ export default async function AdminDashboardPage() {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/admin/properties/new?type=PLOT"
-            className="bg-[#006B5B] hover:bg-[#004F45] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
+            className="bg-[#00695C] hover:bg-[#005B50] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Add New Plot</span>
           </Link>
           <Link
             href="/admin/properties/new?type=FLAT"
-            className="bg-[#17232B] hover:bg-black text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
+            className="bg-[#12262D] hover:bg-black text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Add New Flat</span>
@@ -143,7 +143,7 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-[#17232B] font-heading">
+                <p className="text-2xl font-extrabold text-[#12262D] font-heading">
                   {c.value}
                 </p>
                 <p className="text-[11px] text-[#657278] mt-0.5">{c.desc}</p>
@@ -158,13 +158,13 @@ export default async function AdminDashboardPage() {
         {/* Recent Enquiries */}
         <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-soft overflow-hidden">
           <div className="p-5 border-b border-[#E2E7E5] flex items-center justify-between">
-            <h3 className="text-base font-bold text-[#17232B] font-heading flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-[#006B5B]" />
+            <h3 className="text-base font-bold text-[#12262D] font-heading flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-[#00695C]" />
               Recent Client Enquiries
             </h3>
             <Link
               href="/admin/enquiries"
-              className="text-xs font-bold text-[#006B5B] hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-[#00695C] hover:underline flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowRight className="w-3 h-3" />
@@ -174,9 +174,9 @@ export default async function AdminDashboardPage() {
           <div className="divide-y divide-[#E2E7E5] overflow-x-auto">
             {recentEnquiries.length > 0 ? (
               recentEnquiries.map((enq) => (
-                <div key={enq.id} className="p-4 hover:bg-[#F7F8F6] transition-colors">
+                <div key={enq.id} className="p-4 hover:bg-[#F5F8F8] transition-colors">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm text-[#17232B]">{enq.name}</span>
+                    <span className="font-bold text-sm text-[#12262D]">{enq.name}</span>
                     <span
                       className={`text-[11px] font-bold px-2 py-0.5 rounded ${
                         enq.status === "NEW"
@@ -188,10 +188,10 @@ export default async function AdminDashboardPage() {
                     </span>
                   </div>
                   <p className="text-xs text-[#657278]">
-                    Phone: <span className="font-mono text-[#17232B]">{enq.phone}</span> | Budget:{" "}
+                    Phone: <span className="font-mono text-[#12262D]">{enq.phone}</span> | Budget:{" "}
                     {enq.budget || "Not specified"}
                   </p>
-                  <p className="text-xs text-[#17232B] line-clamp-1 mt-1 bg-[#F7F8F6] p-1.5 rounded">
+                  <p className="text-xs text-[#12262D] line-clamp-1 mt-1 bg-[#F5F8F8] p-1.5 rounded">
                     "{enq.message}"
                   </p>
                 </div>
@@ -205,13 +205,13 @@ export default async function AdminDashboardPage() {
         {/* Recent Site Visits */}
         <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-soft overflow-hidden">
           <div className="p-5 border-b border-[#E2E7E5] flex items-center justify-between">
-            <h3 className="text-base font-bold text-[#17232B] font-heading flex items-center gap-2">
-              <CalendarCheck className="w-4 h-4 text-[#006B5B]" />
+            <h3 className="text-base font-bold text-[#12262D] font-heading flex items-center gap-2">
+              <CalendarCheck className="w-4 h-4 text-[#00695C]" />
               Scheduled Site Visits
             </h3>
             <Link
               href="/admin/site-visits"
-              className="text-xs font-bold text-[#006B5B] hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-[#00695C] hover:underline flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowRight className="w-3 h-3" />
@@ -221,9 +221,9 @@ export default async function AdminDashboardPage() {
           <div className="divide-y divide-[#E2E7E5] overflow-x-auto">
             {recentVisits.length > 0 ? (
               recentVisits.map((visit) => (
-                <div key={visit.id} className="p-4 hover:bg-[#F7F8F6] transition-colors">
+                <div key={visit.id} className="p-4 hover:bg-[#F5F8F8] transition-colors">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm text-[#17232B]">{visit.name}</span>
+                    <span className="font-bold text-sm text-[#12262D]">{visit.name}</span>
                     <span
                       className={`text-[11px] font-bold px-2 py-0.5 rounded ${
                         visit.status === "PENDING"
@@ -235,11 +235,11 @@ export default async function AdminDashboardPage() {
                     </span>
                   </div>
                   <p className="text-xs text-[#657278]">
-                    Date: <strong className="text-[#006B5B]">{visit.preferredDate}</strong> | Slot:{" "}
+                    Date: <strong className="text-[#00695C]">{visit.preferredDate}</strong> | Slot:{" "}
                     {visit.preferredTime}
                   </p>
                   <p className="text-xs text-[#657278] mt-0.5">
-                    Phone: <span className="font-mono text-[#17232B]">{visit.phone}</span>
+                    Phone: <span className="font-mono text-[#12262D]">{visit.phone}</span>
                   </p>
                 </div>
               ))

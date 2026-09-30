@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import { Star, MessageSquareQuote, CheckCircle2 } from "lucide-react";
@@ -16,7 +16,7 @@ export default async function AdminReviewsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-[#17232B] font-heading">
+        <h1 className="text-2xl font-extrabold text-[#12262D] font-heading">
           Customer Reviews & Testimonials
         </h1>
         <p className="text-xs sm:text-sm text-[#657278] mt-1">
@@ -31,12 +31,12 @@ export default async function AdminReviewsPage() {
             className="bg-white rounded-2xl p-6 border border-[#E2E7E5] shadow-soft flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-1 text-[#C99A3D] mb-3">
+              <div className="flex items-center gap-1 text-[#D6A84F] mb-3">
                 {[...Array(rev.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-[#C99A3D]" />
+                  <Star key={i} className="w-4 h-4 fill-[#D6A84F]" />
                 ))}
               </div>
-              <p className="text-xs text-[#17232B] italic leading-relaxed mb-4">
+              <p className="text-xs text-[#12262D] italic leading-relaxed mb-4">
                 "{rev.comment}"
               </p>
             </div>
@@ -54,10 +54,10 @@ export default async function AdminReviewsPage() {
                 />
               </div>
               <div>
-                <p className="text-xs font-bold text-[#17232B] font-heading">{rev.name}</p>
+                <p className="text-xs font-bold text-[#12262D] font-heading">{rev.name}</p>
                 <p className="text-[11px] text-[#657278]">{rev.roleOrLocation}</p>
                 {rev.propertyPurchased && (
-                  <p className="text-[10px] text-[#006B5B] font-semibold">
+                  <p className="text-[10px] text-[#00695C] font-semibold">
                     {rev.propertyPurchased}
                   </p>
                 )}

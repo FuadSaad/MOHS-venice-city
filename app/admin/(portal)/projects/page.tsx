@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +18,7 @@ export default async function AdminProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#17232B] font-heading">
+          <h1 className="text-2xl font-extrabold text-[#12262D] font-heading">
             Township Projects
           </h1>
           <p className="text-xs sm:text-sm text-[#657278] mt-1">
@@ -42,7 +42,7 @@ export default async function AdminProjectsPage() {
               />
             </div>
             <div className="p-6 space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#006B5B] font-bold">
+              <div className="flex items-center justify-between text-xs text-[#00695C] font-bold">
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5" />
                   {proj.location}
@@ -51,7 +51,7 @@ export default async function AdminProjectsPage() {
                   {proj.properties.length} Active Listings
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-[#17232B] font-heading">
+              <h3 className="text-lg font-bold text-[#12262D] font-heading">
                 {proj.title}
               </h3>
               <p className="text-xs text-[#657278] line-clamp-2">
@@ -64,7 +64,7 @@ export default async function AdminProjectsPage() {
                 <Link
                   href={`/projects/${proj.slug}`}
                   target="_blank"
-                  className="font-bold text-[#006B5B] hover:underline flex items-center gap-1"
+                  className="font-bold text-[#00695C] hover:underline flex items-center gap-1"
                 >
                   <span>View Public Page</span>
                   <ExternalLink className="w-3 h-3" />

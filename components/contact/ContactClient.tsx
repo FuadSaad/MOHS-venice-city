@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import {
@@ -103,10 +103,10 @@ export default function ContactClient() {
       <div className="lg:col-span-5 space-y-8">
         <div className="bg-white rounded-2xl p-7 sm:p-8 border border-[#E2E7E5] shadow-soft space-y-6">
           <div>
-            <span className="text-xs font-bold text-[#006B5B] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#00695C] uppercase tracking-wider">
               HEAD OFFICE & SITE PAVILION
             </span>
-            <h2 className="text-2xl font-extrabold text-[#17232B] font-heading mt-1">
+            <h2 className="text-2xl font-extrabold text-[#12262D] font-heading mt-1">
               Contact MOHS Venice City
             </h2>
             <p className="text-sm text-[#657278] mt-2">
@@ -114,13 +114,13 @@ export default function ContactClient() {
             </p>
           </div>
 
-          <div className="space-y-5 text-sm text-[#17232B]">
+          <div className="space-y-5 text-sm text-[#12262D]">
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#E8F5F1] text-[#006B5B] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#E8F5F3] text-[#00695C] flex items-center justify-center shrink-0">
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <p className="font-bold text-[#17232B] font-heading">Site Office Address</p>
+                <p className="font-bold text-[#12262D] font-heading">Site Office Address</p>
                 <p className="text-xs sm:text-sm text-[#657278] mt-0.5 leading-relaxed">
                   Sector 3, Main Boulevard, MOHS Venice City, Uttara - Purbachal Link Road, Dhaka.
                 </p>
@@ -128,13 +128,13 @@ export default function ContactClient() {
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#E8F5F1] text-[#006B5B] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#E8F5F3] text-[#00695C] flex items-center justify-center shrink-0">
                 <Phone className="w-5 h-5" />
               </div>
               <div>
-                <p className="font-bold text-[#17232B] font-heading">Direct Hotline</p>
+                <p className="font-bold text-[#12262D] font-heading">Direct Hotline</p>
                 <p className="text-xs sm:text-sm text-[#657278] mt-0.5">
-                  <a href="tel:+8801711000000" className="text-[#006B5B] font-bold hover:underline">
+                  <a href="tel:+8801711000000" className="text-[#00695C] font-bold hover:underline">
                     +880 1711-000000
                   </a>{" "}
                   (Sales & Verification)
@@ -143,13 +143,13 @@ export default function ContactClient() {
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#E8F5F1] text-[#006B5B] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#E8F5F3] text-[#00695C] flex items-center justify-center shrink-0">
                 <Mail className="w-5 h-5" />
               </div>
               <div>
-                <p className="font-bold text-[#17232B] font-heading">Email Address</p>
+                <p className="font-bold text-[#12262D] font-heading">Email Address</p>
                 <p className="text-xs sm:text-sm text-[#657278] mt-0.5">
-                  <a href="mailto:info@mohsvenicecity.com" className="text-[#006B5B] font-bold hover:underline">
+                  <a href="mailto:info@mohsvenicecity.com" className="text-[#00695C] font-bold hover:underline">
                     info@mohsvenicecity.com
                   </a>
                 </p>
@@ -157,11 +157,11 @@ export default function ContactClient() {
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#E8F5F1] text-[#006B5B] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#E8F5F3] text-[#00695C] flex items-center justify-center shrink-0">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="font-bold text-[#17232B] font-heading">Visiting Hours</p>
+                <p className="font-bold text-[#12262D] font-heading">Visiting Hours</p>
                 <p className="text-xs sm:text-sm text-[#657278] mt-0.5 leading-relaxed">
                   Saturday - Thursday: 9:00 AM – 7:00 PM
                   <br />
@@ -173,9 +173,9 @@ export default function ContactClient() {
         </div>
 
         {/* Free Transport Notice */}
-        <div className="p-6 bg-[#17232B] text-white rounded-2xl shadow-soft space-y-2">
+        <div className="p-6 bg-[#12262D] text-white rounded-2xl shadow-soft space-y-2">
           <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4 text-[#C99A3D]" />
+            <ShieldCheck className="w-4 h-4 text-[#D6A84F]" />
             Complimentary Transport Service
           </div>
           <p className="text-sm font-bold font-heading">
@@ -191,7 +191,7 @@ export default function ContactClient() {
       {/* Right: Interactive Form Tabbed (General Enquiry vs Site Visit) */}
       <div className="lg:col-span-7 bg-white rounded-2xl p-7 sm:p-9 border border-[#E2E7E5] shadow-soft">
         {/* Tab switch */}
-        <div className="flex rounded-xl bg-[#F7F8F6] p-1 border border-[#E2E7E5] mb-6">
+        <div className="flex rounded-xl bg-[#F5F8F8] p-1 border border-[#E2E7E5] mb-6">
           <button
             type="button"
             onClick={() => {
@@ -200,8 +200,8 @@ export default function ContactClient() {
             }}
             className={`flex-1 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${
               activeTab === "ENQUIRY"
-                ? "bg-[#006B5B] text-white shadow-xs"
-                : "text-[#657278] hover:text-[#17232B]"
+                ? "bg-[#00695C] text-white shadow-xs"
+                : "text-[#657278] hover:text-[#12262D]"
             }`}
           >
             <Send className="w-4 h-4" />
@@ -215,21 +215,21 @@ export default function ContactClient() {
             }}
             className={`flex-1 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${
               activeTab === "VISIT"
-                ? "bg-[#006B5B] text-white shadow-xs"
-                : "text-[#657278] hover:text-[#17232B]"
+                ? "bg-[#00695C] text-white shadow-xs"
+                : "text-[#657278] hover:text-[#12262D]"
             }`}
           >
-            <Calendar className="w-4 h-4 text-[#C99A3D]" />
+            <Calendar className="w-4 h-4 text-[#D6A84F]" />
             <span>Schedule Site Visit</span>
           </button>
         </div>
 
         {success ? (
           <div className="text-center py-12 space-y-4">
-            <div className="w-16 h-16 bg-[#E8F5F1] text-[#006B5B] rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-10 h-10 text-[#006B5B]" />
+            <div className="w-16 h-16 bg-[#E8F5F3] text-[#00695C] rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-10 h-10 text-[#00695C]" />
             </div>
-            <h3 className="text-2xl font-bold text-[#17232B] font-heading">
+            <h3 className="text-2xl font-bold text-[#12262D] font-heading">
               {activeTab === "VISIT" ? "Site Visit Booked!" : "Enquiry Received!"}
             </h3>
             <p className="text-sm text-[#657278] max-w-md mx-auto">
@@ -239,7 +239,7 @@ export default function ContactClient() {
             <button
               type="button"
               onClick={handleReset}
-              className="mt-4 px-6 py-2.5 bg-[#006B5B] text-white font-bold rounded-xl text-sm hover:bg-[#004F45] transition-colors"
+              className="mt-4 px-6 py-2.5 bg-[#00695C] text-white font-bold rounded-xl text-sm hover:bg-[#005B50] transition-colors"
             >
               Submit Another Request
             </button>
@@ -254,7 +254,7 @@ export default function ContactClient() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#17232B] mb-1">
+                <label className="block text-xs font-semibold text-[#12262D] mb-1">
                   Full Name <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -263,12 +263,12 @@ export default function ContactClient() {
                   placeholder="e.g. Mahfuzur Rahman"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+                  className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#17232B] mb-1">
+                <label className="block text-xs font-semibold text-[#12262D] mb-1">
                   Phone Number <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -277,14 +277,14 @@ export default function ContactClient() {
                   placeholder="01711-XXXXXX"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+                  className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#17232B] mb-1">
+                <label className="block text-xs font-semibold text-[#12262D] mb-1">
                   Email Address
                 </label>
                 <input
@@ -292,18 +292,18 @@ export default function ContactClient() {
                   placeholder="email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+                  className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#17232B] mb-1">
+                <label className="block text-xs font-semibold text-[#12262D] mb-1">
                   Property Category
                 </label>
                 <select
                   value={propertyType}
                   onChange={(e) => setPropertyType(e.target.value)}
-                  className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+                  className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
                 >
                   <option value="PLOT">Residential Plot (Katha)</option>
                   <option value="FLAT">Flat / Apartment (Sq Ft)</option>
@@ -314,9 +314,9 @@ export default function ContactClient() {
 
             {/* Visit specific fields */}
             {activeTab === "VISIT" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#E8F5F1]/50 border border-[#006B5B]/20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#E8F5F3]/50 border border-[#00695C]/20">
                 <div>
-                  <label className="block text-xs font-semibold text-[#004F45] mb-1">
+                  <label className="block text-xs font-semibold text-[#005B50] mb-1">
                     Preferred Visit Date <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -324,18 +324,18 @@ export default function ContactClient() {
                     required
                     value={visitDate}
                     onChange={(e) => setVisitDate(e.target.value)}
-                    className="w-full bg-white border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+                    className="w-full bg-white border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#004F45] mb-1">
+                  <label className="block text-xs font-semibold text-[#005B50] mb-1">
                     Time Slot
                   </label>
                   <select
                     value={visitTime}
                     onChange={(e) => setVisitTime(e.target.value)}
-                    className="w-full bg-white border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 outline-none"
+                    className="w-full bg-white border border-[#E2E7E5] rounded-xl px-3 py-2 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 outline-none"
                   >
                     <option value="Morning (10:00 AM - 12:00 PM)">
                       Morning (10:00 AM - 12:00 PM)
@@ -355,7 +355,7 @@ export default function ContactClient() {
             {activeTab === "ENQUIRY" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#17232B] mb-1">
+                  <label className="block text-xs font-semibold text-[#12262D] mb-1">
                     Preferred Sector / Location
                   </label>
                   <input
@@ -363,12 +363,12 @@ export default function ContactClient() {
                     placeholder="e.g. Sector 3, Lake View, VIP Zone"
                     value={preferredLocation}
                     onChange={(e) => setPreferredLocation(e.target.value)}
-                    className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+                    className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#17232B] mb-1">
+                  <label className="block text-xs font-semibold text-[#12262D] mb-1">
                     Target Budget
                   </label>
                   <input
@@ -376,14 +376,14 @@ export default function ContactClient() {
                     placeholder="e.g. ৳ 60 Lakh - ৳ 90 Lakh"
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
-                    className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+                    className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-[#17232B] mb-1">
+              <label className="block text-xs font-semibold text-[#12262D] mb-1">
                 Your Message / Specific Question
               </label>
               <textarea
@@ -391,14 +391,14 @@ export default function ContactClient() {
                 placeholder="Ask about available plots, boundary demarcation, installment plans, or legal khatiyans..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl p-3.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none resize-none"
+                className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl p-3.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none resize-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#006B5B] hover:bg-[#004F45] disabled:bg-slate-400 text-white font-bold py-3.5 px-4 rounded-xl text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-[#00695C] hover:bg-[#005B50] disabled:bg-slate-400 text-white font-bold py-3.5 px-4 rounded-xl text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
               {loading ? (
                 <>
@@ -407,12 +407,12 @@ export default function ContactClient() {
                 </>
               ) : activeTab === "VISIT" ? (
                 <>
-                  <Calendar className="w-4 h-4 text-[#C99A3D]" />
+                  <Calendar className="w-4 h-4 text-[#D6A84F]" />
                   <span>Confirm Site Visit Tour</span>
                 </>
               ) : (
                 <>
-                  <Send className="w-4 h-4 text-[#C99A3D]" />
+                  <Send className="w-4 h-4 text-[#D6A84F]" />
                   <span>Submit Property Enquiry</span>
                 </>
               )}

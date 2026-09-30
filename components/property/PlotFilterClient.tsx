@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useMemo } from "react";
 import { Search, Filter, RotateCcw, Landmark, MapPin, Compass, ShieldCheck } from "lucide-react";
@@ -89,7 +89,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
               placeholder="Search by keyword, sector..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl pl-10 pr-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl pl-10 pr-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             />
           </div>
 
@@ -98,7 +98,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
             <select
               value={katha}
               onChange={(e) => setKatha(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             >
               <option value="">All Plot Sizes (Katha)</option>
               <option value="3">3 Katha (Duplex Friendly)</option>
@@ -113,7 +113,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
             <select
               value={facing}
               onChange={(e) => setFacing(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             >
               <option value="">Any Facing Direction</option>
               <option value="South">South Facing</option>
@@ -129,7 +129,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
             <select
               value={roadWidth}
               onChange={(e) => setRoadWidth(e.target.value)}
-              className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#17232B] focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] outline-none"
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-sm text-[#12262D] focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] outline-none"
             >
               <option value="">Any Road Width</option>
               <option value="40">40 Feet Road</option>
@@ -147,7 +147,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
             <select
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
-              className="bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs sm:text-sm text-[#17232B] outline-none"
+              className="bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs sm:text-sm text-[#12262D] outline-none"
             >
               <option value="">Any Budget</option>
               <option value="0-6000000">Up to ৳ 60 Lakh</option>
@@ -157,12 +157,12 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
             </select>
 
             {/* Corner Plot checkbox */}
-            <label className="inline-flex items-center gap-2 cursor-pointer bg-[#F7F8F6] px-3.5 py-2 rounded-xl border border-[#E2E7E5] text-xs font-semibold text-[#17232B] hover:bg-slate-100 transition-colors">
+            <label className="inline-flex items-center gap-2 cursor-pointer bg-[#F5F8F8] px-3.5 py-2 rounded-xl border border-[#E2E7E5] text-xs font-semibold text-[#12262D] hover:bg-slate-100 transition-colors">
               <input
                 type="checkbox"
                 checked={cornerOnly}
                 onChange={(e) => setCornerOnly(e.target.checked)}
-                className="w-4 h-4 text-[#006B5B] rounded accent-[#006B5B]"
+                className="w-4 h-4 text-[#00695C] rounded accent-[#00695C]"
               />
               <span>Corner Plots Only</span>
             </label>
@@ -170,7 +170,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
 
           <div className="flex items-center gap-3">
             <span className="text-xs text-[#657278] font-medium">
-              Showing <strong className="text-[#17232B]">{filteredPlots.length}</strong> plots
+              Showing <strong className="text-[#12262D]">{filteredPlots.length}</strong> plots
             </span>
             {(search || katha || facing || roadWidth || cornerOnly || budget || location) && (
               <button
@@ -194,7 +194,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
         </div>
       ) : (
         <div className="text-center py-20 bg-white rounded-2xl border border-[#E2E7E5] p-8">
-          <p className="text-base text-[#17232B] font-bold">
+          <p className="text-base text-[#12262D] font-bold">
             No residential plots match your chosen filters.
           </p>
           <p className="text-sm text-[#657278] mt-1">
@@ -202,7 +202,7 @@ export default function PlotFilterClient({ initialPlots }: PlotFilterClientProps
           </p>
           <button
             onClick={handleReset}
-            className="mt-4 px-5 py-2 bg-[#006B5B] text-white rounded-xl text-sm font-semibold hover:bg-[#004F45] transition-colors"
+            className="mt-4 px-5 py-2 bg-[#00695C] text-white rounded-xl text-sm font-semibold hover:bg-[#005B50] transition-colors"
           >
             Clear All Filters
           </button>

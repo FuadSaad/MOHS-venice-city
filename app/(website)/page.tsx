@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import prisma from "@/lib/prisma";
 import HeroSection from "@/components/home/HeroSection";
 import StatsSection from "@/components/home/StatsSection";
@@ -43,7 +43,7 @@ export default async function HomePage() {
       <HeroSection />
 
       {/* Interest-Free Ecosystem Banner */}
-      <div className="bg-[#006B5B] text-white py-3 text-center text-sm sm:text-base font-semibold tracking-wide border-y border-[#004F45]">
+      <div className="bg-[#00695C] text-white py-3 text-center text-sm sm:text-base font-semibold tracking-wide border-y border-[#005B50]">
         An Interest-Free Business Ecosystem
       </div>
 
