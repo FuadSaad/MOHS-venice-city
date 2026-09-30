@@ -5,18 +5,72 @@ import Image from "next/image";
 import { MapPin, LayoutGrid, Maximize2, X, Compass, ExternalLink } from "lucide-react";
 
 function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
-  const [isZoomed, setIsZoomed] = useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const magnifierRef = React.useRef<HTMLDivElement>(null);
+  
+  const zoomLevel = 2.5;
+  const magnifierSize = 250;
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!imgRef.current || !magnifierRef.current) return;
+    
+    const elem = imgRef.current;
+    const { top, left, width, height } = elem.getBoundingClientRect();
+    
+    let x = e.clientX - left;
+    let y = e.clientY - top;
+    
+    // Bounds check
+    if (x < 0 || y < 0 || x > width || y > height) {
+      magnifierRef.current.style.opacity = "0";
+      return;
+    }
+    
+    magnifierRef.current.style.opacity = "1";
+    
+    // Position magnifier center at cursor
+    magnifierRef.current.style.left = `calc(50% - ${width / 2}px + ${x}px - ${magnifierSize / 2}px)`;
+    magnifierRef.current.style.top = `calc(50% - ${height / 2}px + ${y}px - ${magnifierSize / 2}px)`;
+    
+    magnifierRef.current.style.backgroundSize = `${width * zoomLevel}px ${height * zoomLevel}px`;
+    magnifierRef.current.style.backgroundPositionX = `${-x * zoomLevel + magnifierSize / 2}px`;
+    magnifierRef.current.style.backgroundPositionY = `${-y * zoomLevel + magnifierSize / 2}px`;
+  };
 
   return (
     <div 
-      className={`relative w-full h-full bg-[#E8F5F3]/30 ${isZoomed ? 'overflow-auto cursor-zoom-out' : 'flex items-center justify-center overflow-hidden cursor-zoom-in'}`}
-      onClick={() => setIsZoomed(!isZoomed)}
-      title={isZoomed ? "Click to zoom out" : "Click to zoom in"}
+      ref={containerRef}
+      className="relative w-full h-full flex items-center justify-center bg-[#E8F5F3]/30 overflow-hidden cursor-crosshair"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => {
+        if (magnifierRef.current) magnifierRef.current.style.opacity = "0";
+      }}
     >
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
-        className={isZoomed ? "max-w-none w-auto h-auto object-none" : "max-w-full max-h-full object-contain transition-transform duration-300"}
+        className="max-w-full max-h-full object-contain"
+      />
+      
+      <div
+        ref={magnifierRef}
+        style={{
+          position: "absolute",
+          pointerEvents: "none",
+          height: `${magnifierSize}px`,
+          width: `${magnifierSize}px`,
+          opacity: "0", 
+          border: "2px solid #00695C",
+          backgroundColor: "white",
+          backgroundImage: `url('${src}')`,
+          backgroundRepeat: "no-repeat",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
+          borderRadius: "12px",
+          zIndex: 100,
+          transition: "opacity 0.2s ease"
+        }}
       />
     </div>
   );
@@ -26,7 +80,7 @@ export default function MapSection() {
   const [activeModal, setActiveModal] = useState<"LOCATION" | "LAYOUT" | null>(null);
 
   const locationMapImage = "/images/MOHS-Layout-map.webp";
-  const layoutMapImage = "/images/layout-map-v2.png";
+  const layoutMapImage = "/images/layout-map-v2-optimized.jpg";
 
   return (
     <section className="pt-16 sm:pt-24 pb-4 sm:pb-6 bg-white border-b border-[#E2E7E5]">
@@ -155,7 +209,7 @@ export default function MapSection() {
                     ? "MOHS Venice City — Regional Location Map"
                     : "MOHS Venice City — Sector Layout & Masterplan"}
                 </h4>
-                <span className="hidden sm:inline-flex px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded">Click to Zoom</span>
+                <span className="hidden sm:inline-flex px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded">Hover to Zoom</span>
               </div>
               <button
                 onClick={() => setActiveModal(null)}
