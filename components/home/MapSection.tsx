@@ -155,7 +155,7 @@ export default function MapSection() {
                     ? "MOHS Venice City — Regional Location Map"
                     : "MOHS Venice City — Sector Layout & Masterplan"}
                 </h4>
-                <span className="hidden sm:inline-flex px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded">Hover to Zoom</span>
+                <span className="hidden sm:inline-flex px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded">Click to Zoom</span>
               </div>
               <button
                 onClick={() => setActiveModal(null)}
@@ -166,7 +166,7 @@ export default function MapSection() {
             </div>
             
             {/* The Image Magnifier Area */}
-            <div className="flex-1 w-full bg-[#E8F5F3]/20 relative">
+            <div className="flex-1 w-full bg-[#E8F5F3]/20 relative min-h-0 overflow-hidden">
               <ImageMagnifier 
                 src={activeModal === "LOCATION" ? locationMapImage : layoutMapImage} 
                 alt="Map Enlarge" 
