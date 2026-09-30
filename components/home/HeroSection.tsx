@@ -38,15 +38,18 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[620px] lg:min-h-[680px] flex items-center bg-[#17232B] overflow-hidden">
-      {/* Background Image with optimized dark green overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-700 scale-100"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80')`,
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#17232B]/95 via-[#004F45]/85 to-[#17232B]/90" />
+    <section className="relative min-h-[620px] lg:min-h-[680px] flex items-center bg-[#12262D] overflow-hidden">
+      {/* Background Video with optimized dark green overlay */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 scale-100"
+      >
+        <source src="/videos/hero-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-r from-[#12262D]/95 via-[#005B50]/85 to-[#12262D]/90" />
 
       {/* Subtle geometric pattern overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none" />
@@ -73,20 +76,20 @@ export default function HeroSection() {
             {/* Value checklist pills */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2 text-xs sm:text-sm text-slate-300">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#C99A3D]" /> 100% High Land & Ready Mutation
+                <CheckCircle2 className="w-4 h-4 text-[#D6A84F]" /> 100% High Land & Ready Mutation
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#C99A3D]" /> Direct Road Access (40ft - 80ft)
+                <CheckCircle2 className="w-4 h-4 text-[#D6A84F]" /> Direct Road Access (40ft - 80ft)
               </span>
             </div>
 
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
               <Link
                 href="/properties"
-                className="bg-[#006B5B] hover:bg-[#004F45] text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 border border-emerald-400/30"
+                className="bg-[#00695C] hover:bg-[#005B50] text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 border border-emerald-400/30"
               >
                 <span>Explore Properties</span>
-                <ArrowRight className="w-4 h-4 text-[#C99A3D]" />
+                <ArrowRight className="w-4 h-4 text-[#D6A84F]" />
               </Link>
               <Link
                 href="/projects"
@@ -101,14 +104,14 @@ export default function HeroSection() {
           <div className="lg:col-span-5 w-full max-w-md mx-auto">
             <div className="bg-white rounded-2xl p-6 sm:p-7 shadow-2xl border border-white/40 backdrop-blur-lg">
               {/* Search Panel Header Tabs */}
-              <div className="flex rounded-xl bg-[#F7F8F6] p-1 border border-[#E2E7E5] mb-6">
+              <div className="flex rounded-xl bg-[#F5F8F8] p-1 border border-[#E2E7E5] mb-6">
                 <button
                   type="button"
                   onClick={() => setActiveTab("PLOT")}
                   className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${
                     activeTab === "PLOT"
-                      ? "bg-[#006B5B] text-white shadow-sm"
-                      : "text-[#657278] hover:text-[#17232B]"
+                      ? "bg-[#00695C] text-white shadow-sm"
+                      : "text-[#657278] hover:text-[#12262D]"
                   }`}
                 >
                   Residential Plots
@@ -118,8 +121,8 @@ export default function HeroSection() {
                   onClick={() => setActiveTab("FLAT")}
                   className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${
                     activeTab === "FLAT"
-                      ? "bg-[#006B5B] text-white shadow-sm"
-                      : "text-[#657278] hover:text-[#17232B]"
+                      ? "bg-[#00695C] text-white shadow-sm"
+                      : "text-[#657278] hover:text-[#12262D]"
                   }`}
                 >
                   Flats / Apartments
@@ -130,13 +133,13 @@ export default function HeroSection() {
               <form onSubmit={handleSearch} className="space-y-4">
                 {/* Location Filter */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#17232B] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#006B5B]" /> Location
+                  <label className="block text-xs font-semibold text-[#12262D] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#00695C]" /> Location
                   </label>
                   <select
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:outline-none focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] transition-all"
+                    className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:outline-none focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] transition-all"
                   >
                     <option value="">All Locations in Township</option>
                     <option value="Sector 1">Sector 1 (Lake View)</option>
@@ -150,13 +153,13 @@ export default function HeroSection() {
                 {/* Plot / Flat Specific Field */}
                 {activeTab === "PLOT" ? (
                   <div>
-                    <label className="block text-xs font-semibold text-[#17232B] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                      <Landmark className="w-3.5 h-3.5 text-[#006B5B]" /> Plot Size (Katha)
+                    <label className="block text-xs font-semibold text-[#12262D] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                      <Landmark className="w-3.5 h-3.5 text-[#00695C]" /> Plot Size (Katha)
                     </label>
                     <select
                       value={plotKatha}
                       onChange={(e) => setPlotKatha(e.target.value)}
-                      className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:outline-none focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] transition-all"
+                      className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:outline-none focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] transition-all"
                     >
                       <option value="">Any Katha Size</option>
                       <option value="3">3 Katha (Duplex Friendly)</option>
@@ -167,13 +170,13 @@ export default function HeroSection() {
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-xs font-semibold text-[#17232B] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                      <Landmark className="w-3.5 h-3.5 text-[#006B5B]" /> Bedrooms
+                    <label className="block text-xs font-semibold text-[#12262D] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                      <Landmark className="w-3.5 h-3.5 text-[#00695C]" /> Bedrooms
                     </label>
                     <select
                       value={bedrooms}
                       onChange={(e) => setBedrooms(e.target.value)}
-                      className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:outline-none focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] transition-all"
+                      className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:outline-none focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] transition-all"
                     >
                       <option value="">Any Bedrooms</option>
                       <option value="2">2 Bedrooms (Smart Flat)</option>
@@ -185,13 +188,13 @@ export default function HeroSection() {
 
                 {/* Budget Range */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#17232B] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                    <Wallet className="w-3.5 h-3.5 text-[#006B5B]" /> Budget Range
+                  <label className="block text-xs font-semibold text-[#12262D] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                    <Wallet className="w-3.5 h-3.5 text-[#00695C]" /> Budget Range
                   </label>
                   <select
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
-                    className="w-full bg-[#F7F8F6] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#17232B] focus:outline-none focus:ring-2 focus:ring-[#006B5B]/30 focus:border-[#006B5B] transition-all"
+                    className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3.5 py-2.5 text-sm text-[#12262D] focus:outline-none focus:ring-2 focus:ring-[#00695C]/30 focus:border-[#00695C] transition-all"
                   >
                     <option value="">Any Budget</option>
                     <option value="0-6000000">Up to ৳ 60 Lakh</option>
@@ -204,9 +207,9 @@ export default function HeroSection() {
                 {/* Search CTA */}
                 <button
                   type="submit"
-                  className="w-full mt-2 bg-[#006B5B] hover:bg-[#004F45] text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group"
+                  className="w-full mt-2 bg-[#00695C] hover:bg-[#005B50] text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group"
                 >
-                  <Search className="w-4 h-4 text-[#C99A3D]" />
+                  <Search className="w-4 h-4 text-[#D6A84F]" />
                   <span>Search Properties</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
