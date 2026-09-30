@@ -40,6 +40,7 @@ import EnquiryModal from "@/components/property/EnquiryModal";
 export default function InteractiveMapViewer() {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapWrapperRef = useRef<HTMLDivElement>(null);
 
   // Selection states
   const [selectedPlot, setSelectedPlot] = useState<PlotItem | null>(null);
@@ -58,7 +59,7 @@ export default function InteractiveMapViewer() {
   const [showLegend, setShowLegend] = useState<boolean>(true);
   const [showFacilities, setShowFacilities] = useState<boolean>(false);
   // Development Mode (Requirement 14: "Show Plot Boundaries")
-  const [showPlotBoundaries, setShowPlotBoundaries] = useState<boolean>(false);
+  const [showPlotBoundaries, setShowPlotBoundaries] = useState<boolean>(true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
 
@@ -100,36 +101,44 @@ export default function InteractiveMapViewer() {
           (p) => p.id.toLowerCase() === plotParam.toLowerCase() || p.plotNo.toLowerCase() === plotParam.toLowerCase()
         );
         if (found) {
-          handleSelectPlot(found);
+          setSelectedPlot(found);
+          const timer = setTimeout(() => {
+            zoomToPlot(found);
+          }, 300);
+          return () => clearTimeout(timer);
         }
       }
+
+      // If no query param, initial zoom to the verified test area
+      const timer = setTimeout(() => {
+        focusTestArea();
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, []);
 
-  // Zoom to a specific plot
+  // Zoom to a specific plot using react-zoom-pan-pinch zoomToElement
   const zoomToPlot = (plot: PlotItem) => {
-    if (!transformRef.current || !containerRef.current) return;
-    const [cx, cy] = plot.center;
-    const container = containerRef.current;
-    const containerW = container.clientWidth;
-    const containerH = container.clientHeight;
-
-    const scale = 2.8;
-    const normX = cx / MAP_DIMENSIONS.width;
-    const normY = cy / MAP_DIMENSIONS.height;
-
-    const targetX = -(normX * containerW * scale - containerW / 2);
-    const targetY = -(normY * containerH * scale - containerH / 2);
-
-    transformRef.current.setTransform(targetX, targetY, scale, 500);
+    if (!transformRef.current) return;
+    setTimeout(() => {
+      try {
+        transformRef.current?.zoomToElement(plot.id, 5.0, 500);
+      } catch (err) {
+        console.warn("zoomToPlot error:", err);
+      }
+    }, 50);
   };
 
-  // Focus directly on the verified test area (P-093, P-094, P-102, P-103, P-111)
+  // Focus directly on the verified prototype test area (P-093, P-094, P-102, P-103, P-111)
   const focusTestArea = () => {
-    const testPlot = PLOT_DATASET.find((p) => p.id === "P-093") || PLOT_DATASET[0];
-    if (testPlot) {
-      handleSelectPlot(testPlot);
-    }
+    if (!transformRef.current) return;
+    setTimeout(() => {
+      try {
+        transformRef.current?.zoomToElement("P-102", 4.2, 500);
+      } catch (err) {
+        console.warn("focusTestArea error:", err);
+      }
+    }, 50);
   };
 
   const handleSelectPlot = (plot: PlotItem) => {
@@ -142,16 +151,22 @@ export default function InteractiveMapViewer() {
     setSelectedFacility(fac);
     setSelectedPlot(null);
 
-    if (transformRef.current && containerRef.current) {
+    if (transformRef.current && containerRef.current && mapWrapperRef.current) {
       const container = containerRef.current;
+      const mapWrapper = mapWrapperRef.current;
       const containerW = container.clientWidth;
       const containerH = container.clientHeight;
-      const scale = 2.2;
-      const normX = fac.x / MAP_DIMENSIONS.width;
-      const normY = fac.y / MAP_DIMENSIONS.height;
-      const targetX = -(normX * containerW * scale - containerW / 2);
-      const targetY = -(normY * containerH * scale - containerH / 2);
-      transformRef.current.setTransform(targetX, targetY, scale, 500);
+      const mapW = mapWrapper.clientWidth;
+      const mapH = mapWrapper.clientHeight;
+
+      const scale = 4.0;
+      const pixelX = (fac.x / MAP_DIMENSIONS.width) * mapW;
+      const pixelY = (fac.y / MAP_DIMENSIONS.height) * mapH;
+
+      const targetX = containerW / 2 - pixelX * scale;
+      const targetY = containerH / 2 - pixelY * scale;
+
+      transformRef.current.setTransform(targetX, targetY, scale, 600);
     }
   };
 
@@ -198,7 +213,7 @@ export default function InteractiveMapViewer() {
   return (
     <div className="bg-[#F5F8F8] min-h-screen flex flex-col">
       {/* 1. Header Section */}
-      <div className="bg-white border-b border-[#E2E7E5] py-4 sm:py-6 shadow-xs">
+      <div className="bg-white border-b border-[#E2E7E5] py-4 sm:py-5 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -213,7 +228,7 @@ export default function InteractiveMapViewer() {
                 Interactive Property Map
               </h1>
               <p className="text-xs sm:text-sm text-[#657278] mt-0.5">
-                Explore available plots, apartments and community facilities with precise plot boundary selection.
+                Explore available plots, apartments and community facilities with precise vector plot boundaries.
               </p>
             </div>
 
@@ -226,7 +241,7 @@ export default function InteractiveMapViewer() {
                 title="Focus on verified test plots P-093, P-094, P-102, P-103, P-111"
               >
                 <Target className="w-3.5 h-3.5 text-[#00695C]" />
-                <span>Test Area (P-093, P-094...)</span>
+                <span>Test Area (P-093, P-094, P-102...)</span>
               </button>
 
               {/* Dev Mode: Show Plot Boundaries (Requirement 14) */}
@@ -248,10 +263,10 @@ export default function InteractiveMapViewer() {
       </div>
 
       {/* 2. Filter & Search Bar */}
-      <div className="bg-white border-b border-[#E2E7E5] py-3 px-4 sm:px-6 lg:px-8 sticky top-16 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-          {/* Dropdown Filters */}
-          <div className="flex flex-wrap items-center gap-2 flex-1 overflow-x-auto pb-1 lg:pb-0">
+      <div className="bg-white border-b border-[#E2E7E5] py-3 shadow-xs sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+          {/* Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2">
             {/* Property Type */}
             <div className="flex items-center gap-1.5 bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-2.5 py-1.5 text-xs">
               <span className="font-bold text-[#657278]">Type:</span>
@@ -262,6 +277,7 @@ export default function InteractiveMapViewer() {
               >
                 <option value="ALL">All Types</option>
                 <option value="Residential Plot">Residential Plot</option>
+                <option value="Flat / Apartment">Flat / Apartment</option>
                 <option value="Commercial Plot">Commercial Plot</option>
               </select>
             </div>
@@ -275,6 +291,7 @@ export default function InteractiveMapViewer() {
                 className="bg-transparent font-bold text-[#12262D] focus:outline-none cursor-pointer text-xs"
               >
                 <option value="ALL">All Sizes</option>
+                <option value="3 Katha">3 Katha</option>
                 <option value="4 Katha">4 Katha</option>
                 <option value="5 Katha">5 Katha</option>
                 <option value="10 Katha">10 Katha</option>
@@ -310,7 +327,6 @@ export default function InteractiveMapViewer() {
                 <option value="South">South</option>
                 <option value="East">East</option>
                 <option value="West">West</option>
-                <option value="River">River Facing</option>
               </select>
             </div>
 
@@ -339,7 +355,7 @@ export default function InteractiveMapViewer() {
             <Search className="w-4 h-4 text-[#657278]" />
             <input
               type="text"
-              placeholder="Search Plot (e.g. P-093, P-094)..."
+              placeholder="Search Plot (e.g. P-093, P-102)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent text-xs font-bold text-[#12262D] placeholder-[#657278] focus:outline-none w-full"
@@ -360,13 +376,13 @@ export default function InteractiveMapViewer() {
       {/* 3. Main Map Canvas Area */}
       <div
         ref={containerRef}
-        className="flex-1 relative w-full overflow-hidden bg-[#0F1E24] min-h-[620px] sm:min-h-[720px] lg:min-h-[800px] flex items-center justify-center"
+        className="flex-1 relative w-full overflow-hidden bg-[#1E292E] min-h-[620px] sm:min-h-[720px] lg:min-h-[820px] flex items-center justify-center"
       >
         <TransformWrapper
           ref={transformRef}
-          initialScale={1.1}
+          initialScale={1.0}
           minScale={0.8}
-          maxScale={7}
+          maxScale={12}
           centerOnInit={true}
           wheel={{ step: 0.15 }}
           pinch={{ step: 5 }}
@@ -395,7 +411,7 @@ export default function InteractiveMapViewer() {
                   <button
                     onClick={() => resetTransform(400)}
                     className="p-2.5 rounded-xl hover:bg-[#F5F8F8] text-[#12262D] hover:text-[#00695C] transition-colors border-t border-[#E2E7E5]"
-                    title="Reset View"
+                    title="Reset Full View"
                   >
                     <RotateCcw className="w-4 h-4" />
                   </button>
@@ -411,10 +427,10 @@ export default function InteractiveMapViewer() {
                 {/* Quick Target Verified Test Area Button */}
                 <button
                   onClick={focusTestArea}
-                  className="bg-white/95 backdrop-blur-md hover:bg-emerald-50 text-[#00695C] p-2.5 rounded-2xl shadow-xl border border-[#E2E7E5] transition-colors flex items-center justify-center"
+                  className="bg-white/95 backdrop-blur-md hover:bg-emerald-50 text-[#00695C] p-2.5 rounded-2xl shadow-xl border border-[#E2E7E5] transition-colors flex items-center justify-center group"
                   title="Target Test Area (P-093, P-094, P-102, P-103, P-111)"
                 >
-                  <Target className="w-4 h-4 text-[#00695C]" />
+                  <Target className="w-4 h-4 text-[#00695C] group-hover:scale-110 transition-transform" />
                 </button>
               </div>
 
@@ -452,88 +468,83 @@ export default function InteractiveMapViewer() {
                     </div>
                   </div>
                   <div className="mt-2 pt-1.5 border-t border-[#E2E7E5] text-[10px] text-[#657278]">
-                    Click on any individual plot to view exact details.
+                    Click on any individual plot boundary to inspect details.
                   </div>
                 </div>
               )}
 
-              {/* The Actual Pan-Zoom Canvas */}
+              {/* The Pan-Zoom Vector SVG Canvas */}
               <TransformComponent
                 wrapperClass="!w-full !h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
                 contentClass="!w-full !h-full flex items-center justify-center"
               >
                 <div
-                  className="relative select-none"
+                  ref={mapWrapperRef}
+                  className="relative select-none shadow-2xl bg-white"
                   style={{
                     width: "100%",
-                    maxWidth: "5100px",
-                    aspectRatio: "5100 / 3300",
+                    maxWidth: "6600px",
+                    aspectRatio: "6600 / 10200",
                   }}
                 >
-                  {/* 1. Base Original Masterplan Image - 100% Unaltered */}
-                  <img
-                    src="/images/map/masterplan.jpg"
-                    alt="MOHS Venice City Official Masterplan"
-                    className="w-full h-full object-contain pointer-events-none block"
-                    draggable={false}
-                  />
-
-                  {/* 2. SVG Overlay Layer - 100% Synchronized with Image */}
                   <svg
-                    viewBox="0 0 5100 3300"
-                    preserveAspectRatio="none"
-                    className="absolute inset-0 w-full h-full pointer-events-auto"
-                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+                    viewBox="0 0 6600 10200"
+                    preserveAspectRatio="xMidYMid meet"
+                    className="w-full h-full block pointer-events-auto bg-white"
+                    style={{ width: "100%", height: "100%", backgroundColor: "#FFFFFF" }}
                   >
                     <defs>
                       {/* Glow filter for selected plot */}
                       <filter id="plot-glow" x="-30%" y="-30%" width="160%" height="160%">
-                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feGaussianBlur stdDeviation="8" result="blur" />
                         <feComposite in="SourceGraphic" in2="blur" operator="over" />
                       </filter>
                     </defs>
 
-                    {/* Plots: STRICTLY INDIVIDUAL POLYGONS (<polygon points="..." />) */}
+                    {/* Architectural Paper White Base */}
+                    <rect x="0" y="0" width="6600" height="10200" fill="#FFFFFF" />
+
+                    {/* 1. Base Masterplan Vector SVG (100% Vector Quality, No Rasterization) */}
+                    <image
+                      href="/images/map/MOHS-Venice-City-Project-Map-02.svg"
+                      width="6600"
+                      height="10200"
+                      preserveAspectRatio="xMidYMid meet"
+                      className="pointer-events-none block"
+                    />
+
+                    {/* 2. Interactive Vector Plot Paths (<path id="..." d="..." class="plot" />) */}
                     {PLOT_DATASET.map((plot) => {
                       const isMatching = matchingPlotIds.has(plot.id);
                       const isSelected = selectedPlot?.id === plot.id;
                       const isHovered = hoveredPlot?.id === plot.id;
 
-                      // Fill & Stroke logic:
-                      // Default when dev mode is OFF: Completely transparent! The original map artwork shows through 100%.
-                      // Hover: subtle transparent teal fill & thin outline.
-                      // Selected: gold outline with glowing highlight.
-                      // Dev mode: subtle visible boundaries so user can inspect geometry.
                       let fill = "transparent";
                       let stroke = "transparent";
                       let strokeWidth = 0;
                       let filter = undefined;
 
                       if (isSelected) {
-                        fill = "rgba(214, 168, 79, 0.45)"; // Gold fill
-                        stroke = "#D6A84F"; // Gold stroke
-                        strokeWidth = 3.5;
+                        fill = "rgba(214, 168, 79, 0.45)"; // Gold highlight
+                        stroke = "#D6A84F"; // Gold boundary
+                        strokeWidth = 6;
                         filter = "url(#plot-glow)";
                       } else if (isHovered) {
                         fill = "rgba(0, 105, 92, 0.40)"; // Subtle teal fill
-                        stroke = "#00695C"; // Subtle teal stroke
-                        strokeWidth = 2.5;
+                        stroke = "#00695C"; // Subtle teal boundary
+                        strokeWidth = 4.5;
                       } else if (showPlotBoundaries) {
-                        fill = isMatching ? "rgba(0, 105, 92, 0.08)" : "transparent";
-                        stroke = isMatching ? "rgba(0, 105, 92, 0.45)" : "rgba(0,0,0,0.1)";
-                        strokeWidth = 1;
+                        fill = isMatching ? "rgba(0, 105, 92, 0.12)" : "transparent";
+                        stroke = isMatching ? "rgba(0, 105, 92, 0.60)" : "rgba(0,0,0,0.15)";
+                        strokeWidth = 2;
                       }
-
-                      const pointsString = plot.points
-                        .map(([px, py]) => `${px},${py}`)
-                        .join(" ");
 
                       return (
                         <g key={plot.id} className="cursor-pointer">
-                          {/* Authentic Angled Boundary Polygon */}
-                          <polygon
+                          {/* Authentic Angled Boundary Vector Path */}
+                          <path
                             id={plot.id}
-                            points={pointsString}
+                            d={plot.d}
                             fill={fill}
                             stroke={stroke}
                             strokeWidth={strokeWidth}
@@ -554,17 +565,17 @@ export default function InteractiveMapViewer() {
                             }}
                           />
 
-                          {/* Development Mode: Show Plot ID label inside centroid */}
+                          {/* Development Mode: Show Plot ID inside centroid */}
                           {(showPlotBoundaries || isSelected || isHovered) && (
                             <text
                               x={plot.center[0]}
-                              y={plot.center[1] + 4}
+                              y={plot.center[1] + 6}
                               textAnchor="middle"
                               fill="#FFFFFF"
-                              stroke="rgba(0,0,0,0.8)"
-                              strokeWidth={3}
+                              stroke="rgba(0,0,0,0.85)"
+                              strokeWidth={5}
                               paintOrder="stroke"
-                              fontSize={isSelected ? 16 : 13}
+                              fontSize={isSelected ? 26 : 20}
                               fontWeight="bold"
                               fontFamily="sans-serif"
                               className="pointer-events-none select-none transition-all"
@@ -575,6 +586,40 @@ export default function InteractiveMapViewer() {
                         </g>
                       );
                     })}
+
+                    {/* Facilities Markers */}
+                    {showFacilities &&
+                      FACILITIES_DATASET.map((fac) => (
+                        <g
+                          key={fac.id}
+                          className="cursor-pointer"
+                          onClick={() => handleSelectFacility(fac)}
+                        >
+                          <circle
+                            cx={fac.x}
+                            cy={fac.y}
+                            r={fac.radius}
+                            fill="#159ED0"
+                            fillOpacity={0.25}
+                            stroke="#159ED0"
+                            strokeWidth={4}
+                          />
+                          <circle cx={fac.x} cy={fac.y} r={14} fill="#159ED0" />
+                          <text
+                            x={fac.x}
+                            y={fac.y - fac.radius - 10}
+                            textAnchor="middle"
+                            fill="#12262D"
+                            stroke="#FFFFFF"
+                            strokeWidth={6}
+                            paintOrder="stroke"
+                            fontSize={22}
+                            fontWeight="bold"
+                          >
+                            {fac.name}
+                          </text>
+                        </g>
+                      ))}
                   </svg>
                 </div>
               </TransformComponent>
