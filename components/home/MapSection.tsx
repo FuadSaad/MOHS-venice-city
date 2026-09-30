@@ -4,13 +4,82 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { MapPin, LayoutGrid, Maximize2, X, Compass, ExternalLink } from "lucide-react";
 
+function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
+  const [[x, y], setXY] = useState([0, 0]);
+  const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
+  const [showMagnifier, setShowMagnifier] = useState(false);
+
+  const magnifierHeight = 250;
+  const magnifierWidth = 250;
+  const zoomLevel = 2.5;
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center bg-[#E8F5F1]/30 overflow-hidden cursor-crosshair">
+      <img
+        src={src}
+        alt={alt}
+        className="max-w-full max-h-full object-contain"
+        onMouseEnter={(e) => {
+          const elem = e.currentTarget;
+          const { width, height } = elem.getBoundingClientRect();
+          setSize([width, height]);
+          setShowMagnifier(true);
+        }}
+        onMouseMove={(e) => {
+          const elem = e.currentTarget;
+          // Get the position of the IMAGE itself, not the container
+          const { top, left, width, height } = elem.getBoundingClientRect();
+          
+          // Calculate mouse position relative to the image
+          let mouseX = e.clientX - left;
+          let mouseY = e.clientY - top;
+          
+          // Constrain within image bounds so magnifier doesn't glitch outside
+          mouseX = Math.max(0, Math.min(mouseX, width));
+          mouseY = Math.max(0, Math.min(mouseY, height));
+          
+          // Set x,y for the magnifier div position (relative to viewport/container if we use clientX but let's use standard positioning)
+          setXY([e.clientX - left, e.clientY - top]);
+        }}
+        onMouseLeave={() => {
+          setShowMagnifier(false);
+        }}
+      />
+      
+      {showMagnifier && (
+        <div
+          style={{
+            position: "absolute",
+            pointerEvents: "none",
+            height: `${magnifierHeight}px`,
+            width: `${magnifierWidth}px`,
+            // Center the magnifier on the mouse
+            top: `calc(50% - ${imgHeight / 2}px + ${y}px - ${magnifierHeight / 2}px)`,
+            left: `calc(50% - ${imgWidth / 2}px + ${x}px - ${magnifierWidth / 2}px)`,
+            opacity: "1", 
+            border: "2px solid #006B5B",
+            backgroundColor: "white",
+            backgroundImage: `url('${src}')`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: `${imgWidth * zoomLevel}px ${imgHeight * zoomLevel}px`,
+            // Shift background by zoom amount, plus offset to center the magnifying lens
+            backgroundPositionX: `${-x * zoomLevel + magnifierWidth / 2}px`,
+            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
+            boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
+            borderRadius: "12px",
+            zIndex: 100
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function MapSection() {
   const [activeModal, setActiveModal] = useState<"LOCATION" | "LAYOUT" | null>(null);
 
-  const locationMapImage =
-    "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80";
-  const layoutMapImage =
-    "https://images.unsplash.com/photo-1524813686514-a57563d77d61?auto=format&fit=crop&w=1600&q=80";
+  const locationMapImage = "/images/MOHS-Layout-map.webp";
+  const layoutMapImage = "/images/MOHS-Venice-City-Map-Final-2026-Image.webp";
 
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-[#E2E7E5]">
@@ -25,29 +94,27 @@ export default function MapSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Card 1: Location Map */}
-          <div className="bg-[#F7F8F6] rounded-2xl border border-[#E2E7E5] overflow-hidden shadow-soft flex flex-col justify-between group">
-            <div className="p-6 pb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#006B5B] uppercase tracking-wider">
-                  <MapPin className="w-4 h-4" /> Regional Connectivity
-                </span>
-                <span className="text-xs bg-white border border-[#E2E7E5] px-2.5 py-1 rounded-md text-[#657278] font-medium">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Location Map Card */}
+          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#006B5B]/30 hover:shadow-md transition-all duration-300">
+            <div className="p-6 border-b border-[#E2E7E5] flex-grow">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-1.5 text-[#006B5B] text-xs font-bold uppercase tracking-wider">
+                  <MapPin className="w-4 h-4" /> REGIONAL CONNECTIVITY
+                </div>
+                <span className="text-xs text-[#657278] font-medium bg-[#F7F8F6] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
                   Uttara - Purbachal Link
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#17232B] font-heading mb-2">
+              <h3 className="text-xl font-bold text-[#17232B] mb-2 font-heading">
                 Location Map
               </h3>
-              <p className="text-sm text-[#657278]">
-                Find us easily. 15 minutes from Hazrat Shahjalal International
-                Airport, 10 minutes from Uttara Sector 18, and connected to the
-                300ft Expressway.
+              <p className="text-sm text-[#657278] leading-relaxed">
+                Find us easily. 15 minutes from Hazrat Shahjalal International Airport, 10 minutes from Uttara Sector 18, and connected to the 300ft Expressway.
               </p>
             </div>
-
-            {/* Map Preview Image */}
+            
+            {/* Location Preview Image */}
             <div className="relative aspect-[16/9] mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
               <Image
                 src={locationMapImage}
@@ -56,7 +123,7 @@ export default function MapSection() {
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-              <button
+              <button 
                 onClick={() => setActiveModal("LOCATION")}
                 className="absolute inset-0 flex items-center justify-center"
                 aria-label="Enlarge location map"
@@ -68,7 +135,7 @@ export default function MapSection() {
             </div>
 
             <div className="p-6 pt-4">
-              <button
+              <button 
                 onClick={() => setActiveModal("LOCATION")}
                 className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F1] text-[#006B5B] border border-[#006B5B]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
               >
@@ -78,27 +145,25 @@ export default function MapSection() {
             </div>
           </div>
 
-          {/* Card 2: Layout Map */}
-          <div className="bg-[#F7F8F6] rounded-2xl border border-[#E2E7E5] overflow-hidden shadow-soft flex flex-col justify-between group">
-            <div className="p-6 pb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#006B5B] uppercase tracking-wider">
-                  <LayoutGrid className="w-4 h-4" /> Master Town Planning
-                </span>
-                <span className="text-xs bg-white border border-[#E2E7E5] px-2.5 py-1 rounded-md text-[#657278] font-medium">
+          {/* Layout Map Card */}
+          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#006B5B]/30 hover:shadow-md transition-all duration-300">
+            <div className="p-6 border-b border-[#E2E7E5] flex-grow">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-1.5 text-[#006B5B] text-xs font-bold uppercase tracking-wider">
+                  <LayoutGrid className="w-4 h-4" /> MASTER TOWN PLANNING
+                </div>
+                <span className="text-xs text-[#657278] font-medium bg-[#F7F8F6] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
                   Sector 1, 2, 3 & VIP Zone
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#17232B] font-heading mb-2">
+              <h3 className="text-xl font-bold text-[#17232B] mb-2 font-heading">
                 Township Layout Map
               </h3>
-              <p className="text-sm text-[#657278]">
-                Explore the detailed project sector layout, designated canal
-                network, central commercial zone, and 40ft-80ft arterial road
-                networks.
+              <p className="text-sm text-[#657278] leading-relaxed">
+                Explore the detailed project sector layout, designated canal network, central commercial zone, and 40ft-80ft arterial road networks.
               </p>
             </div>
-
+            
             {/* Layout Preview Image */}
             <div className="relative aspect-[16/9] mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
               <Image
@@ -134,14 +199,17 @@ export default function MapSection() {
 
       {/* Modal Viewer */}
       {activeModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl relative border border-white/20">
-            <div className="flex items-center justify-between p-4 border-b border-[#E2E7E5] bg-[#F7F8F6]">
-              <h4 className="font-bold text-base text-[#17232B] font-heading">
-                {activeModal === "LOCATION"
-                  ? "MOHS Venice City — Regional Location Map"
-                  : "MOHS Venice City — Sector Layout & Masterplan"}
-              </h4>
+        <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-6xl w-full h-[90vh] flex flex-col overflow-hidden shadow-2xl relative border border-white/20">
+            <div className="flex items-center justify-between p-4 border-b border-[#E2E7E5] bg-[#F7F8F6] shrink-0">
+              <div className="flex items-center gap-3">
+                <h4 className="font-bold text-base text-[#17232B] font-heading">
+                  {activeModal === "LOCATION"
+                    ? "MOHS Venice City — Regional Location Map"
+                    : "MOHS Venice City — Sector Layout & Masterplan"}
+                </h4>
+                <span className="hidden sm:inline-flex px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded">Hover to Zoom</span>
+              </div>
               <button
                 onClick={() => setActiveModal(null)}
                 className="p-1.5 rounded-lg hover:bg-slate-200 text-[#17232B] transition-colors"
@@ -149,15 +217,16 @@ export default function MapSection() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="relative aspect-[16/10] w-full bg-black">
-              <Image
-                src={activeModal === "LOCATION" ? locationMapImage : layoutMapImage}
-                alt="Map enlargement"
-                fill
-                className="object-contain"
+            
+            {/* The Image Magnifier Area */}
+            <div className="flex-1 w-full bg-[#E8F5F1]/20 relative">
+              <ImageMagnifier 
+                src={activeModal === "LOCATION" ? locationMapImage : layoutMapImage} 
+                alt="Map Enlarge" 
               />
             </div>
-            <div className="p-4 bg-white flex items-center justify-between text-xs text-[#657278]">
+            
+            <div className="p-4 bg-white border-t border-[#E2E7E5] flex items-center justify-between text-xs text-[#657278] shrink-0">
               <span>
                 To schedule an in-person site inspection or receive high-res blueprints, call our team.
               </span>
