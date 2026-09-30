@@ -11,14 +11,38 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: admin.userId },
-      select: { id: true, name: true, email: true, role: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        role: true,
+        permissions: true,
+        isActive: true,
+      },
     });
 
-    if (!user) {
+    if (!user || !user.isActive) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    return NextResponse.json({ authenticated: true, user });
+    let permissions: string[] = [];
+    if (user.permissions) {
+      try {
+        permissions = JSON.parse(user.permissions);
+      } catch {
+        permissions = user.permissions.split(",").map((p) => p.trim());
+      }
+    }
+
+    return NextResponse.json({
+      authenticated: true,
+      user: {
+        ...user,
+        permissions,
+        isSuperAdmin: user.role === "SUPER_ADMIN" || user.role === "ADMIN",
+      },
+    });
   } catch (error) {
     return NextResponse.json({ authenticated: false }, { status: 500 });
   }

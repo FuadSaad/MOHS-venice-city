@@ -1,11 +1,18 @@
-﻿import React from "react";
+import React from "react";
 import prisma from "@/lib/prisma";
 import AdminPropertiesClient from "@/components/admin/AdminPropertiesClient";
 import { PropertyItem } from "@/types/property";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import AccessDenied from "@/components/admin/AccessDenied";
 
 export const revalidate = 0;
 
 export default async function AdminPropertiesPage() {
+  const admin = await getSessionAdmin();
+  if (!hasPermission(admin, "properties")) {
+    return <AccessDenied moduleName="Properties Management" />;
+  }
+
   const propertiesRaw = await prisma.property.findMany({
     orderBy: { createdAt: "desc" },
     include: {

@@ -11,8 +11,11 @@ model User {
   id           String   @id @default(cuid())
   name         String
   email        String   @unique
+  username     String?  @unique
   passwordHash String
-  role         String   @default("ADMIN")
+  role         String   @default("SUB_ADMIN") // "SUPER_ADMIN" or "SUB_ADMIN"
+  permissions  String?  // JSON array string e.g. '["properties","enquiries"]'
+  isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

@@ -4,39 +4,67 @@ import { comparePassword, signAdminToken, COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const identifier = (body.identifier || body.email || body.username || "").toLowerCase().trim();
+    const password = body.password;
 
-    if (!email || !password) {
+    if (!identifier || !password) {
       return NextResponse.json(
-        { success: false, error: "Email and password are required" },
+        { success: false, error: "Username/Email and password are required" },
         { status: 400 }
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+    // Lookup user by email OR username
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: identifier },
+          { username: identifier },
+        ],
+      },
     });
 
     if (!user) {
       return NextResponse.json(
-        { success: false, error: "Invalid email or password credentials" },
+        { success: false, error: "Invalid username/email or password" },
         { status: 401 }
+      );
+    }
+
+    if (!user.isActive) {
+      return NextResponse.json(
+        { success: false, error: "Account is disabled. Please contact the Super Administrator." },
+        { status: 403 }
       );
     }
 
     const isValid = await comparePassword(password, user.passwordHash);
     if (!isValid) {
       return NextResponse.json(
-        { success: false, error: "Invalid email or password credentials" },
+        { success: false, error: "Invalid username/email or password" },
         { status: 401 }
       );
     }
 
-    // Sign JWT token
+    // Parse permissions list
+    let permissions: string[] = [];
+    if (user.permissions) {
+      try {
+        permissions = JSON.parse(user.permissions);
+      } catch {
+        permissions = user.permissions.split(",").map((p) => p.trim());
+      }
+    }
+
+    // Sign JWT token with role and permissions
     const token = signAdminToken({
       userId: user.id,
+      name: user.name,
       email: user.email,
+      username: user.username || "",
       role: user.role,
+      permissions,
     });
 
     const response = NextResponse.json({
@@ -45,7 +73,9 @@ export async function POST(req: NextRequest) {
         id: user.id,
         name: user.name,
         email: user.email,
+        username: user.username,
         role: user.role,
+        permissions,
       },
     });
 

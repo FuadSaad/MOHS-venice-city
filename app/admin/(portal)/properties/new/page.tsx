@@ -1,7 +1,14 @@
-﻿import React from "react";
+import React from "react";
 import PropertyForm from "@/components/admin/PropertyForm";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import AccessDenied from "@/components/admin/AccessDenied";
 
-export default function NewPropertyPage() {
+export default async function NewPropertyPage() {
+  const admin = await getSessionAdmin();
+  if (!hasPermission(admin, "properties")) {
+    return <AccessDenied moduleName="Properties Management" />;
+  }
+
   return (
     <div className="space-y-6">
       <div>

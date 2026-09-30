@@ -1,12 +1,20 @@
-﻿import React from "react";
+import React from "react";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import { Star, MessageSquareQuote, CheckCircle2 } from "lucide-react";
 import { ReviewItem } from "@/types/property";
 
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import AccessDenied from "@/components/admin/AccessDenied";
+
 export const revalidate = 0;
 
 export default async function AdminReviewsPage() {
+  const admin = await getSessionAdmin();
+  if (!hasPermission(admin, "reviews")) {
+    return <AccessDenied moduleName="Customer Reviews" />;
+  }
+
   const reviewsRaw = await prisma.review.findMany({
     orderBy: { createdAt: "desc" },
   });

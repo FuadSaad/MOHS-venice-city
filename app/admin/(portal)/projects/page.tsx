@@ -1,12 +1,19 @@
-﻿import React from "react";
+import React from "react";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { FolderKanban, Plus, ExternalLink, MapPin } from "lucide-react";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import AccessDenied from "@/components/admin/AccessDenied";
 
 export const revalidate = 0;
 
 export default async function AdminProjectsPage() {
+  const admin = await getSessionAdmin();
+  if (!hasPermission(admin, "projects")) {
+    return <AccessDenied moduleName="Township Projects" />;
+  }
+
   const projects = await prisma.project.findMany({
     include: {
       properties: { select: { id: true } },
@@ -47,27 +54,21 @@ export default async function AdminProjectsPage() {
                   <MapPin className="w-3.5 h-3.5" />
                   {proj.location}
                 </span>
-                <span className="text-[#657278]">
-                  {proj.properties.length} Active Listings
-                </span>
+                <span>{proj.totalArea || "Mega Township"}</span>
               </div>
-              <h3 className="text-lg font-bold text-[#12262D] font-heading">
-                {proj.title}
-              </h3>
-              <p className="text-xs text-[#657278] line-clamp-2">
-                {proj.description}
-              </p>
-              <div className="pt-3 border-t border-[#E2E7E5] flex items-center justify-between text-xs">
-                <span className="text-[#657278]">
-                  Area: <strong>{proj.totalArea || "620 Bigha"}</strong>
+              <h3 className="font-bold text-lg text-[#12262D]">{proj.title}</h3>
+              <p className="text-xs text-[#657278] line-clamp-2">{proj.description}</p>
+              <div className="pt-2 flex items-center justify-between border-t border-[#E2E7E5] text-xs">
+                <span className="font-semibold text-slate-700">
+                  {proj.properties.length} Associated Properties
                 </span>
                 <Link
                   href={`/projects/${proj.slug}`}
                   target="_blank"
-                  className="font-bold text-[#00695C] hover:underline flex items-center gap-1"
+                  className="font-bold text-[#00695C] flex items-center gap-1 hover:underline"
                 >
-                  <span>View Public Page</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <span>Public View</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>

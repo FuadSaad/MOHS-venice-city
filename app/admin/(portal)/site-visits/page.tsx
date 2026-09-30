@@ -1,11 +1,19 @@
-﻿import React from "react";
+import React from "react";
 import prisma from "@/lib/prisma";
 import AdminSiteVisitsClient from "@/components/admin/AdminSiteVisitsClient";
 import { SiteVisitItem } from "@/types/property";
 
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import AccessDenied from "@/components/admin/AccessDenied";
+
 export const revalidate = 0;
 
 export default async function AdminSiteVisitsPage() {
+  const admin = await getSessionAdmin();
+  if (!hasPermission(admin, "site_visits")) {
+    return <AccessDenied moduleName="Site Visit Bookings" />;
+  }
+
   const visitsRaw = await prisma.siteVisit.findMany({
     orderBy: { createdAt: "desc" },
     include: {

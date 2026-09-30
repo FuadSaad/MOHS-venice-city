@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,6 +31,9 @@ export async function POST(req: NextRequest) {
     const admin = await getSessionAdmin();
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    if (!hasPermission(admin, "gallery")) {
+      return NextResponse.json({ success: false, error: "Forbidden: Insufficient permissions" }, { status: 403 });
     }
 
     const body = await req.json();

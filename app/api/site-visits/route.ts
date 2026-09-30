@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
 
 // GET /api/site-visits (Admin only)
 export async function GET(req: NextRequest) {
@@ -8,6 +8,9 @@ export async function GET(req: NextRequest) {
     const admin = await getSessionAdmin();
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    if (!hasPermission(admin, "site_visits")) {
+      return NextResponse.json({ success: false, error: "Forbidden: Insufficient permissions" }, { status: 403 });
     }
 
     const visits = await prisma.siteVisit.findMany({

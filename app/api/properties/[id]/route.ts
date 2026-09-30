@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
 
 // GET /api/properties/[id]
 export async function GET(
@@ -45,6 +45,9 @@ export async function PUT(
     const admin = await getSessionAdmin();
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    if (!hasPermission(admin, "properties")) {
+      return NextResponse.json({ success: false, error: "Forbidden: Insufficient permissions" }, { status: 403 });
     }
 
     const { id } = params;
@@ -105,6 +108,9 @@ export async function DELETE(
     const admin = await getSessionAdmin();
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    if (!hasPermission(admin, "properties")) {
+      return NextResponse.json({ success: false, error: "Forbidden: Insufficient permissions" }, { status: 403 });
     }
 
     const { id } = params;

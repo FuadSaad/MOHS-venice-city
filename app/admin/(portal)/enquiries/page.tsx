@@ -1,11 +1,19 @@
-﻿import React from "react";
+import React from "react";
 import prisma from "@/lib/prisma";
 import AdminEnquiriesClient from "@/components/admin/AdminEnquiriesClient";
 import { EnquiryItem } from "@/types/property";
 
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
+import AccessDenied from "@/components/admin/AccessDenied";
+
 export const revalidate = 0;
 
 export default async function AdminEnquiriesPage() {
+  const admin = await getSessionAdmin();
+  if (!hasPermission(admin, "enquiries")) {
+    return <AccessDenied moduleName="Client Enquiries" />;
+  }
+
   const enquiriesRaw = await prisma.enquiry.findMany({
     orderBy: { createdAt: "desc" },
     include: {

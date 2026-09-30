@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { getSessionAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -18,9 +18,9 @@ export default async function AdminPortalLayout({
 
   return (
     <div className="flex min-h-screen bg-[#F5F8F8]">
-      <AdminSidebar />
+      <AdminSidebar admin={admin} />
       <div className="flex-1 flex flex-col min-w-0">
-        <AdminNavbar adminEmail={admin.email} />
+        <AdminNavbar admin={admin} />
         <main className="flex-1 p-6 sm:p-8 overflow-y-auto">{children}</main>
       </div>
     </div>

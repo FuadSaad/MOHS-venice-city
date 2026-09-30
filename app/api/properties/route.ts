@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasPermission } from "@/lib/auth";
 import { slugify } from "@/lib/utils";
 
 // GET /api/properties?type=plot&location=Sector+3&minPrice=...
@@ -80,6 +80,9 @@ export async function POST(req: NextRequest) {
     const admin = await getSessionAdmin();
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    if (!hasPermission(admin, "properties")) {
+      return NextResponse.json({ success: false, error: "Forbidden: Insufficient permissions" }, { status: 403 });
     }
 
     const body = await req.json();
