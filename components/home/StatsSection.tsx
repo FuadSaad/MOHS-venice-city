@@ -1,5 +1,6 @@
 import React from "react";
 import { Award, ShieldCheck, Users, Map, CheckCircle } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 export default function StatsSection() {
   const stats = [
@@ -42,23 +43,24 @@ export default function StatsSection() {
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
-              <div
-                key={index}
-                className="flex flex-col items-center text-center p-3 rounded-xl hover:bg-[#F5F8F8] transition-colors"
-              >
-                <div className="w-10 h-10 rounded-full bg-[#E8F5F3] text-[#00695C] flex items-center justify-center mb-3">
-                  <IconComponent className="w-5 h-5 text-[#00695C]" />
+              <Reveal key={index} delay={index * 0.1}>
+                <div
+                  className="flex flex-col items-center text-center p-3 rounded-xl hover:bg-[#F5F8F8] transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#E8F5F3] text-[#00695C] flex items-center justify-center mb-3">
+                    <IconComponent className="w-5 h-5 text-[#00695C]" />
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading tracking-tight">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm font-bold text-[#005B50] mt-0.5">
+                    {stat.label}
+                  </div>
+                  <div className="text-xs text-[#657278] mt-1 leading-tight">
+                    {stat.description}
+                  </div>
                 </div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading tracking-tight">
-                  {stat.value}
-                </div>
-                <div className="text-sm font-bold text-[#005B50] mt-0.5">
-                  {stat.label}
-                </div>
-                <div className="text-xs text-[#657278] mt-1 leading-tight">
-                  {stat.description}
-                </div>
-              </div>
+              </Reveal>
             );
           })}
         </div>

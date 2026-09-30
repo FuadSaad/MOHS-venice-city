@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { MapPin, LayoutGrid, Maximize2, X, Compass, ExternalLink } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -83,21 +84,24 @@ export default function MapSection() {
   const layoutMapImage = "/images/layout-map-v2-optimized.jpg";
 
   return (
-    <section className="pt-16 sm:pt-24 pb-4 sm:pb-6 bg-white border-b border-[#E2E7E5]">
+    <section className="pt-16 sm:pt-24 pb-4 sm:pb-6 bg-white border-b border-[#E2E7E5] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#12262D] font-heading tracking-tight">
-            Strategic Location & Planned Layout
-          </h2>
-          <p className="text-sm sm:text-base text-[#657278] mt-2">
-            MOHS Venice City is strategically situated directly between Uttara and
-            Purbachal, providing unparalleled accessibility.
-          </p>
-        </div>
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#12262D] font-heading tracking-tight">
+              Strategic Location & Planned Layout
+            </h2>
+            <p className="text-sm sm:text-base text-[#657278] mt-2">
+              MOHS Venice City is strategically situated directly between Uttara and
+              Purbachal, providing unparalleled accessibility.
+            </p>
+          </div>
+        </Reveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Location Map Card */}
-          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
+          <Reveal delay={0.1}>
+            <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col h-full hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
             <div className="p-6 border-b border-[#E2E7E5] flex-grow">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-1.5 text-[#00695C] text-xs font-bold uppercase tracking-wider">
@@ -144,10 +148,13 @@ export default function MapSection() {
                 <ExternalLink className="w-4 h-4" />
               </button>
             </div>
+            </div>
           </div>
+          </Reveal>
 
           {/* Layout Map Card */}
-          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
+          <Reveal delay={0.2}>
+          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col h-full hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
             <div className="p-6 border-b border-[#E2E7E5] flex-grow">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-1.5 text-[#00695C] text-xs font-bold uppercase tracking-wider">
@@ -195,6 +202,7 @@ export default function MapSection() {
               </button>
             </div>
           </div>
+          </Reveal>
         </div>
       </div>
 
