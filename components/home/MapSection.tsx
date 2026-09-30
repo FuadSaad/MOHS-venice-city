@@ -14,7 +14,7 @@ function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
   const zoomLevel = 2.5;
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-[#E8F5F1]/30 overflow-hidden cursor-crosshair">
+    <div className="relative w-full h-full flex items-center justify-center bg-[#E8F5F3]/30 overflow-hidden cursor-crosshair">
       <img
         src={src}
         alt={alt}
@@ -57,7 +57,7 @@ function ImageMagnifier({ src, alt }: { src: string; alt: string }) {
             top: `calc(50% - ${imgHeight / 2}px + ${y}px - ${magnifierHeight / 2}px)`,
             left: `calc(50% - ${imgWidth / 2}px + ${x}px - ${magnifierWidth / 2}px)`,
             opacity: "1", 
-            border: "2px solid #006B5B",
+            border: "2px solid #00695C",
             backgroundColor: "white",
             backgroundImage: `url('${src}')`,
             backgroundRepeat: "no-repeat",
@@ -79,13 +79,13 @@ export default function MapSection() {
   const [activeModal, setActiveModal] = useState<"LOCATION" | "LAYOUT" | null>(null);
 
   const locationMapImage = "/images/MOHS-Layout-map.webp";
-  const layoutMapImage = "/images/MOHS-Venice-City-Map-Final-2026-Image.webp";
+  const layoutMapImage = "/images/layout-map-v2.png";
 
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-[#E2E7E5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#17232B] font-heading tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#12262D] font-heading tracking-tight">
             Strategic Location & Planned Layout
           </h2>
           <p className="text-sm sm:text-base text-[#657278] mt-2">
@@ -96,17 +96,17 @@ export default function MapSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Location Map Card */}
-          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#006B5B]/30 hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
             <div className="p-6 border-b border-[#E2E7E5] flex-grow">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-1.5 text-[#006B5B] text-xs font-bold uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-[#00695C] text-xs font-bold uppercase tracking-wider">
                   <MapPin className="w-4 h-4" /> REGIONAL CONNECTIVITY
                 </div>
-                <span className="text-xs text-[#657278] font-medium bg-[#F7F8F6] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
+                <span className="text-xs text-[#657278] font-medium bg-[#F5F8F8] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
                   Uttara - Purbachal Link
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#17232B] mb-2 font-heading">
+              <h3 className="text-xl font-bold text-[#12262D] mb-2 font-heading">
                 Location Map
               </h3>
               <p className="text-sm text-[#657278] leading-relaxed">
@@ -128,7 +128,7 @@ export default function MapSection() {
                 className="absolute inset-0 flex items-center justify-center"
                 aria-label="Enlarge location map"
               >
-                <span className="bg-white/95 text-[#17232B] text-xs font-bold px-4 py-2 rounded-lg shadow-md flex items-center gap-1.5 backdrop-blur-sm group-hover:bg-[#006B5B] group-hover:text-white transition-colors">
+                <span className="bg-white/95 text-[#12262D] text-xs font-bold px-4 py-2 rounded-lg shadow-md flex items-center gap-1.5 backdrop-blur-sm group-hover:bg-[#00695C] group-hover:text-white transition-colors">
                   <Maximize2 className="w-3.5 h-3.5" /> Enlarge Location Map
                 </span>
               </button>
@@ -137,7 +137,7 @@ export default function MapSection() {
             <div className="p-6 pt-4">
               <button 
                 onClick={() => setActiveModal("LOCATION")}
-                className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F1] text-[#006B5B] border border-[#006B5B]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
               >
                 <span>View Full Location Map</span>
                 <ExternalLink className="w-4 h-4" />
@@ -146,17 +146,17 @@ export default function MapSection() {
           </div>
 
           {/* Layout Map Card */}
-          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#006B5B]/30 hover:shadow-md transition-all duration-300">
+          <div className="bg-white rounded-2xl border border-[#E2E7E5] shadow-xs overflow-hidden group flex flex-col hover:border-[#00695C]/30 hover:shadow-md transition-all duration-300">
             <div className="p-6 border-b border-[#E2E7E5] flex-grow">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-1.5 text-[#006B5B] text-xs font-bold uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-[#00695C] text-xs font-bold uppercase tracking-wider">
                   <LayoutGrid className="w-4 h-4" /> MASTER TOWN PLANNING
                 </div>
-                <span className="text-xs text-[#657278] font-medium bg-[#F7F8F6] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
+                <span className="text-xs text-[#657278] font-medium bg-[#F5F8F8] px-2.5 py-1 rounded-md border border-[#E2E7E5]">
                   Sector 1, 2, 3 & VIP Zone
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#17232B] mb-2 font-heading">
+              <h3 className="text-xl font-bold text-[#12262D] mb-2 font-heading">
                 Township Layout Map
               </h3>
               <p className="text-sm text-[#657278] leading-relaxed">
@@ -178,7 +178,7 @@ export default function MapSection() {
                 className="absolute inset-0 flex items-center justify-center"
                 aria-label="Enlarge layout map"
               >
-                <span className="bg-white/95 text-[#17232B] text-xs font-bold px-4 py-2 rounded-lg shadow-md flex items-center gap-1.5 backdrop-blur-sm group-hover:bg-[#006B5B] group-hover:text-white transition-colors">
+                <span className="bg-white/95 text-[#12262D] text-xs font-bold px-4 py-2 rounded-lg shadow-md flex items-center gap-1.5 backdrop-blur-sm group-hover:bg-[#00695C] group-hover:text-white transition-colors">
                   <Maximize2 className="w-3.5 h-3.5" /> Enlarge Layout Plan
                 </span>
               </button>
@@ -187,7 +187,7 @@ export default function MapSection() {
             <div className="p-6 pt-4">
               <button
                 onClick={() => setActiveModal("LAYOUT")}
-                className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F1] text-[#006B5B] border border-[#006B5B]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2.5 px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors"
               >
                 <span>View Detailed Layout Map</span>
                 <ExternalLink className="w-4 h-4" />
@@ -201,9 +201,9 @@ export default function MapSection() {
       {activeModal && (
         <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-2xl max-w-6xl w-full h-[90vh] flex flex-col overflow-hidden shadow-2xl relative border border-white/20">
-            <div className="flex items-center justify-between p-4 border-b border-[#E2E7E5] bg-[#F7F8F6] shrink-0">
+            <div className="flex items-center justify-between p-4 border-b border-[#E2E7E5] bg-[#F5F8F8] shrink-0">
               <div className="flex items-center gap-3">
-                <h4 className="font-bold text-base text-[#17232B] font-heading">
+                <h4 className="font-bold text-base text-[#12262D] font-heading">
                   {activeModal === "LOCATION"
                     ? "MOHS Venice City — Regional Location Map"
                     : "MOHS Venice City — Sector Layout & Masterplan"}
@@ -212,14 +212,14 @@ export default function MapSection() {
               </div>
               <button
                 onClick={() => setActiveModal(null)}
-                className="p-1.5 rounded-lg hover:bg-slate-200 text-[#17232B] transition-colors"
+                className="p-1.5 rounded-lg hover:bg-slate-200 text-[#12262D] transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
             {/* The Image Magnifier Area */}
-            <div className="flex-1 w-full bg-[#E8F5F1]/20 relative">
+            <div className="flex-1 w-full bg-[#E8F5F3]/20 relative">
               <ImageMagnifier 
                 src={activeModal === "LOCATION" ? locationMapImage : layoutMapImage} 
                 alt="Map Enlarge" 
@@ -232,7 +232,7 @@ export default function MapSection() {
               </span>
               <a
                 href="tel:+8801711000000"
-                className="font-bold text-[#006B5B] hover:underline"
+                className="font-bold text-[#00695C] hover:underline"
               >
                 +880 1711-000000
               </a>
