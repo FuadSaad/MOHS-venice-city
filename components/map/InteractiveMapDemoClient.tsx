@@ -52,44 +52,89 @@ export default function InteractiveMapDemoClient() {
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex items-center justify-center">
       <div className="w-full max-w-[1600px] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col lg:flex-row h-[85vh]">
         
-        {/* Left Side: Map Viewer (65%) */}
-        <div className="lg:w-[65%] relative bg-[#E8F5F3]/30 border-r border-slate-100">
-          <TransformWrapper
-            initialScale={1}
-            minScale={1}
-            maxScale={3}
-            centerOnInit
-            limitToBounds={true}
-            wheel={{ step: 0.1 }}
-            panning={{ velocityDisabled: true }}
-          >
-            {({ zoomIn, zoomOut, resetTransform }) => (
-              <>
-                <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
-                  <button onClick={() => zoomIn()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2.5 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
-                    <ZoomIn className="w-5 h-5" />
-                  </button>
-                  <button onClick={() => zoomOut()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2.5 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
-                    <ZoomOut className="w-5 h-5" />
-                  </button>
-                  <button onClick={() => resetTransform()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2.5 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
-                    <Expand className="w-5 h-5" />
-                  </button>
-                </div>
-
-                <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
-                  <div className="relative w-full h-full flex items-center justify-center p-8">
-                    <img
-                      src="/images/map-interactive.jpg"
-                      alt="Masterplan Map"
-                      className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-2xl"
-                      draggable={false}
-                    />
+        {/* Left Side: Map Viewers (65%) */}
+        <div className="lg:w-[65%] flex flex-col md:flex-row relative bg-[#E8F5F3]/30 border-r border-slate-100">
+          
+          {/* Map 1 */}
+          <div className="flex-1 relative border-r border-slate-200">
+            <TransformWrapper
+              initialScale={1}
+              minScale={1}
+              maxScale={3}
+              centerOnInit
+              limitToBounds={true}
+              wheel={{ step: 0.1 }}
+              panning={{ velocityDisabled: true }}
+            >
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                    <button onClick={() => zoomIn()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                      <ZoomIn className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => zoomOut()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                      <ZoomOut className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => resetTransform()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                      <Expand className="w-4 h-4" />
+                    </button>
                   </div>
-                </TransformComponent>
-              </>
-            )}
-          </TransformWrapper>
+
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
+                    <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-6">
+                      <img
+                        src="/images/map-interactive.jpg"
+                        alt="Masterplan Map 1"
+                        className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-xl"
+                        draggable={false}
+                      />
+                    </div>
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
+          </div>
+
+          {/* Map 2 */}
+          <div className="flex-1 relative">
+            <TransformWrapper
+              initialScale={1}
+              minScale={1}
+              maxScale={3}
+              centerOnInit
+              limitToBounds={true}
+              wheel={{ step: 0.1 }}
+              panning={{ velocityDisabled: true }}
+            >
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                    <button onClick={() => zoomIn()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                      <ZoomIn className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => zoomOut()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                      <ZoomOut className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => resetTransform()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                      <Expand className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
+                    <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-6">
+                      <img
+                        src="/images/map-interactive-2.jpg"
+                        alt="Masterplan Map 2"
+                        className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-xl"
+                        draggable={false}
+                      />
+                    </div>
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
+          </div>
+
         </div>
 
         {/* Right Side: Sidebar & Plot Selection (35%) */}
