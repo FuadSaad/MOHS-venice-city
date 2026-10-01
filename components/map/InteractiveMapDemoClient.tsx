@@ -118,19 +118,21 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
 
       {/* Right Side: Sidebar & Plot Selection */}
       <div className="absolute top-0 right-0 bottom-0 w-[45%] lg:w-[40%] flex flex-col bg-white border-l border-slate-100 shadow-xl z-10">
-        <div className="p-2 md:p-4 border-b border-slate-100 flex flex-col items-center justify-center">
-          <Image 
-            src="/images/logo.png" 
-            alt="MOHS Venice City" 
-            width={100} 
-            height={35} 
-            className="object-contain drop-shadow-sm md:w-[120px]"
-          />
-          <div className="mt-1 md:mt-2 text-center">
-            <h2 className="font-heading font-black text-[#12262D] text-[10px] md:text-sm tracking-wide">
+        <div className="py-1.5 px-2 md:p-4 border-b border-slate-100 flex flex-col items-center justify-center">
+          <div className="w-[60px] md:w-[120px] mb-0.5 md:mb-2">
+            <Image 
+              src="/images/logo.png" 
+              alt="MOHS Venice City" 
+              width={120} 
+              height={40} 
+              className="w-full h-auto object-contain drop-shadow-sm"
+            />
+          </div>
+          <div className="text-center flex flex-col items-center justify-center leading-tight md:leading-normal">
+            <h2 className="font-heading font-black text-[#12262D] text-[9px] md:text-sm tracking-widest md:tracking-wide m-0">
               SELECT A PLOT
             </h2>
-            <p className="text-[9px] md:text-[11px] text-slate-500 font-medium">
+            <p className="text-[7px] md:text-[11px] text-slate-400 font-medium hidden sm:block md:mt-0.5">
               Click for details
             </p>
           </div>
@@ -143,20 +145,20 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
                 key={plot.id}
                 onClick={() => setSelectedPlot(plot)}
                 className={`
-                  relative group flex flex-col items-center justify-center p-1.5 md:p-3 rounded-lg md:rounded-2xl border-2 transition-all duration-300
+                  relative group flex flex-col items-center justify-center py-1 px-1 md:p-3 rounded-lg md:rounded-2xl border-2 transition-all duration-300
                   ${plot.status === "AVAILABLE" ? "bg-emerald-50/50 border-emerald-100 text-emerald-900 hover:bg-emerald-100 hover:border-emerald-300" : ""}
                   ${plot.status === "BOOKED" ? "bg-amber-50/50 border-amber-100 text-amber-900 hover:bg-amber-100 hover:border-amber-300" : ""}
                   ${plot.status === "SOLD" ? "bg-rose-50/50 border-rose-100 text-rose-900 hover:bg-rose-100 hover:border-rose-300" : ""}
-                  ${selectedPlot?.id === plot.id ? "!border-[#12262D] !shadow-md scale-[1.03] ring-2 ring-[#12262D]/10" : "hover:shadow-sm hover:-translate-y-0.5"}
+                  ${selectedPlot?.id === plot.id ? "!border-[#12262D] !shadow-md scale-[1.03] ring-1 md:ring-2 ring-[#12262D]/10" : "hover:shadow-sm hover:-translate-y-0.5"}
                 `}
               >
-                <span className={`text-[10px] md:text-lg font-black font-heading ${selectedPlot?.id === plot.id ? "text-[#12262D]" : ""}`}>
+                <span className={`text-[10px] md:text-lg font-black font-heading leading-tight ${selectedPlot?.id === plot.id ? "text-[#12262D]" : ""}`}>
                   {plot.id}
                 </span>
-                <span className="text-[8px] md:text-[11px] mt-0.5 md:mt-0.5 font-bold opacity-75">
+                <span className="text-[8px] md:text-[11px] leading-tight font-bold opacity-75">
                   {plot.size}
                 </span>
-                <span className={`text-[6px] md:text-[8px] uppercase font-black tracking-widest mt-1 md:mt-2 px-1 md:px-2 py-0.5 rounded-full
+                <span className={`text-[6px] md:text-[8px] uppercase font-black tracking-widest mt-0.5 md:mt-2 px-1 md:px-2 py-0.5 rounded-full
                   ${plot.status === "AVAILABLE" ? "bg-emerald-200/60 text-emerald-800" : ""}
                   ${plot.status === "BOOKED" ? "bg-amber-200/60 text-amber-800" : ""}
                   ${plot.status === "SOLD" ? "bg-rose-200/60 text-rose-800" : ""}
