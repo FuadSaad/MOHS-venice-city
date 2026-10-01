@@ -45,19 +45,13 @@ export default function FloatingWidgets({ settings }: { settings?: WebsiteSettin
     // Set google translate cookie and reload
     const langCode = selected === "BN" ? "bn" : "en";
     
-    // Fallback cookie setting
+    // Set cookies across different paths to ensure it takes effect
     document.cookie = `googtrans=/en/${langCode}; path=/; domain=` + window.location.hostname;
     document.cookie = `googtrans=/en/${langCode}; path=/`;
 
-    // The robust way: trigger the hidden google translate dropdown without reloading
-    const select = document.querySelector(".goog-te-combo") as HTMLSelectElement;
-    if (select) {
-      select.value = langCode;
-      select.dispatchEvent(new Event("change"));
-    } else {
-      // If widget hasn't loaded yet, reload the page to apply the cookie
-      window.location.reload();
-    }
+    // The most robust way to apply the translation in Next.js is to reload
+    // so the Google Translate script initializes with the new cookie.
+    window.location.reload();
   };
 
   return (
