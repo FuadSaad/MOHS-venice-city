@@ -1,131 +1,357 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, LayoutList, BookOpen, Download } from "lucide-react";
+import { 
+  ChevronLeft, ChevronRight, LayoutList, BookOpen, Download, 
+  Map, ZoomIn, ZoomOut, Maximize, Search, Printer, Share2, 
+  PanelLeftClose, PanelLeft, X, Info
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-interface BrochureViewerProps {
+interface Brochure {
+  id: string;
+  name: string;
+  description: string;
   pages: string[];
-  pdfUrl?: string;
+  mapImage: string;
 }
 
-export default function BrochureViewer({ pages, pdfUrl = "#" }: BrochureViewerProps) {
-  const [viewMode, setViewMode] = useState<"SCROLL" | "BOOK">("SCROLL");
+interface BrochureViewerProps {
+  brochure: Brochure;
+}
+
+// Dummy plots for the interactive masterplan
+const dummyPlots = [
+  { id: "CP-01", size: "30 Katha", status: "AVAILABLE", type: "Commercial Plot", facing: "South Facing", frontRoad: "100ft Boulevard", price: "৳ 4,05,00,000", polygon: "40,30 45,30 45,45 40,45" },
+  { id: "CP-02", size: "30 Katha", status: "SOLD", type: "Commercial Plot", facing: "River Facing", frontRoad: "100ft Boulevard", price: "৳ 4,05,00,000", polygon: "47,30 52,30 52,45 47,45" },
+  { id: "CP-03", size: "40 Katha", status: "BOOKED", type: "Commercial Plot", facing: "North Facing", frontRoad: "80ft Avenue", price: "৳ 5,40,00,000", polygon: "54,30 61,30 61,45 54,45" },
+  { id: "PR-01", size: "20 Katha", status: "AVAILABLE", type: "Residential Plot", facing: "East Facing", frontRoad: "60ft Road", price: "৳ 2,50,00,000", polygon: "30,60 38,60 38,70 30,70" },
+];
+
+export default function BrochureViewer({ brochure }: BrochureViewerProps) {
+  const [viewMode, setViewMode] = useState<"SCROLL" | "BOOK" | "MASTERPLAN">("BOOK");
   const [currentPage, setCurrentPage] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPlot, setSelectedPlot] = useState<typeof dummyPlots[0] | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [brochure]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (viewMode === "BOOK") {
+        if (e.key === "ArrowRight") nextPage();
+        if (e.key === "ArrowLeft") prevPage();
+      }
+      if (e.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [viewMode, currentPage, isFullscreen]);
 
   const nextPage = () => {
-    if (currentPage < pages.length - 1) setCurrentPage(p => p + 1);
+    if (currentPage < brochure.pages.length - 1) setCurrentPage(p => p + 1);
   };
-
   const prevPage = () => {
     if (currentPage > 0) setCurrentPage(p => p - 1);
   };
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen().catch(err => {
+        setIsFullscreen(!isFullscreen); // Fallback to CSS fullscreen
+      });
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
   return (
-    <div className="max-w-5xl mx-auto w-full">
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-white p-4 rounded-2xl border border-[#E2E7E5] shadow-sm">
-        <div className="flex items-center gap-2 bg-[#F5F8F8] p-1.5 rounded-xl border border-[#E2E7E5]">
-          <button
-            onClick={() => setViewMode("SCROLL")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-              viewMode === "SCROLL"
-                ? "bg-[#00695C] text-white shadow-sm"
-                : "text-[#657278] hover:text-[#12262D]"
-            }`}
-          >
-            <LayoutList className="w-4 h-4" />
-            Scroll View
+    <div 
+      ref={containerRef}
+      className={`bg-[#0f171a] text-slate-200 flex flex-col font-sans transition-all duration-300 ${
+        isFullscreen ? 'fixed inset-0 z-50' : 'relative w-full h-[85vh]'
+      }`}
+    >
+      {/* Top Toolbar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-[#080d0f] border-b border-white/10 shrink-0">
+        
+        {/* Left: View Modes */}
+        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg">
+          <button onClick={() => setViewMode("BOOK")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "BOOK" ? "bg-[#00695C] text-white" : "hover:bg-white/10 text-slate-400"}`}>
+            <BookOpen className="w-4 h-4" /> <span className="hidden sm:inline">Book View</span>
           </button>
-          <button
-            onClick={() => setViewMode("BOOK")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-              viewMode === "BOOK"
-                ? "bg-[#00695C] text-white shadow-sm"
-                : "text-[#657278] hover:text-[#12262D]"
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            Book View
+          <button onClick={() => setViewMode("SCROLL")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "SCROLL" ? "bg-[#00695C] text-white" : "hover:bg-white/10 text-slate-400"}`}>
+            <LayoutList className="w-4 h-4" /> <span className="hidden sm:inline">Scroll View</span>
+          </button>
+          <button onClick={() => setViewMode("MASTERPLAN")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "MASTERPLAN" ? "bg-[#00695C] text-white" : "hover:bg-white/10 text-slate-400"}`}>
+            <Map className="w-4 h-4" /> <span className="hidden sm:inline">Interactive Masterplan</span>
           </button>
         </div>
 
-        <a 
-          href="/images/brochure/1.jpg" // Ideally a PDF link, but this is a placeholder
-          download="MOHS_Venice_City_Brochure.pdf"
-          className="flex items-center gap-2 text-[#00695C] hover:text-[#005B50] font-bold text-sm px-4 py-2 rounded-lg hover:bg-[#E8F5F3] transition-colors"
-          onClick={(e) => { e.preventDefault(); alert("PDF Download will be available soon!"); }}
-        >
-          <Download className="w-4 h-4" />
-          Download PDF
-        </a>
-      </div>
-
-      {/* Viewer Content */}
-      <div className="w-full bg-[#12262D] rounded-2xl overflow-hidden shadow-2xl border border-[#12262D]/20 min-h-[500px]">
-        {viewMode === "SCROLL" ? (
-          <div className="flex flex-col w-full h-full p-4 sm:p-8 space-y-8 bg-[#E8F5F3]/10">
-            {pages.map((src, idx) => (
-              <div key={idx} className="w-full relative shadow-lg rounded-xl overflow-hidden border border-white/10">
-                <Image
-                  src={src}
-                  alt={`Brochure Page ${idx + 1}`}
-                  width={1200}
-                  height={1600}
-                  className="w-full h-auto object-contain bg-white"
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="relative w-full aspect-[3/4] sm:aspect-auto sm:h-[80vh] flex items-center justify-center bg-[#E8F5F3]/10 p-4 sm:p-8 overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentPage}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="relative w-full h-full flex items-center justify-center"
-              >
-                <div className="relative w-full h-full max-w-full max-h-full shadow-2xl border border-white/20">
-                  <Image
-                    src={pages[currentPage]}
-                    alt={`Brochure Page ${currentPage + 1}`}
-                    fill
-                    className="object-contain bg-white"
-                    unoptimized
-                  />
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Book Controls */}
-            <div className="absolute inset-x-0 bottom-4 sm:bottom-8 flex items-center justify-center gap-4 z-10 pointer-events-none">
-              <button
-                onClick={prevPage}
-                disabled={currentPage === 0}
-                className="pointer-events-auto w-12 h-12 flex items-center justify-center rounded-full bg-white/90 text-[#12262D] shadow-lg backdrop-blur hover:bg-[#00695C] hover:text-white transition-all disabled:opacity-50 disabled:hover:bg-white/90 disabled:hover:text-[#12262D]"
-              >
-                <ChevronLeft className="w-6 h-6" />
+        {/* Center: Title / Page Indicator */}
+        <div className="flex-1 flex justify-center items-center">
+          {viewMode !== "MASTERPLAN" && (
+            <div className="flex items-center gap-3">
+              <button onClick={prevPage} disabled={currentPage === 0} className="p-1 hover:bg-white/10 rounded disabled:opacity-30">
+                <ChevronLeft className="w-5 h-5" />
               </button>
-              
-              <div className="pointer-events-auto px-4 py-2 rounded-full bg-white/90 text-[#12262D] font-bold shadow-lg backdrop-blur text-sm">
-                Page {currentPage + 1} of {pages.length}
-              </div>
-
-              <button
-                onClick={nextPage}
-                disabled={currentPage === pages.length - 1}
-                className="pointer-events-auto w-12 h-12 flex items-center justify-center rounded-full bg-white/90 text-[#12262D] shadow-lg backdrop-blur hover:bg-[#00695C] hover:text-white transition-all disabled:opacity-50 disabled:hover:bg-white/90 disabled:hover:text-[#12262D]"
-              >
-                <ChevronRight className="w-6 h-6" />
+              <span className="text-sm font-medium">Page {currentPage + 1} of {brochure.pages.length}</span>
+              <button onClick={nextPage} disabled={currentPage === brochure.pages.length - 1} className="p-1 hover:bg-white/10 rounded disabled:opacity-30">
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
-          </div>
+          )}
+          {viewMode === "MASTERPLAN" && (
+            <span className="text-sm font-bold text-emerald-400">Interactive Masterplan Mode</span>
+          )}
+        </div>
+
+        {/* Right: Tools */}
+        <div className="flex items-center gap-2">
+          {viewMode !== "MASTERPLAN" && (
+            <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 hover:bg-white/10 rounded-md transition-colors" title="Search Text">
+              <Search className="w-4 h-4" />
+            </button>
+          )}
+          <button onClick={() => alert("Print dialog opening...")} className="p-2 hover:bg-white/10 rounded-md transition-colors hidden sm:block" title="Print">
+            <Printer className="w-4 h-4" />
+          </button>
+          <button onClick={() => alert("Share link copied!")} className="p-2 hover:bg-white/10 rounded-md transition-colors hidden sm:block" title="Share">
+            <Share2 className="w-4 h-4" />
+          </button>
+          <button onClick={() => alert("PDF Download starting...")} className="p-2 hover:bg-white/10 rounded-md transition-colors text-emerald-400 hover:text-emerald-300" title="Download PDF">
+            <Download className="w-4 h-4" />
+          </button>
+          <div className="w-px h-4 bg-white/20 mx-1 hidden sm:block"></div>
+          <button onClick={toggleFullscreen} className="p-2 hover:bg-white/10 rounded-md transition-colors" title="Fullscreen">
+            <Maximize className="w-4 h-4" />
+          </button>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-white/10 rounded-md transition-colors" title="Toggle Thumbnails">
+            {sidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Search Overlay */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-[#1a2327] border-b border-white/10 overflow-hidden shrink-0">
+            <div className="p-3 flex items-center gap-3 max-w-2xl mx-auto">
+              <Search className="w-4 h-4 text-slate-400" />
+              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search document text..." className="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-slate-500" />
+              <button onClick={() => setSearchOpen(false)} className="p-1 hover:bg-white/10 rounded"><X className="w-4 h-4" /></button>
+            </div>
+          </motion.div>
         )}
+      </AnimatePresence>
+
+      {/* Main Viewer Area */}
+      <div className="flex-1 flex overflow-hidden relative">
+        
+        {/* Thumbnails Sidebar */}
+        <AnimatePresence>
+          {sidebarOpen && viewMode !== "MASTERPLAN" && (
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: 50 }}
+              className="absolute sm:relative inset-x-0 bottom-0 sm:inset-y-0 sm:left-0 z-40 bg-[#0b1114] sm:border-r border-t sm:border-t-0 border-white/10 flex flex-col shrink-0 overflow-y-auto h-48 sm:h-auto sm:w-60 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] sm:shadow-none"
+            >
+              <div className="p-3 border-b border-white/5 sticky top-0 bg-[#0b1114]/90 backdrop-blur z-10 flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pages</span>
+                <button className="sm:hidden p-1 hover:bg-white/10 rounded" onClick={() => setSidebarOpen(false)}><X className="w-4 h-4" /></button>
+              </div>
+              <div className="p-3 grid grid-cols-3 sm:grid-cols-2 gap-3">
+                {brochure.pages.map((src, idx) => (
+                  <button 
+                    key={idx}
+                    onClick={() => { setCurrentPage(idx); if (window.innerWidth < 640) setSidebarOpen(false); }}
+                    className={`relative aspect-[3/4] rounded-lg overflow-hidden border-2 transition-all ${currentPage === idx ? "border-[#00695C] shadow-lg shadow-[#00695C]/20" : "border-transparent hover:border-white/20"}`}
+                  >
+                    <Image src={src} alt={`Thumb ${idx+1}`} fill className="object-cover" unoptimized />
+                    <div className="absolute bottom-1 right-1 bg-black/60 px-1.5 py-0.5 rounded text-[9px] font-bold">{idx + 1}</div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Viewer Canvas */}
+        <div className="flex-1 bg-[#121a1e] relative overflow-hidden flex flex-col items-center justify-center">
+          
+          {/* SCROLL MODE */}
+          {viewMode === "SCROLL" && (
+            <div className="w-full h-full overflow-y-auto p-4 sm:p-12 flex flex-col items-center gap-8 scrollbar-thin scrollbar-thumb-white/20">
+              {brochure.pages.map((src, idx) => (
+                <div key={idx} className="w-full max-w-4xl relative aspect-[3/4] bg-white shadow-2xl">
+                  <Image src={src} alt={`Page ${idx+1}`} fill className="object-contain" unoptimized />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* BOOK MODE */}
+          {viewMode === "BOOK" && (
+            <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit>
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
+                    <button onClick={() => zoomIn()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomIn className="w-5 h-5" /></button>
+                    <button onClick={() => zoomOut()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomOut className="w-5 h-5" /></button>
+                    <button onClick={() => resetTransform()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10 text-xs font-bold">FIT</button>
+                  </div>
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
+                    <AnimatePresence mode="wait">
+                      <motion.div 
+                        key={currentPage}
+                        initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.3 }}
+                        className="relative w-full max-w-4xl aspect-[3/4] bg-white shadow-2xl"
+                      >
+                        <Image src={brochure.pages[currentPage]} alt={`Page ${currentPage+1}`} fill className="object-contain" unoptimized />
+                      </motion.div>
+                    </AnimatePresence>
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
+          )}
+
+          {/* MASTERPLAN MODE */}
+          {viewMode === "MASTERPLAN" && (
+            <TransformWrapper initialScale={1} minScale={0.5} maxScale={8} centerOnInit>
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
+                    <button onClick={() => zoomIn()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomIn className="w-5 h-5" /></button>
+                    <button onClick={() => zoomOut()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomOut className="w-5 h-5" /></button>
+                    <button onClick={() => resetTransform()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10 text-xs font-bold">FIT</button>
+                  </div>
+
+                  {/* Legend Overlay */}
+                  <div className="absolute left-4 top-4 z-20 bg-black/70 backdrop-blur p-4 rounded-xl border border-white/10 pointer-events-none hidden sm:block">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">Map Legend</h4>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-emerald-500/50 border border-emerald-400"></div><span className="text-xs text-slate-300">Available</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-amber-500/50 border border-amber-400"></div><span className="text-xs text-slate-300">Reserved</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-rose-500/50 border border-rose-400"></div><span className="text-xs text-slate-300">Sold</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-slate-500/50 border border-slate-400"></div><span className="text-xs text-slate-300">Unavailable</span></div>
+                    </div>
+                  </div>
+
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
+                    <div className="relative inline-block w-full max-w-[1200px]">
+                      <Image 
+                        src={brochure.mapImage} 
+                        alt="Masterplan" 
+                        width={2000} 
+                        height={1400} 
+                        className="w-full h-auto object-contain pointer-events-none" 
+                        unoptimized 
+                      />
+                      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+                        {dummyPlots.map((plot) => (
+                          <polygon 
+                            key={plot.id}
+                            points={plot.polygon} 
+                            onClick={(e) => { e.stopPropagation(); setSelectedPlot(plot); }}
+                            className={`
+                              cursor-pointer stroke-[0.2] transition-all duration-300
+                              ${plot.status === 'AVAILABLE' ? 'fill-emerald-500/30 stroke-emerald-400 hover:fill-emerald-500/50' : ''}
+                              ${plot.status === 'BOOKED' ? 'fill-amber-500/30 stroke-amber-400 hover:fill-amber-500/50' : ''}
+                              ${plot.status === 'SOLD' ? 'fill-rose-500/30 stroke-rose-400 hover:fill-rose-500/50' : ''}
+                              ${selectedPlot?.id === plot.id ? '!stroke-[0.5] !stroke-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]' : ''}
+                            `}
+                          >
+                            <title>{plot.id} - Click for details</title>
+                          </polygon>
+                        ))}
+                      </svg>
+                    </div>
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
+          )}
+        </div>
+
+        {/* Masterplan Plot Details Drawer */}
+        <AnimatePresence>
+          {viewMode === "MASTERPLAN" && selectedPlot && (
+            <motion.div
+              initial={{ x: 400, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 400, opacity: 0 }}
+              className="absolute inset-y-0 right-0 z-40 w-full sm:w-80 bg-white text-[#12262D] border-l border-slate-200 shadow-2xl flex flex-col"
+            >
+              <div className="p-5 border-b border-slate-100 flex justify-between items-start bg-slate-50">
+                <div>
+                  <h3 className="text-2xl font-black font-heading leading-none mb-1">{selectedPlot.id}</h3>
+                  <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full
+                    ${selectedPlot.status === 'AVAILABLE' ? 'bg-emerald-100 text-emerald-700' : ''}
+                    ${selectedPlot.status === 'BOOKED' ? 'bg-amber-100 text-amber-700' : ''}
+                    ${selectedPlot.status === 'SOLD' ? 'bg-rose-100 text-rose-700' : ''}
+                  `}>
+                    {selectedPlot.status}
+                  </span>
+                </div>
+                <button onClick={() => setSelectedPlot(null)} className="p-1.5 hover:bg-slate-200 rounded-full transition-colors">
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto p-5">
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Plot Size</label>
+                    <div className="font-bold text-lg">{selectedPlot.size}</div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Property Type</label>
+                    <div className="font-bold">{selectedPlot.type}</div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Facing</label>
+                    <div className="font-bold">{selectedPlot.facing}</div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Front Road</label>
+                    <div className="font-bold">{selectedPlot.frontRoad}</div>
+                  </div>
+                  <div className="pt-4 border-t border-slate-100">
+                    <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Estimated Price</label>
+                    <div className="font-black text-2xl text-[#00695C]">{selectedPlot.price}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
+                <button className="w-full bg-[#00695C] text-white py-3 rounded-xl font-bold hover:bg-[#004d40] transition-colors shadow-md">
+                  Schedule Site Visit
+                </button>
+                <button className="w-full bg-white text-[#12262D] border border-slate-200 py-3 rounded-xl font-bold hover:border-[#00695C] hover:text-[#00695C] transition-colors">
+                  Contact Sales Team
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
     </div>
   );

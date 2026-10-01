@@ -8,10 +8,8 @@ export const metadata = {
 
 export default function BrochurePage() {
   return (
-    <div className="min-h-screen bg-[#F5F8F8] py-16 sm:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <BrochurePageClient />
-      </div>
+    <div className="min-h-screen bg-[#F5F8F8]">
+      <BrochurePageClient />
     </div>
   );
 }
