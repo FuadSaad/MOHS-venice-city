@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2, RotateCcw } from "lucide-react";
+import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2, RotateCcw, ChevronDown } from "lucide-react";
 
 const module1Plots = Array.from({ length: 15 }, (_, i) => {
   const num = i + 1;
@@ -102,38 +102,48 @@ export default function InteractiveMapDemoClient() {
       {/* Filter Bar */}
       <div className="w-full max-w-7xl mx-auto mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
         <div className="w-full md:w-auto flex-1 flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide snap-x">
-          <select 
-            value={filterZone} 
-            onChange={(e) => setFilterZone(e.target.value)}
-            className="snap-start shrink-0 bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer"
-          >
-            <option value="All Zones">Zone: All Zones</option>
-            <option value="Corporate & Commercial">Corporate & Commercial</option>
-            <option value="Premium Residential">Premium Residential</option>
-          </select>
+          
+          <div className="relative snap-start shrink-0">
+            <select 
+              value={filterZone} 
+              onChange={(e) => setFilterZone(e.target.value)}
+              className="w-full bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer hover:border-slate-300 transition-colors"
+            >
+              <option value="All Zones">Zone: All Zones</option>
+              <option value="Corporate & Commercial">Corporate & Commercial</option>
+              <option value="Premium Residential">Premium Residential</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+          </div>
 
-          <select 
-            value={filterSize} 
-            onChange={(e) => setFilterSize(e.target.value)}
-            className="snap-start shrink-0 bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer"
-          >
-            <option value="All Sizes">Size: All Sizes</option>
-            <option value="20 Katha">20 Katha</option>
-            <option value="25 Katha">25 Katha</option>
-            <option value="30 Katha">30 Katha</option>
-            <option value="40 Katha">40 Katha</option>
-          </select>
+          <div className="relative snap-start shrink-0">
+            <select 
+              value={filterSize} 
+              onChange={(e) => setFilterSize(e.target.value)}
+              className="w-full bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer hover:border-slate-300 transition-colors"
+            >
+              <option value="All Sizes">Size: All Sizes</option>
+              <option value="20 Katha">20 Katha</option>
+              <option value="25 Katha">25 Katha</option>
+              <option value="30 Katha">30 Katha</option>
+              <option value="40 Katha">40 Katha</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+          </div>
 
-          <select 
-            value={filterStatus} 
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="snap-start shrink-0 bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer"
-          >
-            <option value="All Status">Status: All Status</option>
-            <option value="AVAILABLE">Available</option>
-            <option value="BOOKED">Booked</option>
-            <option value="SOLD">Sold</option>
-          </select>
+          <div className="relative snap-start shrink-0">
+            <select 
+              value={filterStatus} 
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="w-full bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer hover:border-slate-300 transition-colors"
+            >
+              <option value="All Status">Status: All Status</option>
+              <option value="AVAILABLE">Available</option>
+              <option value="BOOKED">Booked</option>
+              <option value="SOLD">Sold</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+          </div>
 
           <div className="snap-start shrink-0 bg-[#E8F5F3] text-[#00695C] text-xs font-black px-4 py-2.5 rounded-xl border border-[#00695C]/20 whitespace-nowrap">
             {matchingPlots} Properties Matching
