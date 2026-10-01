@@ -5,45 +5,43 @@ import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2 } from "lucide-react";
 
-const plotsData = [
-  { 
-    id: "CP-01", 
-    size: "30 Katha", 
-    type: "Commercial Plot", 
-    status: "AVAILABLE", 
-    price: "৳ 4,05,00,000",
-    facing: "South Facing",
+const module1Plots = Array.from({ length: 15 }, (_, i) => {
+  const num = i + 1;
+  const is30 = num <= 7;
+  const statuses = ["AVAILABLE", "AVAILABLE", "BOOKED", "SOLD", "AVAILABLE"];
+  return {
+    id: `CP-${num.toString().padStart(2, '0')}`,
+    size: is30 ? "30 Katha" : "40 Katha",
+    type: "Commercial Plot",
+    status: statuses[i % statuses.length],
+    price: is30 ? "৳ 4,05,00,000" : "৳ 5,40,00,000",
+    facing: num % 2 === 0 ? "South Facing" : "River Facing",
     frontRoad: "100ft Riverfront Boulevard",
     location: "Commercial Riverfront",
     desc: "High-visibility commercial plot suitable for corporate towers, financial institutions, shopping malls, and hospitality complexes."
-  },
-  { 
-    id: "CP-05", 
-    size: "10 Katha", 
-    type: "Commercial Plot", 
-    status: "AVAILABLE", 
-    price: "৳ 1,35,00,000",
-    facing: "River Facing",
-    frontRoad: "100ft Riverfront Boulevard",
-    location: "Commercial Riverfront",
-    desc: "High-visibility commercial plot suitable for corporate towers, financial institutions, shopping malls, and hospitality complexes."
-  },
-  { 
-    id: "P-101", 
-    size: "5 Katha", 
-    type: "Residential Plot", 
-    status: "BOOKED", 
-    price: "৳ 75,00,000",
-    facing: "North",
-    frontRoad: "40ft Internal Road",
-    location: "Residential Zone",
-    desc: "Premium residential plot perfect for building your dream home in a secure, master-planned community."
-  }
-];
+  };
+});
 
-// Replicate data to fill the sidebar
-const expandedPlotsData = [...plotsData, ...plotsData, ...plotsData].map((p, i) => ({...p, id: p.id.replace(/[0-9]+/, String(i+1).padStart(2, '0'))}));
-
+const module2Plots = Array.from({ length: 16 }, (_, i) => {
+  const num = i + 1;
+  let size = "20 Katha";
+  let price = "৳ 2,70,00,000";
+  if (num === 1) { size = "30 Katha"; price = "৳ 4,05,00,000"; }
+  else if (num >= 2 && num <= 6) { size = "25 Katha"; price = "৳ 3,37,50,000"; }
+  
+  const statuses = ["AVAILABLE", "BOOKED", "AVAILABLE", "AVAILABLE", "SOLD"];
+  return {
+    id: num.toString().padStart(2, '0'),
+    size: size,
+    type: "Premium Plot",
+    status: statuses[(i + 2) % statuses.length],
+    price: price,
+    facing: num % 2 === 0 ? "East Facing" : "West Facing",
+    frontRoad: "60ft Internal Avenue",
+    location: "Premium Zone",
+    desc: "Exclusive premium plot perfect for building your dream home in a highly secure, master-planned community."
+  };
+});
 
 export default function InteractiveMapDemoClient() {
   return (
@@ -62,18 +60,18 @@ export default function InteractiveMapDemoClient() {
       <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 h-[85vh] xl:h-[75vh]">
         
         {/* Module 1 */}
-        <MapModule imageSrc="/images/map-interactive.jpg" title="Sector 1" />
+        <MapModule imageSrc="/images/map-interactive.jpg" title="Sector 1" plotsData={module1Plots} />
         
         {/* Module 2 */}
-        <MapModule imageSrc="/images/map-interactive-2.jpg" title="Sector 2" />
+        <MapModule imageSrc="/images/map-interactive-2.jpg" title="Sector 2" plotsData={module2Plots} />
 
       </div>
     </div>
   );
 }
 
-function MapModule({ imageSrc, title }: { imageSrc: string, title: string }) {
-  const [selectedPlot, setSelectedPlot] = useState<typeof expandedPlotsData[0] | null>(null);
+function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: string, plotsData: any[] }) {
+  const [selectedPlot, setSelectedPlot] = useState<typeof module1Plots[0] | null>(null);
 
   return (
     <div className="flex-1 bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col lg:flex-row relative">
@@ -140,7 +138,7 @@ function MapModule({ imageSrc, title }: { imageSrc: string, title: string }) {
 
         <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200">
           <div className="grid grid-cols-2 gap-3">
-            {expandedPlotsData.map((plot) => (
+            {plotsData.map((plot) => (
               <button
                 key={plot.id}
                 onClick={() => setSelectedPlot(plot)}
