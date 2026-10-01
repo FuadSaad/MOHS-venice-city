@@ -27,14 +27,14 @@ export default async function Footer() {
               <div className="relative w-64 h-24">
                 <Image
                   src="/images/logo.png"
-                  alt="MOHS Venice City"
+                  alt={settings.companyName}
                   fill
                   className="object-contain object-left"
                 />
               </div>
             </div>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm">
-              MOHS Venice City is a flagship eco-waterfront township located at the
+              {settings.companyName} is a flagship eco-waterfront township located at the
               prestigious Uttara - Purbachal extension. We offer 100% verified
               residential plots and modern architectural flats with guaranteed
               documentation transparency.
@@ -175,23 +175,23 @@ export default async function Footer() {
             <ul className="space-y-3 text-sm text-white/80">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#D6A84F] shrink-0 mt-0.5" />
-                <span>Uttara - Purbachal Link Road, Sector 3, Dhaka, Bangladesh</span>
+                <span>{settings.address}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#D6A84F] shrink-0" />
-                <a href="tel:+8801711000000" className="hover:text-white">
-                  +880 1711-000000
+                <a href={`tel:${settings.phone.replace(/[^0-9+]/g, "")}`} className="hover:text-white">
+                  {settings.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#D6A84F] shrink-0" />
-                <a href="mailto:info@mohsvenicecity.com" className="hover:text-white">
-                  info@mohsvenicecity.com
+                <a href={`mailto:${settings.email}`} className="hover:text-white">
+                  {settings.email}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#D6A84F] shrink-0 mt-0.5" />
-                <span>Sat - Thu: 9:00 AM - 7:00 PM (Fri open for site visits)</span>
+                <span>{settings.visitingHours}</span>
               </li>
             </ul>
           </div>
@@ -199,7 +199,7 @@ export default async function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/60">
-          <p>© {new Date().getFullYear()} MOHS Venice City. All Rights Reserved. "Your Property Partner".</p>
+          <p>&copy; {new Date().getFullYear()} {settings.companyName}. All Rights Reserved. &quot;{settings.tagline}&quot;.</p>
           <div className="flex items-center gap-6">
             <Link href="/about" className="hover:text-white transition-colors">
               Privacy Policy

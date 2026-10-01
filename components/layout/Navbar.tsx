@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import SiteVisitModal from "@/components/property/SiteVisitModal";
 import { Menu, X, PhoneCall, Calendar, ShieldCheck, User, TrendingUp, ExternalLink, ChevronDown, Map, Building2, FileText, Compass } from "lucide-react";
 
-export default function Navbar() {
+export default function Navbar({ settings }: { settings?: any }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [propertiesOpen, setPropertiesOpen] = useState(false);
   const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
@@ -52,15 +52,15 @@ export default function Navbar() {
               <ShieldCheck className="w-3.5 h-3.5" /> An Interest-Free Business Ecosystem • 100% Verified Legal Titles
             </span>
             <span className="text-white/40">|</span>
-            <span className="text-slate-300">Uttara - Purbachal Extension, Dhaka</span>
+            <span className="text-slate-300">{settings?.address || "Uttara - Purbachal Extension, Dhaka"}</span>
           </div>
           <div className="flex items-center gap-4">
             <a
-              href="tel:+8801711000000"
+              href={`tel:${settings?.phone || "+8801711000000"}`}
               className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors"
             >
               <PhoneCall className="w-3 h-3 text-[#D6A84F]" />
-              <span>Hotline: +880 1711-000000</span>
+              <span>Hotline: {settings?.phone || "+880 1711-000000"}</span>
             </a>
 
           </div>
