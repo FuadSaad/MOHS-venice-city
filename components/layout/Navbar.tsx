@@ -71,7 +71,7 @@ export default function Navbar({ settings }: { settings?: any }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-2 xl:gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
+          <Link href="/" className="flex items-center gap-3 group shrink-0 lg:ml-4 xl:ml-6">
             <div className="relative w-44 h-16 sm:w-52 sm:h-20 flex items-center">
               <Image
                 src="/images/logo.png"
