@@ -189,7 +189,7 @@ export default function MapSection() {
               </p>
             </div>
             
-              {/* Layout Preview Image */}
+            {/* Layout Preview Image */}
             <div className="relative aspect-[16/9] mx-3 sm:mx-6 rounded-xl overflow-hidden border border-[#E2E7E5] bg-slate-200">
               <Image
                 src={layoutMapImage}
@@ -198,25 +198,25 @@ export default function MapSection() {
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-              <Link
-                href="/interactive-map"
+              <button
+                onClick={() => setActiveModal("LAYOUT")}
                 className="absolute inset-0 flex items-center justify-center"
                 aria-label="Enlarge layout map"
               >
                 <span className="bg-white/95 text-[#12262D] text-xs font-bold px-4 py-2 rounded-lg shadow-md flex items-center gap-1.5 backdrop-blur-sm group-hover:bg-[#00695C] group-hover:text-white transition-colors">
                   <Maximize2 className="w-3.5 h-3.5" /> Enlarge Layout Plan
                 </span>
-              </Link>
+              </button>
             </div>
 
             <div className="p-3 sm:p-6 pt-3 sm:pt-4">
-              <Link
-                href="/interactive-map"
+              <button
+                onClick={() => setActiveModal("LAYOUT")}
                 className="w-full py-2 px-2 sm:py-2.5 sm:px-4 bg-white hover:bg-[#E8F5F3] text-[#00695C] border border-[#00695C]/30 rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors text-center"
               >
                 <span>View Detailed Map</span>
                 <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
-              </Link>
+              </button>
             </div>
           </div>
           </Reveal>
