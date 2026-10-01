@@ -74,10 +74,10 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
   const [selectedPlot, setSelectedPlot] = useState<typeof module1Plots[0] | null>(null);
 
   return (
-    <div className="flex-1 bg-white rounded-2xl lg:rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-row relative h-[65vh] xl:h-full">
+    <div className="flex-1 bg-white rounded-2xl lg:rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-row relative w-full">
       
       {/* Left Side: Map Viewer */}
-      <div className="w-[55%] lg:w-[60%] h-full relative bg-[#E8F5F3]/30 border-r border-slate-100">
+      <div className="w-[55%] lg:w-[60%] relative bg-[#E8F5F3]/30 flex flex-col">
         <TransformWrapper
           initialScale={1}
           minScale={1}
@@ -101,12 +101,12 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
                 </button>
               </div>
 
-              <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
-                <div className="relative w-full h-full flex items-center justify-center p-2 lg:p-4">
+              <TransformComponent wrapperClass="!w-full" contentClass="!w-full flex items-center justify-center">
+                <div className="relative w-full p-2 lg:p-4">
                   <img
                     src={imageSrc}
                     alt={title}
-                    className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-xl lg:rounded-2xl"
+                    className="w-full h-auto object-contain drop-shadow-2xl rounded-xl lg:rounded-2xl"
                     draggable={false}
                   />
                 </div>
@@ -117,7 +117,7 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
       </div>
 
       {/* Right Side: Sidebar & Plot Selection */}
-      <div className="w-[45%] lg:w-[40%] flex flex-col h-full relative bg-white">
+      <div className="absolute top-0 right-0 bottom-0 w-[45%] lg:w-[40%] flex flex-col bg-white border-l border-slate-100 shadow-xl z-10">
         <div className="p-2 md:p-4 border-b border-slate-100 flex flex-col items-center justify-center">
           <Image 
             src="/images/logo.png" 
