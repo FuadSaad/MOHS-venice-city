@@ -18,7 +18,7 @@ export default function FloatingWidgets({ settings }: { settings?: WebsiteSettin
     // Initialize Google Translate globally
     (window as any).googleTranslateElementInit = () => {
       new (window as any).google.translate.TranslateElement(
-        { pageLanguage: "en", autoDisplay: false },
+        { pageLanguage: "en", includedLanguages: "en,bn", autoDisplay: false },
         "google_translate_element"
       );
     };
@@ -43,15 +43,19 @@ export default function FloatingWidgets({ settings }: { settings?: WebsiteSettin
     setShowLangMenu(false);
     
     // Set google translate cookie and reload
-    if (selected === "BN") {
-      document.cookie = "googtrans=/en/bn; path=/; domain=" + window.location.hostname;
-      document.cookie = "googtrans=/en/bn; path=/";
-      window.location.reload();
+    const langCode = selected === "BN" ? "bn" : "en";
+    
+    // Fallback cookie setting
+    document.cookie = `googtrans=/en/${langCode}; path=/; domain=` + window.location.hostname;
+    document.cookie = `googtrans=/en/${langCode}; path=/`;
+
+    // The robust way: trigger the hidden google translate dropdown without reloading
+    const select = document.querySelector(".goog-te-combo") as HTMLSelectElement;
+    if (select) {
+      select.value = langCode;
+      select.dispatchEvent(new Event("change"));
     } else {
-      document.cookie = "googtrans=/en/en; path=/; domain=" + window.location.hostname;
-      document.cookie = "googtrans=/en/en; path=/";
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+      // If widget hasn't loaded yet, reload the page to apply the cookie
       window.location.reload();
     }
   };
