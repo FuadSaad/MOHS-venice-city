@@ -1,28 +1,15 @@
 import React from "react";
-import { Metadata } from "next";
-import InteractiveMapViewer from "@/components/map/InteractiveMapViewer";
+import InteractiveMapDemoClient from "@/components/map/InteractiveMapDemoClient";
 
-import prisma from "@/lib/prisma";
-
-export const metadata: Metadata = {
-  title: "Interactive Property Map | MOHS Venice City",
-  description:
-    "Explore the official masterplan of MOHS Venice City interactively. View and select available residential plots, modern apartments, and community amenities in real-time.",
+export const metadata = {
+  title: "Interactive Masterplan | MOHS Venice City",
+  description: "Explore our master-planned sectors side-by-side. View detailed plot layouts, check real-time availability, and find the perfect location for your future home or business.",
 };
 
-export default async function InteractiveMapPage() {
-  const dbPlots = await prisma.property.findMany({
-    where: { propertyType: "PLOT" },
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      status: true,
-      price: true,
-      priceFormatted: true,
-      isFeatured: true,
-    }
-  });
-
-  return <InteractiveMapViewer dbPlots={dbPlots} />;
+export default function InteractiveMapPage() {
+  return (
+    <div className="w-full">
+      <InteractiveMapDemoClient />
+    </div>
+  );
 }
