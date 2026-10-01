@@ -10,7 +10,7 @@ interface CustomerReviewsProps {
 
 export default function CustomerReviews({ reviews }: CustomerReviewsProps) {
   return (
-    <section className="py-16 sm:py-24 bg-[#F5F8F8] border-b border-[#E2E7E5]">
+    <section className="pt-8 pb-16 sm:pt-12 sm:pb-24 bg-[#F5F8F8] border-b border-[#E2E7E5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto mb-14">

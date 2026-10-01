@@ -24,7 +24,7 @@ export default function ProjectOverview() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-[#F5F8F8]">
+    <section className="pt-16 pb-8 sm:pt-24 sm:pb-12 bg-[#F5F8F8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Visual Showcase */}
