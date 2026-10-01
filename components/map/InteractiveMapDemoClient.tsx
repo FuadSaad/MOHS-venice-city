@@ -73,7 +73,7 @@ export default function InteractiveMapDemoClient() {
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex flex-col items-center">
       
       {/* Top Header & Stats */}
-      <div className="w-full max-w-[1800px] flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-4 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-4 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="text-left">
           <h1 className="text-3xl md:text-4xl font-black font-heading text-[#12262D] tracking-tight mb-2">
             Interactive Property Map
@@ -100,7 +100,7 @@ export default function InteractiveMapDemoClient() {
       </div>
 
       {/* Filter Bar */}
-      <div className="w-full max-w-[1800px] mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+      <div className="w-full max-w-7xl mx-auto mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
         <div className="w-full md:w-auto flex-1 flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide snap-x">
           <select 
             value={filterZone} 
@@ -154,7 +154,7 @@ export default function InteractiveMapDemoClient() {
         </div>
       </div>
 
-      <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 xl:h-[75vh]">
+      <div className="w-full max-w-7xl mx-auto flex flex-col xl:flex-row gap-6 xl:h-[75vh]">
         
         {/* Module 1 */}
         <MapModule 
