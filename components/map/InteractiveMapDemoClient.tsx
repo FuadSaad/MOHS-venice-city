@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2 } from "lucide-react";
+import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2, RotateCcw } from "lucide-react";
 
 const module1Plots = Array.from({ length: 15 }, (_, i) => {
   const num = i + 1;
@@ -138,6 +138,21 @@ export default function InteractiveMapDemoClient() {
           <div className="snap-start shrink-0 bg-[#E8F5F3] text-[#00695C] text-xs font-black px-4 py-2.5 rounded-xl border border-[#00695C]/20 whitespace-nowrap">
             {matchingPlots} Properties Matching
           </div>
+          
+          {(filterZone !== "All Zones" || filterSize !== "All Sizes" || filterStatus !== "All Status" || searchQuery !== "") && (
+            <button
+              onClick={() => {
+                setFilterZone("All Zones");
+                setFilterSize("All Sizes");
+                setFilterStatus("All Status");
+                setSearchQuery("");
+              }}
+              className="snap-start shrink-0 flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 px-3 py-2.5 rounded-xl transition-colors whitespace-nowrap"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Reset Filters
+            </button>
+          )}
         </div>
 
         <div className="w-full md:w-[280px] shrink-0 relative">
