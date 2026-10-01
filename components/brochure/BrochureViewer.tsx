@@ -5,9 +5,12 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, LayoutList, BookOpen, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const pages = Array.from({ length: 10 }, (_, i) => `/images/brochure/${i + 1}.jpg`);
+interface BrochureViewerProps {
+  pages: string[];
+  pdfUrl?: string;
+}
 
-export default function BrochureViewer() {
+export default function BrochureViewer({ pages, pdfUrl = "#" }: BrochureViewerProps) {
   const [viewMode, setViewMode] = useState<"SCROLL" | "BOOK">("SCROLL");
   const [currentPage, setCurrentPage] = useState(0);
 
