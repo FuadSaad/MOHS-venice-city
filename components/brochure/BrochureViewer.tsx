@@ -5,7 +5,7 @@ import Image from "next/image";
 import { 
   ChevronLeft, ChevronRight, LayoutList, BookOpen, Download, 
   Map, ZoomIn, ZoomOut, Maximize, Search, Printer, Share2, 
-  PanelLeftClose, PanelLeft, X, Info
+  PanelLeftClose, PanelLeft, X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -31,7 +31,7 @@ const dummyPlots = [
 ];
 
 export default function BrochureViewer({ brochure }: BrochureViewerProps) {
-  const [viewMode, setViewMode] = useState<"SCROLL" | "BOOK" | "MASTERPLAN">("BOOK");
+  const [viewMode, setViewMode] = useState<"SCROLL" | "BOOK" | "MASTERPLAN">("SCROLL");
   const [currentPage, setCurrentPage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -69,7 +69,7 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen().catch(err => {
+      containerRef.current?.requestFullscreen().catch(() => {
         setIsFullscreen(!isFullscreen); // Fallback to CSS fullscreen
       });
       setIsFullscreen(true);
@@ -82,22 +82,22 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
   return (
     <div 
       ref={containerRef}
-      className={`bg-[#0f171a] text-slate-200 flex flex-col font-sans transition-all duration-300 ${
+      className={`bg-white text-[#12262D] flex flex-col font-sans transition-all duration-300 ${
         isFullscreen ? 'fixed inset-0 z-50' : 'relative w-full h-[85vh]'
       }`}
     >
       {/* Top Toolbar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-[#080d0f] border-b border-white/10 shrink-0">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-white border-b border-slate-200 shrink-0">
         
         {/* Left: View Modes */}
-        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg">
-          <button onClick={() => setViewMode("BOOK")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "BOOK" ? "bg-[#00695C] text-white" : "hover:bg-white/10 text-slate-400"}`}>
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+          <button onClick={() => setViewMode("BOOK")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "BOOK" ? "bg-[#00695C] text-white shadow-sm" : "hover:bg-slate-200 text-slate-500"}`}>
             <BookOpen className="w-4 h-4" /> <span className="hidden sm:inline">Book View</span>
           </button>
-          <button onClick={() => setViewMode("SCROLL")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "SCROLL" ? "bg-[#00695C] text-white" : "hover:bg-white/10 text-slate-400"}`}>
+          <button onClick={() => setViewMode("SCROLL")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "SCROLL" ? "bg-[#00695C] text-white shadow-sm" : "hover:bg-slate-200 text-slate-500"}`}>
             <LayoutList className="w-4 h-4" /> <span className="hidden sm:inline">Scroll View</span>
           </button>
-          <button onClick={() => setViewMode("MASTERPLAN")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "MASTERPLAN" ? "bg-[#00695C] text-white" : "hover:bg-white/10 text-slate-400"}`}>
+          <button onClick={() => setViewMode("MASTERPLAN")} className={`p-2 rounded-md flex items-center gap-2 text-xs font-bold transition-colors ${viewMode === "MASTERPLAN" ? "bg-[#00695C] text-white shadow-sm" : "hover:bg-slate-200 text-slate-500"}`}>
             <Map className="w-4 h-4" /> <span className="hidden sm:inline">Interactive Masterplan</span>
           </button>
         </div>
@@ -106,41 +106,41 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
         <div className="flex-1 flex justify-center items-center">
           {viewMode !== "MASTERPLAN" && (
             <div className="flex items-center gap-3">
-              <button onClick={prevPage} disabled={currentPage === 0} className="p-1 hover:bg-white/10 rounded disabled:opacity-30">
+              <button onClick={prevPage} disabled={currentPage === 0} className="p-1 hover:bg-slate-100 rounded disabled:opacity-30">
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <span className="text-sm font-medium">Page {currentPage + 1} of {brochure.pages.length}</span>
-              <button onClick={nextPage} disabled={currentPage === brochure.pages.length - 1} className="p-1 hover:bg-white/10 rounded disabled:opacity-30">
+              <span className="text-sm font-bold text-slate-700">Page {currentPage + 1} of {brochure.pages.length}</span>
+              <button onClick={nextPage} disabled={currentPage === brochure.pages.length - 1} className="p-1 hover:bg-slate-100 rounded disabled:opacity-30">
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           )}
           {viewMode === "MASTERPLAN" && (
-            <span className="text-sm font-bold text-emerald-400">Interactive Masterplan Mode</span>
+            <span className="text-sm font-bold text-[#00695C]">Interactive Masterplan Mode</span>
           )}
         </div>
 
         {/* Right: Tools */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 text-slate-500">
           {viewMode !== "MASTERPLAN" && (
-            <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 hover:bg-white/10 rounded-md transition-colors" title="Search Text">
+            <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 hover:bg-slate-100 hover:text-slate-800 rounded-md transition-colors" title="Search Text">
               <Search className="w-4 h-4" />
             </button>
           )}
-          <button onClick={() => alert("Print dialog opening...")} className="p-2 hover:bg-white/10 rounded-md transition-colors hidden sm:block" title="Print">
+          <button onClick={() => alert("Print dialog opening...")} className="p-2 hover:bg-slate-100 hover:text-slate-800 rounded-md transition-colors hidden sm:block" title="Print">
             <Printer className="w-4 h-4" />
           </button>
-          <button onClick={() => alert("Share link copied!")} className="p-2 hover:bg-white/10 rounded-md transition-colors hidden sm:block" title="Share">
+          <button onClick={() => alert("Share link copied!")} className="p-2 hover:bg-slate-100 hover:text-slate-800 rounded-md transition-colors hidden sm:block" title="Share">
             <Share2 className="w-4 h-4" />
           </button>
-          <button onClick={() => alert("PDF Download starting...")} className="p-2 hover:bg-white/10 rounded-md transition-colors text-emerald-400 hover:text-emerald-300" title="Download PDF">
+          <button onClick={() => alert("PDF Download starting...")} className="p-2 hover:bg-emerald-50 hover:text-[#00695C] rounded-md transition-colors text-[#00695C]" title="Download PDF">
             <Download className="w-4 h-4" />
           </button>
-          <div className="w-px h-4 bg-white/20 mx-1 hidden sm:block"></div>
-          <button onClick={toggleFullscreen} className="p-2 hover:bg-white/10 rounded-md transition-colors" title="Fullscreen">
+          <div className="w-px h-4 bg-slate-300 mx-1 hidden sm:block"></div>
+          <button onClick={toggleFullscreen} className="p-2 hover:bg-slate-100 hover:text-slate-800 rounded-md transition-colors" title="Fullscreen">
             <Maximize className="w-4 h-4" />
           </button>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-white/10 rounded-md transition-colors" title="Toggle Thumbnails">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-100 hover:text-slate-800 rounded-md transition-colors" title="Toggle Thumbnails">
             {sidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
           </button>
         </div>
@@ -149,11 +149,11 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
       {/* Search Overlay */}
       <AnimatePresence>
         {searchOpen && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-[#1a2327] border-b border-white/10 overflow-hidden shrink-0">
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-slate-50 border-b border-slate-200 overflow-hidden shrink-0">
             <div className="p-3 flex items-center gap-3 max-w-2xl mx-auto">
               <Search className="w-4 h-4 text-slate-400" />
-              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search document text..." className="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-slate-500" />
-              <button onClick={() => setSearchOpen(false)} className="p-1 hover:bg-white/10 rounded"><X className="w-4 h-4" /></button>
+              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search document text..." className="flex-1 bg-transparent border-none outline-none text-sm text-[#12262D] placeholder:text-slate-400" />
+              <button onClick={() => setSearchOpen(false)} className="p-1 hover:bg-slate-200 text-slate-500 rounded"><X className="w-4 h-4" /></button>
             </div>
           </motion.div>
         )}
@@ -169,21 +169,21 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
               initial={{ opacity: 0, y: 50 }} 
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: 50 }}
-              className="absolute sm:relative inset-x-0 bottom-0 sm:inset-y-0 sm:left-0 z-40 bg-[#0b1114] sm:border-r border-t sm:border-t-0 border-white/10 flex flex-col shrink-0 overflow-y-auto h-48 sm:h-auto sm:w-60 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] sm:shadow-none"
+              className="absolute sm:relative inset-x-0 bottom-0 sm:inset-y-0 sm:left-0 z-40 bg-slate-50 sm:border-r border-t sm:border-t-0 border-slate-200 flex flex-col shrink-0 overflow-y-auto h-48 sm:h-auto sm:w-60 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] sm:shadow-none"
             >
-              <div className="p-3 border-b border-white/5 sticky top-0 bg-[#0b1114]/90 backdrop-blur z-10 flex justify-between items-center">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pages</span>
-                <button className="sm:hidden p-1 hover:bg-white/10 rounded" onClick={() => setSidebarOpen(false)}><X className="w-4 h-4" /></button>
+              <div className="p-3 border-b border-slate-200 sticky top-0 bg-slate-50/90 backdrop-blur z-10 flex justify-between items-center">
+                <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Pages</span>
+                <button className="sm:hidden p-1 hover:bg-slate-200 text-slate-500 rounded" onClick={() => setSidebarOpen(false)}><X className="w-4 h-4" /></button>
               </div>
               <div className="p-3 grid grid-cols-3 sm:grid-cols-2 gap-3">
                 {brochure.pages.map((src, idx) => (
                   <button 
                     key={idx}
                     onClick={() => { setCurrentPage(idx); if (window.innerWidth < 640) setSidebarOpen(false); }}
-                    className={`relative aspect-[3/4] rounded-lg overflow-hidden border-2 transition-all ${currentPage === idx ? "border-[#00695C] shadow-lg shadow-[#00695C]/20" : "border-transparent hover:border-white/20"}`}
+                    className={`relative aspect-[3/4] rounded-lg overflow-hidden border-2 transition-all ${currentPage === idx ? "border-[#00695C] shadow-lg shadow-[#00695C]/20 scale-105" : "border-slate-200 hover:border-[#00695C]/50 bg-white"}`}
                   >
                     <Image src={src} alt={`Thumb ${idx+1}`} fill className="object-cover" unoptimized />
-                    <div className="absolute bottom-1 right-1 bg-black/60 px-1.5 py-0.5 rounded text-[9px] font-bold">{idx + 1}</div>
+                    <div className="absolute bottom-1 right-1 bg-white/90 shadow px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-700">{idx + 1}</div>
                   </button>
                 ))}
               </div>
@@ -192,13 +192,13 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
         </AnimatePresence>
 
         {/* Viewer Canvas */}
-        <div className="flex-1 bg-[#121a1e] relative overflow-hidden flex flex-col items-center justify-center">
+        <div className="flex-1 bg-[#F5F8F8] relative overflow-hidden flex flex-col items-center justify-center">
           
           {/* SCROLL MODE */}
           {viewMode === "SCROLL" && (
-            <div className="w-full h-full overflow-y-auto p-4 sm:p-12 flex flex-col items-center gap-8 scrollbar-thin scrollbar-thumb-white/20">
+            <div className="w-full h-full overflow-y-auto p-4 sm:p-12 flex flex-col items-center gap-8 scrollbar-thin scrollbar-thumb-slate-300">
               {brochure.pages.map((src, idx) => (
-                <div key={idx} className="w-full max-w-4xl relative aspect-[3/4] bg-white shadow-2xl">
+                <div key={idx} className="w-full max-w-4xl relative aspect-[3/4] bg-white shadow-xl rounded-sm border border-slate-200">
                   <Image src={src} alt={`Page ${idx+1}`} fill className="object-contain" unoptimized />
                 </div>
               ))}
@@ -211,9 +211,9 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
               {({ zoomIn, zoomOut, resetTransform }) => (
                 <>
                   <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
-                    <button onClick={() => zoomIn()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomIn className="w-5 h-5" /></button>
-                    <button onClick={() => zoomOut()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomOut className="w-5 h-5" /></button>
-                    <button onClick={() => resetTransform()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10 text-xs font-bold">FIT</button>
+                    <button onClick={() => zoomIn()} className="p-2 bg-white/90 hover:bg-white backdrop-blur rounded-lg shadow-sm border border-slate-200 text-slate-600"><ZoomIn className="w-5 h-5" /></button>
+                    <button onClick={() => zoomOut()} className="p-2 bg-white/90 hover:bg-white backdrop-blur rounded-lg shadow-sm border border-slate-200 text-slate-600"><ZoomOut className="w-5 h-5" /></button>
+                    <button onClick={() => resetTransform()} className="p-2 bg-white/90 hover:bg-white backdrop-blur rounded-lg shadow-sm border border-slate-200 text-slate-600 text-xs font-bold">FIT</button>
                   </div>
                   <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
                     <AnimatePresence mode="wait">
@@ -221,7 +221,7 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
                         key={currentPage}
                         initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.3 }}
-                        className="relative w-full max-w-4xl aspect-[3/4] bg-white shadow-2xl"
+                        className="relative w-full max-w-4xl aspect-[3/4] bg-white shadow-xl rounded-sm border border-slate-200"
                       >
                         <Image src={brochure.pages[currentPage]} alt={`Page ${currentPage+1}`} fill className="object-contain" unoptimized />
                       </motion.div>
@@ -238,19 +238,19 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
               {({ zoomIn, zoomOut, resetTransform }) => (
                 <>
                   <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
-                    <button onClick={() => zoomIn()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomIn className="w-5 h-5" /></button>
-                    <button onClick={() => zoomOut()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10"><ZoomOut className="w-5 h-5" /></button>
-                    <button onClick={() => resetTransform()} className="p-2 bg-black/50 hover:bg-black/70 backdrop-blur rounded-lg shadow-lg border border-white/10 text-xs font-bold">FIT</button>
+                    <button onClick={() => zoomIn()} className="p-2 bg-white/90 hover:bg-white backdrop-blur rounded-lg shadow-sm border border-slate-200 text-slate-600"><ZoomIn className="w-5 h-5" /></button>
+                    <button onClick={() => zoomOut()} className="p-2 bg-white/90 hover:bg-white backdrop-blur rounded-lg shadow-sm border border-slate-200 text-slate-600"><ZoomOut className="w-5 h-5" /></button>
+                    <button onClick={() => resetTransform()} className="p-2 bg-white/90 hover:bg-white backdrop-blur rounded-lg shadow-sm border border-slate-200 text-slate-600 text-xs font-bold">FIT</button>
                   </div>
 
                   {/* Legend Overlay */}
-                  <div className="absolute left-4 top-4 z-20 bg-black/70 backdrop-blur p-4 rounded-xl border border-white/10 pointer-events-none hidden sm:block">
-                    <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">Map Legend</h4>
+                  <div className="absolute left-4 top-4 z-20 bg-white/90 backdrop-blur p-4 rounded-xl border border-slate-200 shadow-sm pointer-events-none hidden sm:block">
+                    <h4 className="text-xs font-black text-[#12262D] uppercase tracking-wider mb-3">Map Legend</h4>
                     <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-emerald-500/50 border border-emerald-400"></div><span className="text-xs text-slate-300">Available</span></div>
-                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-amber-500/50 border border-amber-400"></div><span className="text-xs text-slate-300">Reserved</span></div>
-                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-rose-500/50 border border-rose-400"></div><span className="text-xs text-slate-300">Sold</span></div>
-                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-slate-500/50 border border-slate-400"></div><span className="text-xs text-slate-300">Unavailable</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-emerald-100 border border-emerald-400"></div><span className="text-xs font-bold text-slate-600">Available</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-amber-100 border border-amber-400"></div><span className="text-xs font-bold text-slate-600">Reserved</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-rose-100 border border-rose-400"></div><span className="text-xs font-bold text-slate-600">Sold</span></div>
+                      <div className="flex items-center gap-2"><div className="w-4 h-4 bg-slate-200 border border-slate-400"></div><span className="text-xs font-bold text-slate-600">Unavailable</span></div>
                     </div>
                   </div>
 
