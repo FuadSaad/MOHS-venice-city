@@ -47,8 +47,19 @@ const expandedPlotsData = [...plotsData, ...plotsData, ...plotsData].map((p, i) 
 
 export default function InteractiveMapDemoClient() {
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex items-center justify-center">
-      <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 h-[85vh] xl:h-[80vh]">
+    <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center">
+      
+      {/* Page Header */}
+      <div className="text-center mb-6 lg:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <h1 className="text-3xl md:text-4xl font-black font-heading text-[#12262D] tracking-tight mb-3">
+          Interactive Masterplan Explorer
+        </h1>
+        <p className="text-slate-600 font-medium text-sm md:text-base max-w-3xl mx-auto">
+          Explore our master-planned sectors side-by-side. View detailed plot layouts, check real-time availability, and find the perfect location for your future home or business.
+        </p>
+      </div>
+
+      <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 h-[85vh] xl:h-[75vh]">
         
         {/* Module 1 */}
         <MapModule imageSrc="/images/map-interactive.jpg" title="Sector 1" />
