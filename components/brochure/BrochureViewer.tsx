@@ -40,10 +40,51 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
   const [selectedPlot, setSelectedPlot] = useState<typeof dummyPlots[0] | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isClickScroll = useRef(false);
 
   useEffect(() => {
+    isClickScroll.current = true;
     setCurrentPage(0);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
   }, [brochure]);
+
+  // Scroll to page when currentPage changes (e.g. from thumbnail click)
+  useEffect(() => {
+    if (viewMode === "SCROLL" && pageRefs.current[currentPage] && isClickScroll.current) {
+      pageRefs.current[currentPage]?.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Reset the flag after scrolling is likely done
+      setTimeout(() => { isClickScroll.current = false; }, 800);
+    }
+  }, [currentPage, viewMode]);
+
+  const handleScroll = () => {
+    if (viewMode !== "SCROLL" || !scrollContainerRef.current || isClickScroll.current) return;
+    const container = scrollContainerRef.current;
+    
+    // Use a small offset so it triggers when the page is mostly in view
+    const scrollPosition = container.scrollTop + container.clientHeight / 3;
+    
+    let closestIndex = 0;
+    let minDistance = Infinity;
+    
+    pageRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const distance = Math.abs(ref.offsetTop - scrollPosition);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = index;
+        }
+      }
+    });
+    
+    if (closestIndex !== currentPage) {
+      setCurrentPage(closestIndex);
+    }
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -61,10 +102,16 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
   }, [viewMode, currentPage, isFullscreen]);
 
   const nextPage = () => {
-    if (currentPage < brochure.pages.length - 1) setCurrentPage(p => p + 1);
+    if (currentPage < brochure.pages.length - 1) {
+      isClickScroll.current = true;
+      setCurrentPage(p => p + 1);
+    }
   };
   const prevPage = () => {
-    if (currentPage > 0) setCurrentPage(p => p - 1);
+    if (currentPage > 0) {
+      isClickScroll.current = true;
+      setCurrentPage(p => p - 1);
+    }
   };
 
   const toggleFullscreen = () => {
@@ -179,7 +226,7 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
                 {brochure.pages.map((src, idx) => (
                   <button 
                     key={idx}
-                    onClick={() => { setCurrentPage(idx); if (window.innerWidth < 640) setSidebarOpen(false); }}
+                    onClick={() => { isClickScroll.current = true; setCurrentPage(idx); if (window.innerWidth < 640) setSidebarOpen(false); }}
                     className={`relative aspect-[3/4] rounded-lg overflow-hidden border-2 transition-all ${currentPage === idx ? "border-[#00695C] shadow-lg shadow-[#00695C]/20 scale-105" : "border-slate-200 hover:border-[#00695C]/50 bg-white"}`}
                   >
                     <Image src={src} alt={`Thumb ${idx+1}`} fill className="object-cover" unoptimized />
@@ -196,9 +243,17 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
           
           {/* SCROLL MODE */}
           {viewMode === "SCROLL" && (
-            <div className="w-full h-full overflow-y-auto p-4 sm:p-12 flex flex-col items-center gap-8 scrollbar-thin scrollbar-thumb-slate-300">
+            <div 
+              ref={scrollContainerRef}
+              onScroll={handleScroll}
+              className="w-full h-full overflow-y-auto p-4 sm:p-12 flex flex-col items-center gap-8 scrollbar-thin scrollbar-thumb-slate-300"
+            >
               {brochure.pages.map((src, idx) => (
-                <div key={idx} className="w-full max-w-4xl relative aspect-[3/4] bg-white shadow-xl rounded-sm border border-slate-200">
+                <div 
+                  key={idx} 
+                  ref={el => { pageRefs.current[idx] = el; }}
+                  className="w-full max-w-4xl relative aspect-[3/4] bg-white shadow-xl rounded-sm border border-slate-200"
+                >
                   <Image src={src} alt={`Page ${idx+1}`} fill className="object-contain" unoptimized />
                 </div>
               ))}
