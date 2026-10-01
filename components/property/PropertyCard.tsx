@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -31,7 +31,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       {/* Image container */}
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
         <Image
-          src={property.featuredImage || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80"}
+          src={property.featuredImage || "/images/layout-map-v2-optimized.jpg"}
           alt={property.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
