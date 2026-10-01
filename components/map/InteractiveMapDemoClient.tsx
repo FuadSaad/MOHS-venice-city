@@ -124,7 +124,7 @@ export default function InteractiveMapDemoClient() {
 
         {/* DETAILS MODAL OVERLAY */}
         {selectedPlot && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#12262D]/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#12262D]/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
             <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-in-95 duration-300 border border-slate-100">
               
               {/* Modal Header */}
