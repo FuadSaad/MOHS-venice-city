@@ -32,6 +32,7 @@ const dummyPlots = [
 export default function BrochureViewer({ brochure }: BrochureViewerProps) {
   const [viewMode, setViewMode] = useState<"SCROLL" | "BOOK" | "MASTERPLAN">("SCROLL");
   const [currentPage, setCurrentPage] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -97,12 +98,14 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
   const nextPage = () => {
     if (currentPage < brochure.pages.length - 1) {
       isClickScroll.current = true;
+      setDirection(1);
       setCurrentPage(p => p + 1);
     }
   };
   const prevPage = () => {
     if (currentPage > 0) {
       isClickScroll.current = true;
+      setDirection(-1);
       setCurrentPage(p => p - 1);
     }
   };
@@ -202,7 +205,12 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
                 {brochure.pages.map((src, idx) => (
                   <button 
                     key={idx}
-                    onClick={() => { isClickScroll.current = true; setCurrentPage(idx); if (window.innerWidth < 640) setSidebarOpen(false); }}
+                    onClick={() => { 
+                      isClickScroll.current = true; 
+                      setDirection(idx > currentPage ? 1 : -1);
+                      setCurrentPage(idx); 
+                      if (window.innerWidth < 640) setSidebarOpen(false); 
+                    }}
                     className={`relative w-full aspect-[3/4] rounded shadow-sm overflow-hidden transition-all duration-300
                       ${currentPage === idx ? "ring-2 ring-[#00695C] scale-[1.02]" : "hover:shadow-md hover:scale-[1.02] ring-1 ring-slate-200"}
                     `}
@@ -250,20 +258,24 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
                   </div>
 
                   {/* Navigation Arrows for Book Mode */}
-                  <button onClick={prevPage} disabled={currentPage === 0} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/80 hover:bg-white rounded-full shadow-sm ring-1 ring-slate-100 text-slate-600 disabled:opacity-0 transition-all hidden sm:block">
+                  <button onClick={prevPage} disabled={currentPage === 0} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/80 hover:bg-white rounded-full shadow-md ring-1 ring-slate-100 text-slate-600 disabled:opacity-0 transition-all hidden sm:block">
                     <ChevronLeft className="w-6 h-6" />
                   </button>
-                  <button onClick={nextPage} disabled={currentPage === brochure.pages.length - 1} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/80 hover:bg-white rounded-full shadow-sm ring-1 ring-slate-100 text-slate-600 disabled:opacity-0 transition-all hidden sm:block">
+                  <button onClick={nextPage} disabled={currentPage === brochure.pages.length - 1} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/80 hover:bg-white rounded-full shadow-md ring-1 ring-slate-100 text-slate-600 disabled:opacity-0 transition-all hidden sm:block">
                     <ChevronRight className="w-6 h-6" />
                   </button>
 
-                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
-                    <AnimatePresence mode="wait">
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center [perspective:1500px]">
+                    <AnimatePresence mode="wait" custom={direction}>
                       <motion.div 
                         key={currentPage}
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="relative w-full max-w-3xl aspect-[3/4] bg-white shadow-sm ring-1 ring-slate-100"
+                        custom={direction}
+                        initial={(d: number) => ({ opacity: 0, rotateY: d > 0 ? 90 : -90, transformOrigin: d > 0 ? "right" : "left" })}
+                        animate={{ opacity: 1, rotateY: 0, transformOrigin: "center" }}
+                        exit={(d: number) => ({ opacity: 0, rotateY: d > 0 ? -90 : 90, transformOrigin: d > 0 ? "left" : "right" })}
+                        transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
+                        className="relative w-full h-[85%] sm:h-[95%] max-w-5xl aspect-[3/4] bg-white shadow-2xl ring-1 ring-slate-200"
+                        style={{ backfaceVisibility: "hidden" }}
                       >
                         <Image src={brochure.pages[currentPage]} alt={`Page ${currentPage+1}`} fill className="object-contain" unoptimized />
                       </motion.div>
