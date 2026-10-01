@@ -179,7 +179,7 @@ export default function InteractiveMapDemoClient() {
         </div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto flex flex-col xl:flex-row gap-6 xl:h-[75vh]">
+      <div className="w-full max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-start gap-6">
         
         {/* Module 1 */}
         <MapModule 
