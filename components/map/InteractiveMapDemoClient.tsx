@@ -3,21 +3,50 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall } from "lucide-react";
+import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2 } from "lucide-react";
 
 const plotsData = [
-  { id: "CP-1", size: "30 Katha", type: "Commercial Plot", status: "AVAILABLE", price: "Contact for Pricing" },
-  { id: "CP-2", size: "30 Katha", type: "Commercial Plot", status: "AVAILABLE", price: "Contact for Pricing" },
-  { id: "CP-3", size: "15 Katha", type: "Commercial Plot", status: "BOOKED", price: "Contact for Pricing" },
-  { id: "CP-4", size: "10 Katha", type: "Commercial Plot", status: "AVAILABLE", price: "Contact for Pricing" },
-  { id: "CP-5", size: "10 Katha", type: "Commercial Plot", status: "SOLD", price: "Contact for Pricing" },
-  { id: "CP-6", size: "20 Katha", type: "Commercial Plot", status: "AVAILABLE", price: "Contact for Pricing" },
-  { id: "P-101", size: "5 Katha", type: "Residential Plot", status: "AVAILABLE", price: "৳ 75,00,000" },
-  { id: "P-102", size: "3 Katha", type: "Residential Plot", status: "AVAILABLE", price: "৳ 45,00,000" },
+  { 
+    id: "CP-01", 
+    size: "30 Katha", 
+    type: "Commercial Plot", 
+    status: "AVAILABLE", 
+    price: "৳ 4,05,00,000",
+    facing: "South Facing",
+    frontRoad: "100ft Riverfront Boulevard",
+    location: "Commercial Riverfront",
+    desc: "High-visibility commercial plot suitable for corporate towers, financial institutions, shopping malls, and hospitality complexes."
+  },
+  { 
+    id: "CP-05", 
+    size: "10 Katha", 
+    type: "Commercial Plot", 
+    status: "AVAILABLE", 
+    price: "৳ 1,35,00,000",
+    facing: "River Facing",
+    frontRoad: "100ft Riverfront Boulevard",
+    location: "Commercial Riverfront",
+    desc: "High-visibility commercial plot suitable for corporate towers, financial institutions, shopping malls, and hospitality complexes."
+  },
+  { 
+    id: "P-101", 
+    size: "5 Katha", 
+    type: "Residential Plot", 
+    status: "BOOKED", 
+    price: "৳ 75,00,000",
+    facing: "North",
+    frontRoad: "40ft Internal Road",
+    location: "Residential Zone",
+    desc: "Premium residential plot perfect for building your dream home in a secure, master-planned community."
+  }
 ];
 
+// Replicate data to fill the sidebar
+const expandedPlotsData = [...plotsData, ...plotsData, ...plotsData].map((p, i) => ({...p, id: p.id.replace(/[0-9]+/, String(i+1).padStart(2, '0'))}));
+
+
 export default function InteractiveMapDemoClient() {
-  const [selectedPlot, setSelectedPlot] = useState<typeof plotsData[0] | null>(null);
+  const [selectedPlot, setSelectedPlot] = useState<typeof expandedPlotsData[0] | null>(null);
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex items-center justify-center">
@@ -36,7 +65,6 @@ export default function InteractiveMapDemoClient() {
           >
             {({ zoomIn, zoomOut, resetTransform }) => (
               <>
-                {/* Map Controls */}
                 <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
                   <button onClick={() => zoomIn()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2.5 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
                     <ZoomIn className="w-5 h-5" />
@@ -66,8 +94,6 @@ export default function InteractiveMapDemoClient() {
 
         {/* Right Side: Sidebar & Plot Selection (35%) */}
         <div className="lg:w-[35%] flex flex-col h-full relative bg-white">
-          
-          {/* Header & Logo */}
           <div className="p-8 pb-6 border-b border-slate-100 flex flex-col items-center justify-center">
             <Image 
               src="/images/logo.png" 
@@ -86,10 +112,9 @@ export default function InteractiveMapDemoClient() {
             </div>
           </div>
 
-          {/* Plot Buttons Grid (Scrollable) */}
           <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200">
             <div className="grid grid-cols-2 gap-4">
-              {plotsData.map((plot) => (
+              {expandedPlotsData.map((plot) => (
                 <button
                   key={plot.id}
                   onClick={() => setSelectedPlot(plot)}
@@ -107,7 +132,6 @@ export default function InteractiveMapDemoClient() {
                   <span className="text-sm mt-1.5 font-bold opacity-75">
                     {plot.size}
                   </span>
-                  
                   <span className={`text-[10px] uppercase font-black tracking-widest mt-3 px-3 py-1 rounded-full
                     ${plot.status === "AVAILABLE" ? "bg-emerald-200/60 text-emerald-800" : ""}
                     ${plot.status === "BOOKED" ? "bg-amber-200/60 text-amber-800" : ""}
@@ -119,75 +143,94 @@ export default function InteractiveMapDemoClient() {
               ))}
             </div>
           </div>
-
         </div>
 
-        {/* DETAILS MODAL OVERLAY */}
+        {/* DETAILS MODAL OVERLAY (GLASSMORPHISM) */}
         {selectedPlot && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#12262D]/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
-            <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-in-95 duration-300 border border-slate-100">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 p-4 animate-in fade-in duration-300">
+            {/* The Glassmorphism Container */}
+            <div className="w-full max-w-[420px] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] scale-in-95 duration-300 border border-white/40 bg-white/40 backdrop-blur-2xl p-6 relative">
               
-              {/* Modal Header */}
-              <div className="bg-[#12262D] p-6 text-white relative">
-                <button 
-                  onClick={() => setSelectedPlot(null)}
-                  className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-                <div className="flex flex-col gap-1 mt-2">
-                  <span className="text-emerald-400 font-bold text-sm tracking-wider uppercase">{selectedPlot.type}</span>
-                  <h3 className="text-4xl font-black tracking-tight">{selectedPlot.id}</h3>
-                </div>
-              </div>
-
-              {/* Modal Body */}
-              <div className="p-6 space-y-4 bg-slate-50">
-                
-                <div className="flex justify-between items-center py-3 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold text-sm">Plot Size</span>
-                  <span className="text-lg font-black text-[#12262D]">{selectedPlot.size}</span>
-                </div>
-                
-                <div className="flex justify-between items-center py-3 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold text-sm">Status</span>
-                  <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
-                    selectedPlot.status === "AVAILABLE" ? "bg-emerald-100 text-emerald-700" :
-                    selectedPlot.status === "BOOKED" ? "bg-amber-100 text-amber-700" :
-                    "bg-rose-100 text-rose-700"
+              {/* Header */}
+              <div className="flex items-start justify-between mb-5 relative z-10">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-[22px] font-black text-[#12262D] font-heading tracking-tight">Plot No: {selectedPlot.id}</h3>
+                  <span className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider shadow-sm ${
+                    selectedPlot.status === "AVAILABLE" ? "bg-white text-[#00695C] border border-[#00695C]/20" :
+                    selectedPlot.status === "BOOKED" ? "bg-white text-amber-600 border border-amber-600/20" :
+                    "bg-white text-red-600 border border-red-600/20"
                   }`}>
                     {selectedPlot.status}
                   </span>
                 </div>
-
-                <div className="flex justify-between items-center py-3 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold text-sm">Pricing</span>
-                  <span className="text-xl font-black text-[#00695C]">{selectedPlot.price}</span>
-                </div>
-
-                <div className="bg-emerald-50 p-4 rounded-2xl mt-4 border border-emerald-100">
-                  <h4 className="flex items-center gap-2 text-sm font-black text-emerald-800 mb-2">
-                    <CheckCircle2 className="w-4 h-4" /> 100% Verified Plot
-                  </h4>
-                  <p className="text-xs text-emerald-700/80 font-medium leading-relaxed">
-                    This plot comes with complete CS, SA, RS, and BS record verification. Instant mutation registration available upon full payment.
-                  </p>
-                </div>
-
-              </div>
-
-              {/* Modal Footer */}
-              <div className="p-6 pt-0 bg-slate-50 flex gap-3">
                 <button 
                   onClick={() => setSelectedPlot(null)}
-                  className="flex-1 py-3.5 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-xl border border-slate-200 transition-colors shadow-sm"
+                  className="text-slate-600 hover:text-slate-900 bg-white/50 hover:bg-white/80 p-1.5 rounded-full transition-colors"
                 >
-                  Close
-                </button>
-                <button className="flex-[2] py-3.5 bg-[#00695C] hover:bg-[#005B50] text-white font-bold rounded-xl shadow-lg shadow-[#00695C]/30 flex items-center justify-center gap-2 transition-transform hover:-translate-y-0.5">
-                  <PhoneCall className="w-4 h-4" /> Contact Sales
+                  <X className="w-5 h-5" />
                 </button>
               </div>
+
+              {/* White Info Card */}
+              <div className="bg-white/95 rounded-[20px] p-5 shadow-sm border border-white/60 space-y-3.5 mb-4 relative z-10">
+                <div className="flex justify-between items-center">
+                  <span className="text-[13px] font-medium text-slate-500">Property Type:</span>
+                  <span className="text-[13px] font-bold text-[#12262D]">{selectedPlot.type}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[13px] font-medium text-slate-500">Plot Size:</span>
+                  <span className="text-[12px] font-bold text-[#00695C] bg-[#E8F5F3] px-2.5 py-0.5 rounded-full">{selectedPlot.size}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[13px] font-medium text-slate-500">Facing:</span>
+                  <span className="text-[13px] font-bold text-[#12262D]">{selectedPlot.facing}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[13px] font-medium text-slate-500">Front Road:</span>
+                  <span className="text-[13px] font-bold text-[#12262D]">{selectedPlot.frontRoad}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[13px] font-medium text-slate-500">Location:</span>
+                  <span className="text-[13px] font-bold text-[#12262D]">{selectedPlot.location}</span>
+                </div>
+              </div>
+
+              {/* Teal Price Box */}
+              <div className="bg-[#0b7b75] rounded-[20px] p-5 mb-4 shadow-inner flex justify-between items-center text-white relative z-10">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-100/80 mb-0.5">Total Estimated Price</p>
+                  <p className="text-[26px] font-black tracking-tight">{selectedPlot.price}</p>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm border border-white/20 px-3 py-1.5 rounded-lg">
+                  <span className="text-[11px] font-bold text-white">Mutation Ready</span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-[13px] text-slate-700/90 font-medium leading-relaxed mb-4 px-1 relative z-10">
+                {selectedPlot.desc}
+              </p>
+
+              {/* Verified Badge */}
+              <div className="bg-[#E8F5F3]/90 backdrop-blur-md rounded-xl p-3.5 mb-5 flex items-center gap-2 border border-emerald-500/20 shadow-sm relative z-10">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-[12px] font-bold text-emerald-800">100% Verified Legal Title & Ready Mutation</span>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 mb-4 relative z-10">
+                <button className="flex-1 bg-white/90 hover:bg-white text-[#00695C] font-bold text-[13px] py-3.5 rounded-xl border-2 border-white/50 shadow-sm flex items-center justify-center gap-1.5 transition-colors">
+                  <Info className="w-4 h-4" /> View Details
+                </button>
+                <button className="flex-1 bg-[#00695C] hover:bg-[#005B50] text-white font-bold text-[13px] py-3.5 rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-colors">
+                  <Calendar className="w-4 h-4" /> Schedule Site Visit
+                </button>
+              </div>
+
+              {/* Share Link */}
+              <button className="w-full flex items-center justify-center gap-1.5 text-[12px] font-bold text-slate-600/80 hover:text-slate-800 transition-colors relative z-10">
+                <Share2 className="w-3.5 h-3.5" /> Copy Direct Plot Link
+              </button>
 
             </div>
           </div>
