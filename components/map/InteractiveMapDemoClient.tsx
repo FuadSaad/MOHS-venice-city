@@ -44,17 +44,114 @@ const module2Plots = Array.from({ length: 16 }, (_, i) => {
 });
 
 export default function InteractiveMapDemoClient() {
+  const [filterZone, setFilterZone] = useState("All Zones");
+  const [filterSize, setFilterSize] = useState("All Sizes");
+  const [filterStatus, setFilterStatus] = useState("All Status");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredModule1 = module1Plots.filter(p => {
+    if (filterZone === "Premium Residential") return false;
+    if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
+    if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
+    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  });
+
+  const filteredModule2 = module2Plots.filter(p => {
+    if (filterZone === "Corporate & Commercial") return false;
+    if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
+    if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
+    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  });
+
+  const totalPlots = 31; // 15 + 16
+  const availablePlots = [...module1Plots, ...module2Plots].filter(p => p.status === "AVAILABLE").length;
+  const matchingPlots = filteredModule1.length + filteredModule2.length;
+
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center">
+    <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex flex-col items-center">
       
-      {/* Page Header */}
-      <div className="text-center mb-6 lg:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <h1 className="text-3xl md:text-4xl font-black font-heading text-[#12262D] tracking-tight mb-3">
-          Interactive Masterplan Explorer
-        </h1>
-        <p className="text-slate-600 font-medium text-sm md:text-base max-w-3xl mx-auto">
-          Explore our master-planned sectors side-by-side. View detailed plot layouts, check real-time availability, and find the perfect location for your future home or business.
-        </p>
+      {/* Top Header & Stats */}
+      <div className="w-full max-w-[1800px] flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-4 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="text-left">
+          <h1 className="text-3xl md:text-4xl font-black font-heading text-[#12262D] tracking-tight mb-2">
+            Interactive Property Map
+          </h1>
+          <p className="text-slate-500 font-medium text-sm md:text-base max-w-2xl">
+            Explore our master-planned sectors side-by-side. Use the filters below to find the perfect location for your future home or business.
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-2 md:gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100 self-start lg:self-auto">
+          <div className="flex flex-col items-center justify-center px-3 md:px-5 py-1.5 md:py-2 border-r border-slate-100">
+            <span className="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Total Plots</span>
+            <span className="font-heading font-black text-[#12262D] text-lg md:text-2xl leading-none">{totalPlots}+</span>
+          </div>
+          <div className="flex flex-col items-center justify-center px-3 md:px-5 py-1.5 md:py-2 bg-emerald-50 rounded-xl border border-emerald-100/50">
+            <span className="text-[10px] md:text-xs text-emerald-600 font-bold uppercase tracking-wider mb-0.5">Available</span>
+            <span className="font-heading font-black text-emerald-700 text-lg md:text-2xl leading-none">{availablePlots}</span>
+          </div>
+          <div className="flex flex-col items-center justify-center px-3 md:px-5 py-1.5 md:py-2">
+            <span className="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Facilities</span>
+            <span className="font-heading font-black text-[#00695C] text-lg md:text-2xl leading-none">12 Hubs</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="w-full max-w-[1800px] mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+        <div className="w-full md:w-auto flex-1 flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide snap-x">
+          <select 
+            value={filterZone} 
+            onChange={(e) => setFilterZone(e.target.value)}
+            className="snap-start shrink-0 bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer"
+          >
+            <option value="All Zones">Zone: All Zones</option>
+            <option value="Corporate & Commercial">Corporate & Commercial</option>
+            <option value="Premium Residential">Premium Residential</option>
+          </select>
+
+          <select 
+            value={filterSize} 
+            onChange={(e) => setFilterSize(e.target.value)}
+            className="snap-start shrink-0 bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer"
+          >
+            <option value="All Sizes">Size: All Sizes</option>
+            <option value="20 Katha">20 Katha</option>
+            <option value="25 Katha">25 Katha</option>
+            <option value="30 Katha">30 Katha</option>
+            <option value="40 Katha">40 Katha</option>
+          </select>
+
+          <select 
+            value={filterStatus} 
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="snap-start shrink-0 bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer"
+          >
+            <option value="All Status">Status: All Status</option>
+            <option value="AVAILABLE">Available</option>
+            <option value="BOOKED">Booked</option>
+            <option value="SOLD">Sold</option>
+          </select>
+
+          <div className="snap-start shrink-0 bg-[#E8F5F3] text-[#00695C] text-xs font-black px-4 py-2.5 rounded-xl border border-[#00695C]/20 whitespace-nowrap">
+            {matchingPlots} Properties Matching
+          </div>
+        </div>
+
+        <div className="w-full md:w-[280px] shrink-0 relative">
+          <input
+            type="text"
+            placeholder="Search by Plot No. (e.g. CP-04)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm placeholder:text-slate-400 placeholder:font-medium"
+          />
+          <svg className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
       </div>
 
       <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 xl:h-[75vh]">
@@ -64,7 +161,7 @@ export default function InteractiveMapDemoClient() {
           imageSrc="/images/map-interactive.jpg" 
           title="Sector 1" 
           subtitle="Corporate & Commercial Zone"
-          plotsData={module1Plots} 
+          plotsData={filteredModule1} 
         />
         
         {/* Module 2 */}
@@ -72,7 +169,7 @@ export default function InteractiveMapDemoClient() {
           imageSrc="/images/map-interactive-2.jpg" 
           title="Sector 2" 
           subtitle="Premium Residential Zone"
-          plotsData={module2Plots} 
+          plotsData={filteredModule2} 
         />
 
       </div>
@@ -151,9 +248,19 @@ function MapModule({ imageSrc, title, subtitle, plotsData }: { imageSrc: string,
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-1.5 md:p-4 scrollbar-thin scrollbar-thumb-slate-200">
-          <div className="grid grid-cols-2 gap-1.5 md:gap-3">
-            {plotsData.map((plot) => (
+        <div className="flex-1 overflow-y-auto p-1.5 md:p-4 scrollbar-thin scrollbar-thumb-slate-200 flex flex-col">
+          {plotsData.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-4 opacity-60">
+              <span className="text-slate-400 mb-2">
+                <svg className="w-8 h-8 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+              </span>
+              <p className="text-[10px] md:text-xs font-bold text-slate-500">No plots match<br/>your filters here.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-1.5 md:gap-3">
+              {plotsData.map((plot) => (
               <button
                 key={plot.id}
                 onClick={() => setSelectedPlot(plot)}
@@ -181,6 +288,7 @@ function MapModule({ imageSrc, title, subtitle, plotsData }: { imageSrc: string,
               </button>
             ))}
           </div>
+          )}
         </div>
       </div>
 
