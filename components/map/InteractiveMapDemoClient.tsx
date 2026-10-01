@@ -60,17 +60,27 @@ export default function InteractiveMapDemoClient() {
       <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 xl:h-[75vh]">
         
         {/* Module 1 */}
-        <MapModule imageSrc="/images/map-interactive.jpg" title="Sector 1" plotsData={module1Plots} />
+        <MapModule 
+          imageSrc="/images/map-interactive.jpg" 
+          title="Sector 1" 
+          subtitle="Corporate & Commercial Zone"
+          plotsData={module1Plots} 
+        />
         
         {/* Module 2 */}
-        <MapModule imageSrc="/images/map-interactive-2.jpg" title="Sector 2" plotsData={module2Plots} />
+        <MapModule 
+          imageSrc="/images/map-interactive-2.jpg" 
+          title="Sector 2" 
+          subtitle="Premium Residential Zone"
+          plotsData={module2Plots} 
+        />
 
       </div>
     </div>
   );
 }
 
-function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: string, plotsData: any[] }) {
+function MapModule({ imageSrc, title, subtitle, plotsData }: { imageSrc: string, title: string, subtitle: string, plotsData: any[] }) {
   const [selectedPlot, setSelectedPlot] = useState<typeof module1Plots[0] | null>(null);
 
   return (
@@ -119,7 +129,7 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
       {/* Right Side: Sidebar & Plot Selection */}
       <div className="absolute top-0 right-0 bottom-0 w-[45%] lg:w-[40%] flex flex-col bg-white border-l border-slate-100 shadow-xl z-10">
         <div className="py-1.5 px-2 md:p-4 border-b border-slate-100 flex flex-col items-center justify-center">
-          <div className="w-[60px] md:w-[120px] mb-0.5 md:mb-2">
+          <div className="w-[60px] md:w-[120px] mb-0.5 md:mb-1">
             <Image 
               src="/images/logo.png" 
               alt="MOHS Venice City" 
@@ -127,6 +137,9 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
               height={40} 
               className="w-full h-auto object-contain drop-shadow-sm"
             />
+          </div>
+          <div className="bg-[#00695C] text-white text-[6px] md:text-[10px] px-1.5 py-0.5 md:px-3 md:py-1 rounded-full font-bold uppercase tracking-wider mb-1 md:mb-2 shadow-sm text-center">
+            {subtitle}
           </div>
           <div className="text-center flex flex-col items-center justify-center leading-tight md:leading-normal">
             <h2 className="font-heading font-black text-[#12262D] text-[9px] md:text-sm tracking-widest md:tracking-wide m-0">
