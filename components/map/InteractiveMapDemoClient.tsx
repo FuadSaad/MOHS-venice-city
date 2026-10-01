@@ -94,19 +94,19 @@ export default function InteractiveMapDemoClient() {
 
         {/* Right Side: Sidebar & Plot Selection (35%) */}
         <div className="lg:w-[35%] flex flex-col h-full relative bg-white">
-          <div className="p-6 pb-4 border-b border-slate-100 flex flex-col items-center justify-center">
+          <div className="p-4 border-b border-slate-100 flex flex-col items-center justify-center">
             <Image 
               src="/images/logo.png" 
               alt="MOHS Venice City" 
-              width={160} 
-              height={60} 
+              width={140} 
+              height={50} 
               className="object-contain drop-shadow-sm"
             />
-            <div className="mt-3 text-center space-y-1">
-              <h2 className="font-heading font-black text-[#12262D] text-lg tracking-wide">
+            <div className="-mt-1 text-center">
+              <h2 className="font-heading font-black text-[#12262D] text-base tracking-wide">
                 SELECT A PLOT
               </h2>
-              <p className="text-[13px] text-slate-500 font-medium">
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
                 Click any plot below to view specific details
               </p>
             </div>
