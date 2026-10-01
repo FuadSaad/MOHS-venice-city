@@ -59,8 +59,10 @@ export default function BrochurePageClient() {
       </div>
 
       {/* Main Viewer Section */}
-      <div className="w-full bg-[#12262D] border-y border-slate-800">
-        <BrochureViewer brochure={activeBrochure} />
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-200/50">
+          <BrochureViewer brochure={activeBrochure} />
+        </div>
       </div>
 
       {/* Highlights & CTAs */}
