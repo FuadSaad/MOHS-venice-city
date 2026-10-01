@@ -74,10 +74,10 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
   const [selectedPlot, setSelectedPlot] = useState<typeof module1Plots[0] | null>(null);
 
   return (
-    <div className="flex-1 bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col lg:flex-row relative">
+    <div className="flex-1 bg-white rounded-2xl lg:rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-row relative h-[65vh] xl:h-full">
       
-      {/* Left Side: Map Viewer (60%) */}
-      <div className="h-[50vh] lg:h-auto lg:w-[60%] relative bg-[#E8F5F3]/30 border-b lg:border-b-0 lg:border-r border-slate-100">
+      {/* Left Side: Map Viewer */}
+      <div className="w-[55%] lg:w-[60%] h-full relative bg-[#E8F5F3]/30 border-r border-slate-100">
         <TransformWrapper
           initialScale={1}
           minScale={1}
@@ -89,24 +89,24 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <>
-              <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                <button onClick={() => zoomIn()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
-                  <ZoomIn className="w-4 h-4" />
+              <div className="absolute top-2 left-2 lg:top-4 lg:left-4 z-20 flex flex-col gap-1 lg:gap-2">
+                <button onClick={() => zoomIn()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-1.5 lg:p-2 rounded-lg lg:rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                  <ZoomIn className="w-3 h-3 lg:w-4 lg:h-4" />
                 </button>
-                <button onClick={() => zoomOut()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
-                  <ZoomOut className="w-4 h-4" />
+                <button onClick={() => zoomOut()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-1.5 lg:p-2 rounded-lg lg:rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                  <ZoomOut className="w-3 h-3 lg:w-4 lg:h-4" />
                 </button>
-                <button onClick={() => resetTransform()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-2 rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
-                  <Expand className="w-4 h-4" />
+                <button onClick={() => resetTransform()} className="bg-white/90 backdrop-blur text-slate-700 hover:text-[#00695C] p-1.5 lg:p-2 rounded-lg lg:rounded-xl shadow-lg border border-slate-100 transition-all hover:scale-105">
+                  <Expand className="w-3 h-3 lg:w-4 lg:h-4" />
                 </button>
               </div>
 
               <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
-                <div className="relative w-full h-full flex items-center justify-center p-4">
+                <div className="relative w-full h-full flex items-center justify-center p-2 lg:p-4">
                   <img
                     src={imageSrc}
                     alt={title}
-                    className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-2xl"
+                    className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-xl lg:rounded-2xl"
                     draggable={false}
                   />
                 </div>
@@ -116,34 +116,34 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
         </TransformWrapper>
       </div>
 
-      {/* Right Side: Sidebar & Plot Selection (40%) */}
-      <div className="lg:w-[40%] flex flex-col h-full relative bg-white">
-        <div className="p-4 border-b border-slate-100 flex flex-col items-center justify-center">
+      {/* Right Side: Sidebar & Plot Selection */}
+      <div className="w-[45%] lg:w-[40%] flex flex-col h-full relative bg-white">
+        <div className="p-2 md:p-4 border-b border-slate-100 flex flex-col items-center justify-center">
           <Image 
             src="/images/logo.png" 
             alt="MOHS Venice City" 
-            width={120} 
-            height={40} 
-            className="object-contain drop-shadow-sm"
+            width={100} 
+            height={35} 
+            className="object-contain drop-shadow-sm md:w-[120px]"
           />
-          <div className="mt-2 text-center">
-            <h2 className="font-heading font-black text-[#12262D] text-sm tracking-wide">
+          <div className="mt-1 md:mt-2 text-center">
+            <h2 className="font-heading font-black text-[#12262D] text-[10px] md:text-sm tracking-wide">
               SELECT A PLOT
             </h2>
-            <p className="text-[11px] text-slate-500 font-medium">
-              Click below for details
+            <p className="text-[9px] md:text-[11px] text-slate-500 font-medium">
+              Click for details
             </p>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200">
-          <div className="grid grid-cols-2 gap-3">
+        <div className="flex-1 overflow-y-auto p-2 md:p-4 scrollbar-thin scrollbar-thumb-slate-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
             {plotsData.map((plot) => (
               <button
                 key={plot.id}
                 onClick={() => setSelectedPlot(plot)}
                 className={`
-                  relative group flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all duration-300
+                  relative group flex flex-col items-center justify-center p-2 md:p-3 rounded-xl md:rounded-2xl border-2 transition-all duration-300
                   ${plot.status === "AVAILABLE" ? "bg-emerald-50/50 border-emerald-100 text-emerald-900 hover:bg-emerald-100 hover:border-emerald-300" : ""}
                   ${plot.status === "BOOKED" ? "bg-amber-50/50 border-amber-100 text-amber-900 hover:bg-amber-100 hover:border-amber-300" : ""}
                   ${plot.status === "SOLD" ? "bg-rose-50/50 border-rose-100 text-rose-900 hover:bg-rose-100 hover:border-rose-300" : ""}
