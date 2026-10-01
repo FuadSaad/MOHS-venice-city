@@ -94,45 +94,45 @@ export default function InteractiveMapDemoClient() {
 
         {/* Right Side: Sidebar & Plot Selection (35%) */}
         <div className="lg:w-[35%] flex flex-col h-full relative bg-white">
-          <div className="p-8 pb-6 border-b border-slate-100 flex flex-col items-center justify-center">
+          <div className="p-6 pb-4 border-b border-slate-100 flex flex-col items-center justify-center">
             <Image 
               src="/images/logo.png" 
               alt="MOHS Venice City" 
-              width={180} 
-              height={70} 
+              width={160} 
+              height={60} 
               className="object-contain drop-shadow-sm"
             />
-            <div className="mt-8 text-center space-y-1.5">
-              <h2 className="font-heading font-black text-[#12262D] text-xl tracking-wide">
+            <div className="mt-3 text-center space-y-1">
+              <h2 className="font-heading font-black text-[#12262D] text-lg tracking-wide">
                 SELECT A PLOT
               </h2>
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-[13px] text-slate-500 font-medium">
                 Click any plot below to view specific details
               </p>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 scrollbar-thin scrollbar-thumb-slate-200">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {expandedPlotsData.map((plot) => (
                 <button
                   key={plot.id}
                   onClick={() => setSelectedPlot(plot)}
                   className={`
-                    relative group flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300
+                    relative group flex flex-col items-center justify-center p-3.5 rounded-[1.25rem] border-2 transition-all duration-300
                     ${plot.status === "AVAILABLE" ? "bg-emerald-50/50 border-emerald-100 text-emerald-900 hover:bg-emerald-100 hover:border-emerald-300" : ""}
                     ${plot.status === "BOOKED" ? "bg-amber-50/50 border-amber-100 text-amber-900 hover:bg-amber-100 hover:border-amber-300" : ""}
                     ${plot.status === "SOLD" ? "bg-rose-50/50 border-rose-100 text-rose-900 hover:bg-rose-100 hover:border-rose-300" : ""}
-                    ${selectedPlot?.id === plot.id ? "!border-[#12262D] !shadow-lg scale-[1.03] ring-4 ring-[#12262D]/10" : "hover:shadow-md hover:-translate-y-0.5"}
+                    ${selectedPlot?.id === plot.id ? "!border-[#12262D] !shadow-md scale-[1.03] ring-2 ring-[#12262D]/10" : "hover:shadow-sm hover:-translate-y-0.5"}
                   `}
                 >
-                  <span className={`text-2xl font-black font-heading ${selectedPlot?.id === plot.id ? "text-[#12262D]" : ""}`}>
+                  <span className={`text-xl font-black font-heading ${selectedPlot?.id === plot.id ? "text-[#12262D]" : ""}`}>
                     {plot.id}
                   </span>
-                  <span className="text-sm mt-1.5 font-bold opacity-75">
+                  <span className="text-xs mt-1 font-bold opacity-75">
                     {plot.size}
                   </span>
-                  <span className={`text-[10px] uppercase font-black tracking-widest mt-3 px-3 py-1 rounded-full
+                  <span className={`text-[9px] uppercase font-black tracking-widest mt-2 px-2.5 py-0.5 rounded-full
                     ${plot.status === "AVAILABLE" ? "bg-emerald-200/60 text-emerald-800" : ""}
                     ${plot.status === "BOOKED" ? "bg-amber-200/60 text-amber-800" : ""}
                     ${plot.status === "SOLD" ? "bg-rose-200/60 text-rose-800" : ""}
