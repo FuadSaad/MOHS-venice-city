@@ -45,10 +45,10 @@ export default function StatsSection() {
             return (
               <Reveal key={index} delay={index * 0.1}>
                 <div
-                  className="flex flex-col items-center text-center p-3 rounded-xl hover:bg-[#F5F8F8] transition-colors"
+                  className="flex flex-col items-center text-center p-3 rounded-xl hover:bg-[#F5F8F8] transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#E8F5F3] text-[#00695C] flex items-center justify-center mb-3">
-                    <IconComponent className="w-5 h-5 text-[#00695C]" />
+                  <div className="w-10 h-10 rounded-full bg-[#E8F5F3] flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-[#00695C] transition-all duration-300">
+                    <IconComponent className="w-5 h-5 text-[#00695C] group-hover:text-white fill-transparent group-hover:fill-white/30 transition-all duration-300" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-extrabold text-[#12262D] font-heading tracking-tight">
                     {stat.value}
