@@ -57,7 +57,7 @@ export default function InteractiveMapDemoClient() {
         </p>
       </div>
 
-      <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 h-[85vh] xl:h-[75vh]">
+      <div className="w-full max-w-[1800px] flex flex-col xl:flex-row gap-6 xl:h-[75vh]">
         
         {/* Module 1 */}
         <MapModule imageSrc="/images/map-interactive.jpg" title="Sector 1" plotsData={module1Plots} />
@@ -77,7 +77,7 @@ function MapModule({ imageSrc, title, plotsData }: { imageSrc: string, title: st
     <div className="flex-1 bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col lg:flex-row relative">
       
       {/* Left Side: Map Viewer (60%) */}
-      <div className="lg:w-[60%] relative bg-[#E8F5F3]/30 border-r border-slate-100">
+      <div className="h-[50vh] lg:h-auto lg:w-[60%] relative bg-[#E8F5F3]/30 border-b lg:border-b-0 lg:border-r border-slate-100">
         <TransformWrapper
           initialScale={1}
           minScale={1}
