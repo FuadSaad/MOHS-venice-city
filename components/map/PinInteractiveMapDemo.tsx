@@ -61,14 +61,12 @@ export default function PinInteractiveMapDemo() {
         <div className="flex-1 relative bg-slate-100/50 rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center p-4">
           
           {/* Map Container */}
-          <div className="relative w-full max-w-5xl aspect-[1.5/1] shadow-xl rounded-xl overflow-hidden border border-slate-300">
-            {/* Background Image */}
-            <Image 
-              src="/images/mohs-map-demo.png" 
-              alt="MOHS Map" 
-              fill 
-              className="object-contain lg:object-cover"
-              priority
+          <div className="relative w-full max-w-5xl aspect-[1.5/1] shadow-xl rounded-xl overflow-hidden border border-slate-300 bg-white">
+            {/* Background SVG Image */}
+            <img 
+              src="/images/mohs-map.svg" 
+              alt="MOHS Map SVG" 
+              className="absolute inset-0 w-full h-full object-contain"
             />
             
             {/* Overlay Pins */}
