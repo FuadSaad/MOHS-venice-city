@@ -18,6 +18,7 @@ export async function GET() {
         id: true,
         name: true,
         email: true,
+        employeeId: true,
         username: true,
         phone: true,
         role: true,
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, email, username, phone, password, permissions } = body;
+    const { name, email, employeeId, username, phone, password, permissions } = body;
 
     if (!name || !email || !username || !password) {
       return NextResponse.json(
@@ -77,6 +78,7 @@ export async function POST(req: NextRequest) {
 
     const cleanEmail = email.toLowerCase().trim();
     const cleanUsername = username.toLowerCase().trim();
+    const cleanEmployeeId = employeeId ? employeeId.trim() : null;
 
     if (cleanUsername.length < 3) {
       return NextResponse.json(
@@ -114,6 +116,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check if employeeId already exists
+    if (cleanEmployeeId) {
+      const existingEmployeeId = await prisma.user.findUnique({
+        where: { employeeId: cleanEmployeeId },
+      });
+      if (existingEmployeeId) {
+        return NextResponse.json(
+          { success: false, error: "This Employee ID is already assigned to someone else." },
+          { status: 409 }
+        );
+      }
+    }
+
     const passwordHash = await hashPassword(password);
     const assignedPermissions = Array.isArray(permissions) ? permissions : [];
 
@@ -121,6 +136,7 @@ export async function POST(req: NextRequest) {
       data: {
         name: name.trim(),
         email: cleanEmail,
+        employeeId: cleanEmployeeId,
         username: cleanUsername,
         phone: phone?.trim() || null,
         passwordHash,
@@ -132,6 +148,7 @@ export async function POST(req: NextRequest) {
         id: true,
         name: true,
         email: true,
+        employeeId: true,
         username: true,
         phone: true,
         role: true,

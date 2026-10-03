@@ -18,7 +18,7 @@ export async function PUT(
 
     const { id } = params;
     const body = await req.json();
-    const { name, email, username, phone, password, permissions, isActive, role } = body;
+    const { name, email, employeeId, username, phone, password, permissions, isActive, role } = body;
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
@@ -69,6 +69,22 @@ export async function PUT(
       updateData.username = username.toLowerCase().trim();
     }
 
+    if (employeeId !== undefined && employeeId !== existingUser.employeeId) {
+      const cleanEmployeeId = employeeId ? employeeId.trim() : null;
+      if (cleanEmployeeId) {
+        const idTaken = await prisma.user.findUnique({
+          where: { employeeId: cleanEmployeeId },
+        });
+        if (idTaken) {
+          return NextResponse.json(
+            { success: false, error: "This Employee ID is already assigned" },
+            { status: 409 }
+          );
+        }
+      }
+      updateData.employeeId = cleanEmployeeId;
+    }
+
     if (password && password.trim().length >= 6) {
       updateData.passwordHash = await hashPassword(password.trim());
     }
@@ -92,6 +108,7 @@ export async function PUT(
         id: true,
         name: true,
         email: true,
+        employeeId: true,
         username: true,
         phone: true,
         role: true,

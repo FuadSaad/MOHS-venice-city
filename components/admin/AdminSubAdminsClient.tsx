@@ -51,6 +51,7 @@ export default function AdminSubAdminsClient({
   // Form states
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
+  const [formEmployeeId, setFormEmployeeId] = useState("");
   const [formUsername, setFormUsername] = useState("");
   const [formPhone, setFormPhone] = useState("");
   const [formPassword, setFormPassword] = useState("");
@@ -65,6 +66,7 @@ export default function AdminSubAdminsClient({
     setModalMode("create");
     setFormName("");
     setFormEmail("");
+    setFormEmployeeId("");
     setFormUsername("");
     setFormPhone("");
     setFormPassword("");
@@ -78,6 +80,7 @@ export default function AdminSubAdminsClient({
     setSelectedUser(user);
     setFormName(user.name || "");
     setFormEmail(user.email || "");
+    setFormEmployeeId(user.employeeId || "");
     setFormUsername(user.username || "");
     setFormPhone(user.phone || "");
     setFormPassword(""); // Password is optional on edit
@@ -139,6 +142,7 @@ export default function AdminSubAdminsClient({
     const payload = {
       name: formName,
       email: formEmail,
+      employeeId: formEmployeeId || null,
       username: formUsername,
       phone: formPhone,
       permissions: formPermissions,
@@ -231,7 +235,8 @@ export default function AdminSubAdminsClient({
         u.name?.toLowerCase().includes(q) ||
         u.email?.toLowerCase().includes(q) ||
         u.username?.toLowerCase().includes(q) ||
-        u.phone?.toLowerCase().includes(q)
+        u.phone?.toLowerCase().includes(q) ||
+        u.employeeId?.toLowerCase().includes(q)
     );
   }, [users, searchQuery]);
 
@@ -290,7 +295,7 @@ export default function AdminSubAdminsClient({
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
-              placeholder="Search by name, username, email, phone..."
+              placeholder="Search by name, ID, username, email, phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-700 focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] outline-none transition-all"
@@ -308,6 +313,7 @@ export default function AdminSubAdminsClient({
             <thead className="bg-slate-50 text-slate-500 text-xs font-medium uppercase tracking-wider border-b border-slate-100">
               <tr>
                 <th className="py-3 px-6">Name</th>
+                <th className="py-3 px-6">Employee ID</th>
                 <th className="py-3 px-6">Username</th>
                 <th className="py-3 px-6">Phone</th>
                 <th className="py-3 px-6">Role</th>
@@ -318,7 +324,7 @@ export default function AdminSubAdminsClient({
             <tbody className="divide-y divide-slate-100">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-500">
+                  <td colSpan={7} className="py-8 text-center text-slate-500">
                     No employees found.
                   </td>
                 </tr>
@@ -333,6 +339,7 @@ export default function AdminSubAdminsClient({
                           <span className="text-xs text-slate-500">{user.email}</span>
                         </div>
                       </td>
+                      <td className="py-3 px-6 text-slate-600 font-medium">{user.employeeId || "N/A"}</td>
                       <td className="py-3 px-6 text-slate-600 font-medium">@{user.username || "N/A"}</td>
                       <td className="py-3 px-6 text-slate-600">{user.phone || "N/A"}</td>
                       <td className="py-3 px-6">
@@ -437,6 +444,18 @@ export default function AdminSubAdminsClient({
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                      Employee ID (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={formEmployeeId}
+                      onChange={(e) => setFormEmployeeId(e.target.value)}
+                      placeholder="e.g. EMP-001"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1.5">
                       Email Address <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -472,7 +491,7 @@ export default function AdminSubAdminsClient({
                       className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] outline-none"
                     />
                   </div>
-                  <div className="sm:col-span-2">
+                  <div>
                     <label className="block text-xs font-medium text-slate-700 mb-1.5">
                       Password {modalMode === "edit" ? <span className="text-slate-400 font-normal">(Leave empty to keep current)</span> : <span className="text-rose-500">*</span>}
                     </label>
@@ -483,7 +502,7 @@ export default function AdminSubAdminsClient({
                       value={formPassword}
                       onChange={(e) => setFormPassword(e.target.value)}
                       placeholder={modalMode === "edit" ? "••••••••" : "Minimum 6 characters"}
-                      className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] outline-none max-w-sm"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] outline-none"
                     />
                   </div>
                 </div>
