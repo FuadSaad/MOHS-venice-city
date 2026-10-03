@@ -270,9 +270,14 @@ export default function BrochureViewer({ brochure }: BrochureViewerProps) {
                       <motion.div 
                         key={currentPage}
                         custom={direction}
-                        initial={(d: number) => ({ opacity: 0, rotateY: d > 0 ? 90 : -90, transformOrigin: d > 0 ? "right" : "left" })}
-                        animate={{ opacity: 1, rotateY: 0, transformOrigin: "center" }}
-                        exit={(d: number) => ({ opacity: 0, rotateY: d > 0 ? -90 : 90, transformOrigin: d > 0 ? "left" : "right" })}
+                        variants={{
+                          initial: (d: number) => ({ opacity: 0, rotateY: d > 0 ? 90 : -90, transformOrigin: d > 0 ? "right" : "left" }),
+                          animate: { opacity: 1, rotateY: 0, transformOrigin: "center" },
+                          exit: (d: number) => ({ opacity: 0, rotateY: d > 0 ? -90 : 90, transformOrigin: d > 0 ? "left" : "right" })
+                        }}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
                         transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
                         className="relative w-full h-[85%] sm:h-[95%] max-w-5xl aspect-[3/4] bg-white shadow-2xl ring-1 ring-slate-200"
                         style={{ backfaceVisibility: "hidden" }}
