@@ -148,7 +148,7 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
                 {isSuper ? (
                   <span className="text-[10px] text-amber-300 flex items-center" title="Super Admin">👑</span>
                 ) : (
-                  <Shield className="w-3 h-3 text-emerald-400 shrink-0" title="Sub Admin" />
+                  <span title="Sub Admin"><Shield className="w-3 h-3 text-emerald-400 shrink-0" /></span>
                 )}
               </div>
               <p className="text-[11px] text-white/50 truncate">
