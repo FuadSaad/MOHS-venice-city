@@ -160,18 +160,26 @@ export default function MapPlotsManager({ initialPlots, modules }: MapPlotsManag
                 <span className="bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{modPlots.length}</span>
               </div>
               <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
-                {modPlots.map((plot, i) => (
-                  <div key={plot.id} className="p-3 hover:bg-slate-50 transition-colors flex justify-between items-center">
-                    <div>
-                      <div className="text-xs font-bold text-[#12262D]">{plot.title || `Plot ${i + 1}`}</div>
-                      <div className="text-[10px] text-slate-500 font-medium">{plot.plotKatha} Katha • ৳{plot.price} • {plot.status}</div>
+                {modPlots.map((plot, i) => {
+                  const buttonId = `CP-${(i + 1).toString().padStart(2, '0')}`;
+                  return (
+                    <div key={plot.id} className="p-3 hover:bg-slate-50 transition-colors flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#00695C] text-white font-black text-xs px-2 py-1 rounded shadow-sm w-12 text-center shrink-0">
+                          {buttonId}
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-[#12262D]">{plot.title || `Plot ${i + 1}`}</div>
+                          <div className="text-[10px] text-slate-500 font-medium">{plot.plotKatha} Katha • ৳{plot.price} • {plot.status}</div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <button onClick={() => openEditModal(plot)} className="text-[#00695C] hover:bg-[#00695C]/10 p-1.5 rounded-lg"><Edit2 className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => handleDelete(plot.id)} className="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg"><Trash2 className="w-3.5 h-3.5" /></button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => openEditModal(plot)} className="text-[#00695C] hover:bg-[#00695C]/10 p-1.5 rounded-lg"><Edit2 className="w-3.5 h-3.5" /></button>
-                      <button onClick={() => handleDelete(plot.id)} className="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg"><Trash2 className="w-3.5 h-3.5" /></button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {modPlots.length === 0 && <div className="p-6 text-center text-xs text-slate-500 font-medium">No plots added yet.</div>}
               </div>
             </div>
