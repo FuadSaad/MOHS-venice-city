@@ -190,7 +190,7 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
 }
 
 function MapModule({ imageSrc, title, subtitle, plotsData }: { imageSrc: string, title: string, subtitle: string, plotsData: any[] }) {
-  const [selectedPlot, setSelectedPlot] = useState<typeof module1Plots[0] | null>(null);
+  const [selectedPlot, setSelectedPlot] = useState<any | null>(null);
 
   return (
     <div className="flex-1 bg-white rounded-2xl lg:rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-row relative w-full">
