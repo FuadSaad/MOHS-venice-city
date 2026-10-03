@@ -178,48 +178,49 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
             {modules.map((mod, index) => (
               <div key={mod.id} className="relative">
                 
-                <div className="flex flex-col xl:flex-row gap-6 bg-slate-50/50 p-5 rounded-2xl border border-slate-200 relative group shadow-sm h-full">
-                  <button type="button" onClick={() => requestDeleteModule(index)} className="absolute -top-3 -left-3 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 border border-slate-200 hover:border-rose-200 p-2 rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100 z-20">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                <div className="flex flex-col bg-slate-50/50 rounded-2xl border border-slate-200 relative group shadow-sm h-full">
+                  
+                  {/* Module Header Bar */}
+                  <div className="flex items-center justify-between p-4 border-b border-slate-200/60 bg-slate-100/50 rounded-t-2xl">
+                     <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-[#00695C] text-white flex items-center justify-center font-black text-sm shadow-sm">{index + 1}</div>
+                        <div>
+                          <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Module {index + 1}</h3>
+                          <p className="text-[10px] text-slate-500 font-bold uppercase truncate max-w-[150px]">{mod.title || "Untitled"}</p>
+                        </div>
+                     </div>
+                     <div className="flex items-center gap-2">
+                        {/* Edit Button */}
+                        {!editingModules.includes(index) ? (
+                          <button type="button" onClick={() => toggleEdit(index)} className="bg-[#12262D] hover:bg-black text-white text-[10px] font-bold px-4 py-1.5 rounded-md shadow-sm transition-colors">
+                            Edit Module
+                          </button>
+                        ) : (
+                          <button type="button" onClick={() => toggleEdit(index)} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold px-4 py-1.5 rounded-md shadow-sm border border-emerald-200 transition-colors">
+                            Done Editing
+                          </button>
+                        )}
+                        {/* Delete Button */}
+                        <button type="button" onClick={() => requestDeleteModule(index)} className="bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 border border-slate-200 hover:border-rose-200 p-1.5 rounded-md shadow-sm transition-all" title="Delete Module">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                     </div>
+                  </div>
 
-                  {/* Edit Button at absolute top-right of the card */}
-                  {!editingModules.includes(index) && (
-                    <div className="absolute -top-3 right-4 z-10">
-                      <button type="button" onClick={() => toggleEdit(index)} className="bg-[#12262D] hover:bg-black text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-sm border border-slate-200 transition-colors">
-                        Edit Module
-                      </button>
-                    </div>
-                  )}
-                  {editingModules.includes(index) && (
-                    <div className="absolute -top-3 right-4 z-10">
-                      <button type="button" onClick={() => toggleEdit(index)} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold px-4 py-1.5 rounded-full shadow-sm border border-emerald-200 transition-colors">
-                        Done Editing
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Preview side */}
-                  <div className="w-full xl:w-[220px] shrink-0 flex flex-col gap-3">
-                    <div className="flex items-center gap-2 mb-2 pr-20">
-                      <div className="w-8 h-8 rounded-lg bg-[#00695C] text-white flex items-center justify-center font-black text-sm shadow-sm">{index + 1}</div>
-                      <div>
-                        <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Module {index + 1}</h3>
-                        <p className="text-[10px] text-slate-500 font-bold uppercase truncate">{mod.title || "Untitled"}</p>
+                  <div className="flex flex-col xl:flex-row gap-6 p-5">
+                    {/* Preview side */}
+                    <div className="w-full xl:w-[220px] shrink-0 flex flex-col gap-3">
+                      <div className="aspect-[3/4] w-full bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative flex items-center justify-center">
+                        {mod.image ? (
+                          <img src={mod.image} alt={`Map ${index + 1} Preview`} className="w-full h-full object-contain p-2" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                        ) : (
+                          <ImageIcon className="w-8 h-8 text-slate-300" />
+                        )}
+                        <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
                       </div>
                     </div>
-                    <div className="aspect-[3/4] w-full bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative flex items-center justify-center">
-                      {mod.image ? (
-                        <img src={mod.image} alt={`Map ${index + 1} Preview`} className="w-full h-full object-contain p-2" onError={(e) => (e.currentTarget.style.display = 'none')} />
-                      ) : (
-                        <ImageIcon className="w-8 h-8 text-slate-300" />
-                      )}
-                      <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
-                    </div>
-                  </div>
-                  
                   {/* Form side */}
-                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start pt-10 xl:pt-0">
+                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
                     <div className="sm:col-span-2">
                     <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
                     <input type="text" required disabled={!editingModules.includes(index)} value={mod.image} onChange={(e) => handleModuleChange(index, "image", e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white disabled:bg-slate-100 disabled:text-slate-500 border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
