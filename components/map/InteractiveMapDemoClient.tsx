@@ -5,49 +5,36 @@ import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2, RotateCcw, ChevronDown } from "lucide-react";
 
-const module1Plots = Array.from({ length: 15 }, (_, i) => {
-  const num = i + 1;
-  const is30 = num <= 7;
-  const statuses = ["AVAILABLE", "AVAILABLE", "BOOKED", "SOLD", "AVAILABLE"];
-  return {
-    id: `CP-${num.toString().padStart(2, '0')}`,
-    size: is30 ? "30 Katha" : "40 Katha",
-    type: "Commercial Plot",
-    status: statuses[i % statuses.length],
-    price: is30 ? "৳ 4,05,00,000" : "৳ 5,40,00,000",
-    facing: num % 2 === 0 ? "South Facing" : "River Facing",
-    frontRoad: "100ft Riverfront Boulevard",
-    location: "Commercial Riverfront",
-    desc: "High-visibility commercial plot suitable for corporate towers, financial institutions, shopping malls, and hospitality complexes."
-  };
-});
-
-const module2Plots = Array.from({ length: 16 }, (_, i) => {
-  const num = i + 1;
-  let size = "20 Katha";
-  let price = "৳ 2,70,00,000";
-  if (num === 1) { size = "30 Katha"; price = "৳ 4,05,00,000"; }
-  else if (num >= 2 && num <= 6) { size = "25 Katha"; price = "৳ 3,37,50,000"; }
-  
-  const statuses = ["AVAILABLE", "BOOKED", "AVAILABLE", "AVAILABLE", "SOLD"];
-  return {
-    id: num.toString().padStart(2, '0'),
-    size: size,
-    type: "Premium Plot",
-    status: statuses[(i + 2) % statuses.length],
-    price: price,
-    facing: num % 2 === 0 ? "East Facing" : "West Facing",
-    frontRoad: "60ft Internal Avenue",
-    location: "Premium Zone",
-    desc: "Exclusive premium plot perfect for building your dream home in a highly secure, master-planned community."
-  };
-});
-
-export default function InteractiveMapDemoClient() {
+export default function InteractiveMapDemoClient({ initialPlots = [] }: { initialPlots?: any[] }) {
   const [filterZone, setFilterZone] = useState("All Zones");
   const [filterSize, setFilterSize] = useState("All Sizes");
   const [filterStatus, setFilterStatus] = useState("All Status");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Map DB plots to the UI format
+  const mappedPlots = initialPlots.map(p => {
+    // Generate a short ID if title contains a Plot No, or just use a part of title
+    // or we can just use the title as ID for the card
+    const id = p.title.split(" ")[0].substring(0, 8); // simplified
+
+    return {
+      id: id,
+      size: p.plotKatha ? `${p.plotKatha} Katha` : "Unknown Size",
+      type: p.landCategory || "Plot",
+      status: p.status, // AVAILABLE, BOOKED, SOLD
+      price: p.priceFormatted,
+      facing: p.facing || "N/A",
+      frontRoad: p.plotRoadWidth || "N/A",
+      location: p.location || "N/A",
+      desc: p.description || p.overview || "",
+      sectorBlock: p.sectorBlock || ""
+    };
+  });
+
+  // Split into modules based on sectorBlock
+  // If sectorBlock contains "Sector 1" or "Commercial", put in module 1. Else module 2.
+  const module1Plots = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes("sector 1") || (p.sectorBlock || "").toLowerCase().includes("commercial"));
+  const module2Plots = mappedPlots.filter(p => !module1Plots.includes(p));
 
   const filteredModule1 = module1Plots.filter(p => {
     if (filterZone === "Premium Residential") return false;
@@ -65,8 +52,8 @@ export default function InteractiveMapDemoClient() {
     return true;
   });
 
-  const totalPlots = 31; // 15 + 16
-  const availablePlots = [...module1Plots, ...module2Plots].filter(p => p.status === "AVAILABLE").length;
+  const totalPlots = mappedPlots.length;
+  const availablePlots = mappedPlots.filter(p => p.status === "AVAILABLE").length;
   const matchingPlots = filteredModule1.length + filteredModule2.length;
 
   return (
