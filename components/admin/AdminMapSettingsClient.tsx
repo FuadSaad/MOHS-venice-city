@@ -1,14 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { Save, CheckCircle2, AlertCircle, Loader2, Image as ImageIcon } from "lucide-react";
+import { Save, CheckCircle2, AlertCircle, Loader2, Image as ImageIcon, Map as MapIcon, SlidersHorizontal } from "lucide-react";
 import { WebsiteSettingsData } from "@/lib/settings";
+import MapPlotsManager from "./MapPlotsManager";
+import { PropertyItem } from "@/types/property";
 
 interface AdminMapSettingsClientProps {
   initialSettings: WebsiteSettingsData;
+  plots: PropertyItem[];
 }
 
-export default function AdminMapSettingsClient({ initialSettings }: AdminMapSettingsClientProps) {
+export default function AdminMapSettingsClient({ initialSettings, plots }: AdminMapSettingsClientProps) {
+  const [activeTab, setActiveTab] = useState<"CONFIG" | "PLOTS">("CONFIG");
+
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,38 +63,34 @@ export default function AdminMapSettingsClient({ initialSettings }: AdminMapSett
   return (
     <div className="space-y-6">
       
-      {/* Help block / Instructions */}
-      <div className="bg-gradient-to-br from-[#00695C] to-[#004D40] rounded-2xl p-6 text-white shadow-lg border border-[#004D40] flex flex-col md:flex-row gap-6 items-center">
-        <div className="flex-1">
-          <h4 className="text-lg font-black font-heading tracking-wide flex items-center gap-2 mb-3">
-            <AlertCircle className="w-5 h-5 text-[#D6A84F]" />
-            How to add Plot Buttons?
-          </h4>
-          <p className="text-[13px] text-white/90 leading-relaxed mb-4 font-medium max-w-2xl">
-            The plot buttons on the map are <strong>not created here</strong>. They are automatically pulled from your real <strong>Properties</strong> database! To add a new plot to the map, simply:
-          </p>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[12px] text-white/80 font-medium">
-            <li className="flex items-start gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
-              <span className="bg-[#D6A84F] text-black w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0 mt-0.5">1</span>
-              <span>Go to <strong>Add Property</strong> and select <strong>Residential Plot</strong>.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-black/20 p-3 rounded-xl border border-white/10">
-              <span className="bg-[#D6A84F] text-black w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0 mt-0.5">2</span>
-              <span>Fill out Price, Size, Facing, Status (Available/Sold), and Description.</span>
-            </li>
-            <li className="flex items-start gap-2 bg-black/20 p-3 rounded-xl border border-white/10 md:col-span-2">
-              <span className="bg-[#D6A84F] text-black w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0 mt-0.5">3</span>
-              <span>
-                In the <strong>Sector / Block</strong> field, type the <strong>Filtering Keyword</strong> (e.g. <code>{map1Keyword || "Sector 1"}</code>). 
-                The system will instantly create a button on that map module!
-              </span>
-            </li>
-          </ul>
-        </div>
+      {/* Custom Tabs */}
+      <div className="flex bg-white rounded-xl p-1.5 border border-slate-200 shadow-sm w-max">
+        <button 
+          onClick={() => setActiveTab("CONFIG")}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all ${
+            activeTab === "CONFIG" 
+              ? "bg-[#12262D] text-white shadow-md" 
+              : "text-slate-500 hover:bg-slate-50"
+          }`}
+        >
+          <SlidersHorizontal className="w-4 h-4" />
+          Map Layout & Images
+        </button>
+        <button 
+          onClick={() => setActiveTab("PLOTS")}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all ${
+            activeTab === "PLOTS" 
+              ? "bg-[#12262D] text-white shadow-md" 
+              : "text-slate-500 hover:bg-slate-50"
+          }`}
+        >
+          <MapIcon className="w-4 h-4" />
+          Manage Plot Buttons
+        </button>
       </div>
 
-      {/* Main Settings Form */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm relative">
+      {activeTab === "CONFIG" ? (
+      <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm relative animate-in fade-in slide-in-from-bottom-2 duration-300">
         
         {/* Status Messages */}
         <div className="absolute top-6 right-6 z-10 flex flex-col gap-2">
@@ -132,16 +133,6 @@ export default function AdminMapSettingsClient({ initialSettings }: AdminMapSett
             
             {/* Form side */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
-              <div className="sm:col-span-2 flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <div>
-                  <h4 className="text-xs font-black text-[#12262D]">Want to add or edit buttons here?</h4>
-                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">Go to Properties and use <strong>{map1Keyword || "Sector 1"}</strong> as the Sector/Block.</p>
-                </div>
-                <a href="/admin/properties/new" className="bg-[#00695C] hover:bg-[#005B50] text-white text-[10px] font-bold px-4 py-2 rounded-lg transition-colors">
-                  + Add Plot Button
-                </a>
-              </div>
-
               <div className="sm:col-span-2">
                 <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
                 <input type="url" required value={map1Image} onChange={(e) => setMap1Image(e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
@@ -188,16 +179,6 @@ export default function AdminMapSettingsClient({ initialSettings }: AdminMapSett
             
             {/* Form side */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
-              <div className="sm:col-span-2 flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <div>
-                  <h4 className="text-xs font-black text-[#12262D]">Want to add or edit buttons here?</h4>
-                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">Go to Properties and use <strong>{map2Keyword || "Sector 2"}</strong> as the Sector/Block.</p>
-                </div>
-                <a href="/admin/properties/new" className="bg-[#00695C] hover:bg-[#005B50] text-white text-[10px] font-bold px-4 py-2 rounded-lg transition-colors">
-                  + Add Plot Button
-                </a>
-              </div>
-
               <div className="sm:col-span-2">
                 <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
                 <input type="url" required value={map2Image} onChange={(e) => setMap2Image(e.target.value)} placeholder="/images/map-interactive-2.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
@@ -235,6 +216,11 @@ export default function AdminMapSettingsClient({ initialSettings }: AdminMapSett
           </div>
         </form>
       </div>
+      ) : (
+        <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <MapPlotsManager initialPlots={plots} map1Keyword={map1Keyword} map2Keyword={map2Keyword} />
+        </div>
+      )}
     </div>
   );
 }
