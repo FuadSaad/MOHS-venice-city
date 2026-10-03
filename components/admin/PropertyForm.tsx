@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, ArrowLeft, Check, Sparkles } from "lucide-react";
+import { Loader2, Plus, ArrowLeft, Check, Sparkles, UploadCloud } from "lucide-react";
 import Link from "next/link";
 import { PropertyItem } from "@/types/property";
 
@@ -15,6 +15,41 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [uploadingMain, setUploadingMain] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'main' | 'gallery') => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (type === 'main') setUploadingMain(true);
+    else setUploadingGallery(true);
+    setError("");
+
+    try {
+      const urls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const form = new FormData();
+        form.append("file", files[i]);
+        const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+        const data = await res.json();
+        if (data.success) urls.push(data.url);
+      }
+
+      if (urls.length > 0) {
+        if (type === 'main') {
+          setFeaturedImage(urls[0]);
+        } else {
+          setExtraImagesText(prev => prev ? prev + "\n" + urls.join("\n") : urls.join("\n"));
+        }
+      }
+    } catch (err: any) {
+      setError(err.message || "Upload failed");
+    } finally {
+      if (type === 'main') setUploadingMain(false);
+      else setUploadingGallery(false);
+    }
+  };
 
   const [title, setTitle] = useState(initialData?.title || "");
   const [propertyType, setPropertyType] = useState<"PLOT" | "FLAT">(
@@ -486,31 +521,48 @@ export default function PropertyForm({ initialData, isEdit }: PropertyFormProps)
       {/* Images Card */}
       <div className="bg-white p-7 rounded-2xl border border-[#E2E7E5] shadow-soft space-y-5">
         <h3 className="text-base font-bold text-[#12262D] font-heading border-b border-[#E2E7E5] pb-3">
-          4. Media & Image URLs
+          4. Media & Image Uploads
         </h3>
 
         <div>
           <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
-            Main Featured Image URL <span className="text-rose-500">*</span>
+            Main Featured Image Upload / URL <span className="text-rose-500">*</span>
           </label>
-          <input
-            type="url"
-            required
-            value={featuredImage}
-            onChange={(e) => setFeaturedImage(e.target.value)}
-            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] outline-none"
-          />
+          <div className="flex items-center gap-2">
+            <label className="cursor-pointer shrink-0" title="Upload Photo">
+              <div className="flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors shadow-sm">
+                {uploadingMain ? <Loader2 className="w-5 h-5 animate-spin text-[#00695C]" /> : <UploadCloud className="w-5 h-5 text-slate-500" />}
+              </div>
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleUpload(e, 'main')} disabled={uploadingMain} />
+            </label>
+            <input
+              type="text"
+              required
+              value={featuredImage}
+              onChange={(e) => setFeaturedImage(e.target.value)}
+              placeholder="Upload photo or paste URL..."
+              className="flex-1 w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-4 py-2.5 text-sm text-[#12262D] outline-none focus:border-[#00695C]"
+            />
+          </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-[#12262D] uppercase mb-1">
-            Additional Gallery Image URLs (One URL per line)
-          </label>
+          <div className="flex justify-between items-end mb-1">
+            <label className="block text-xs font-bold text-[#12262D] uppercase">
+              Additional Gallery Image Uploads / URLs
+            </label>
+            <label className="cursor-pointer flex items-center gap-1.5 text-[10px] font-bold text-[#00695C] bg-[#00695C]/10 px-2.5 py-1 rounded hover:bg-[#00695C]/20 transition-colors">
+              {uploadingGallery ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5" />}
+              UPLOAD IMAGES
+              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleUpload(e, 'gallery')} disabled={uploadingGallery} />
+            </label>
+          </div>
           <textarea
-            rows={3}
+            rows={4}
+            placeholder="Upload multiple photos above or paste URLs here (One URL per line)..."
             value={extraImagesText}
             onChange={(e) => setExtraImagesText(e.target.value)}
-            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl p-3 text-xs text-[#12262D] outline-none font-mono"
+            className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl p-3 text-xs text-[#12262D] outline-none focus:border-[#00695C] font-mono leading-relaxed resize-y"
           />
         </div>
       </div>

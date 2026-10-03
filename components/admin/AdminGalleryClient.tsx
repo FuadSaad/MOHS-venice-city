@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Plus, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Plus, Image as ImageIcon, Loader2, UploadCloud } from "lucide-react";
 import { GalleryItemType } from "@/types/property";
 
 interface AdminGalleryClientProps {
@@ -18,6 +18,35 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
   const [category, setCategory] = useState("PLOTS");
   const [imageUrl, setImageUrl] = useState("");
   const [caption, setCaption] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+
+    try {
+      const form = new FormData();
+      form.append("file", file);
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: form,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setImageUrl(data.url);
+      } else {
+        alert(data.error || "Failed to upload image");
+      }
+    } catch (err: any) {
+      alert(err.message || "Network error");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const fetchItems = async () => {
     try {
@@ -98,16 +127,24 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
 
           <div>
             <label className="block text-xs font-bold text-[#12262D] mb-1">
-              Image URL
+              Photo Upload / Image URL
             </label>
-            <input
-              type="url"
-              required
-              placeholder="https://images.unsplash.com/..."
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none"
-            />
+            <div className="flex items-center gap-2">
+              <label className="cursor-pointer shrink-0" title="Upload Photo">
+                <div className="flex items-center justify-center w-[38px] h-[38px] rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors shadow-sm">
+                  {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-[#00695C]" /> : <UploadCloud className="w-4 h-4 text-slate-500" />}
+                </div>
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="Upload photo or paste URL..."
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                className="flex-1 bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none focus:border-[#00695C]"
+              />
+            </div>
           </div>
 
           <div>

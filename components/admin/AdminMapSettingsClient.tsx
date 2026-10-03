@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Save, CheckCircle2, AlertCircle, Loader2, Image as ImageIcon, Map as MapIcon, SlidersHorizontal, Plus, Trash2 } from "lucide-react";
+import { Save, CheckCircle2, AlertCircle, Loader2, Image as ImageIcon, Map as MapIcon, SlidersHorizontal, Plus, Trash2, UploadCloud } from "lucide-react";
 import { WebsiteSettingsData } from "@/lib/settings";
 import MapPlotsManager from "./MapPlotsManager";
 import { PropertyItem } from "@/types/property";
@@ -25,6 +25,36 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingImageIndex, setUploadingImageIndex] = useState<number | null>(null);
+
+  const handleModuleImageUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImageIndex(index);
+    setError("");
+
+    try {
+      const form = new FormData();
+      form.append("file", file);
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: form,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        handleModuleChange(index, "image", data.url);
+      } else {
+        setError(data.error || "Failed to upload image");
+      }
+    } catch (err: any) {
+      setError(err.message || "Network error");
+    } finally {
+      setUploadingImageIndex(null);
+    }
+  };
 
   const [modules, setModules] = useState<MapModuleConfig[]>([]);
   const [editingModules, setEditingModules] = useState<number[]>([]);
@@ -222,8 +252,16 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
                   {/* Form side */}
                   <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
                     <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
-                    <input type="text" required disabled={!editingModules.includes(index)} value={mod.image} onChange={(e) => handleModuleChange(index, "image", e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white disabled:bg-slate-100 disabled:text-slate-500 border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                    <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image Upload / URL</label>
+                    <div className="flex items-center gap-2">
+                      <label className={`cursor-pointer shrink-0 ${!editingModules.includes(index) ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Photo">
+                        <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors shadow-sm">
+                          {uploadingImageIndex === index ? <Loader2 className="w-5 h-5 animate-spin text-[#00695C]" /> : <UploadCloud className="w-5 h-5 text-slate-500" />}
+                        </div>
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleModuleImageUpload(index, e)} disabled={uploadingImageIndex === index || !editingModules.includes(index)} />
+                      </label>
+                      <input type="text" required disabled={!editingModules.includes(index)} value={mod.image} onChange={(e) => handleModuleChange(index, "image", e.target.value)} placeholder="/images/map-interactive.jpg" className="flex-1 w-full bg-white disabled:bg-slate-100 disabled:text-slate-500 border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Title</label>
