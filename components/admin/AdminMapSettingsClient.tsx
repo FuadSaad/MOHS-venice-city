@@ -27,6 +27,15 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
   const [error, setError] = useState<string | null>(null);
 
   const [modules, setModules] = useState<MapModuleConfig[]>([]);
+  const [editingModules, setEditingModules] = useState<number[]>([]);
+
+  const toggleEdit = (index: number) => {
+    if (editingModules.includes(index)) {
+      setEditingModules(editingModules.filter((i) => i !== index));
+    } else {
+      setEditingModules([...editingModules, index]);
+    }
+  };
 
   useEffect(() => {
     try {
@@ -64,10 +73,12 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
 
   const addModule = () => {
     const newId = Date.now().toString();
+    const newIndex = modules.length;
     setModules([
       ...modules, 
-      { id: newId, image: "", title: `New Module ${modules.length + 1}`, subtitle: "", keyword: "" }
+      { id: newId, image: "", title: `New Module ${newIndex + 1}`, subtitle: "", keyword: "" }
     ]);
+    setEditingModules([...editingModules, newIndex]);
   };
 
   const removeModule = (index: number) => {
@@ -186,22 +197,37 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
                 </div>
                 
                 {/* Form side */}
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
-                  <div className="sm:col-span-2">
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start relative">
+                  {!editingModules.includes(index) && (
+                    <div className="absolute top-0 right-0 z-10">
+                      <button type="button" onClick={() => toggleEdit(index)} className="bg-[#12262D] hover:bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                        Edit Module
+                      </button>
+                    </div>
+                  )}
+                  {editingModules.includes(index) && (
+                    <div className="absolute top-0 right-0 z-10">
+                      <button type="button" onClick={() => toggleEdit(index)} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                        Done Editing
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="sm:col-span-2 mt-6 sm:mt-0">
                     <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
-                    <input type="text" required value={mod.image} onChange={(e) => handleModuleChange(index, "image", e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                    <input type="text" required disabled={!editingModules.includes(index)} value={mod.image} onChange={(e) => handleModuleChange(index, "image", e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white disabled:bg-slate-100 disabled:text-slate-500 border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
                   </div>
                   <div>
                     <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Title</label>
-                    <input type="text" required value={mod.title} onChange={(e) => handleModuleChange(index, "title", e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                    <input type="text" required disabled={!editingModules.includes(index)} value={mod.title} onChange={(e) => handleModuleChange(index, "title", e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-white disabled:bg-slate-100 disabled:text-slate-500 border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
                   </div>
                   <div>
                     <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Subtitle / Zone</label>
-                    <input type="text" required value={mod.subtitle} onChange={(e) => handleModuleChange(index, "subtitle", e.target.value)} placeholder="e.g. Corporate Zone" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                    <input type="text" required disabled={!editingModules.includes(index)} value={mod.subtitle} onChange={(e) => handleModuleChange(index, "subtitle", e.target.value)} placeholder="e.g. Corporate Zone" className="w-full bg-white disabled:bg-slate-100 disabled:text-slate-500 border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
                   </div>
                   <div className="sm:col-span-2">
                     <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Filtering Keyword</label>
-                    <input type="text" required value={mod.keyword} onChange={(e) => handleModuleChange(index, "keyword", e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-emerald-50/50 border border-emerald-200 rounded-xl px-4 py-3 text-sm font-bold text-emerald-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm" />
+                    <input type="text" required disabled={!editingModules.includes(index)} value={mod.keyword} onChange={(e) => handleModuleChange(index, "keyword", e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-emerald-50/50 disabled:bg-slate-100 disabled:text-slate-500 border border-emerald-200 disabled:border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-emerald-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm" />
                     <p className="text-[10px] text-emerald-600 mt-1.5 font-bold">Properties with this word in their "Sector/Block" will appear on this map.</p>
                   </div>
                 </div>
