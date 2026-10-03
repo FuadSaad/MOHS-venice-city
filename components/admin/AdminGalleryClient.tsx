@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Plus, Image as ImageIcon, Loader2, UploadCloud } from "lucide-react";
+import { Plus, Image as ImageIcon, Loader2, UploadCloud, Edit2, Trash2, X } from "lucide-react";
 import { GalleryItemType } from "@/types/property";
 
 interface AdminGalleryClientProps {
@@ -19,6 +19,7 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
   const [imageUrl, setImageUrl] = useState("");
   const [caption, setCaption] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -60,21 +61,22 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
     }
   };
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !imageUrl) return;
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/gallery", {
-        method: "POST",
+      const url = editingId ? `/api/gallery/${editingId}` : "/api/gallery";
+      const method = editingId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, category, imageUrl, caption }),
       });
       if (res.ok) {
-        setTitle("");
-        setImageUrl("");
-        setCaption("");
+        cancelEdit();
         await fetchItems();
       }
     } catch (e) {
@@ -84,15 +86,51 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
     }
   };
 
+  const handleEdit = (item: GalleryItemType) => {
+    setEditingId(item.id);
+    setTitle(item.title);
+    setCategory(item.category);
+    setImageUrl(item.imageUrl);
+    setCaption(item.caption || "");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setTitle("");
+    setImageUrl("");
+    setCaption("");
+    setCategory("PLOTS");
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this photo?")) return;
+    
+    try {
+      const res = await fetch(`/api/gallery/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        await fetchItems();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Add New Photo Card */}
-      <div className="bg-white p-6 rounded-2xl border border-[#E2E7E5] shadow-soft">
+      <div className="bg-white p-6 rounded-2xl border border-[#E2E7E5] shadow-soft relative">
+        {editingId && (
+          <button onClick={cancelEdit} className="absolute top-4 right-4 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors">
+             <X className="w-4 h-4 text-slate-600" />
+          </button>
+        )}
         <h3 className="text-base font-bold text-[#12262D] font-heading mb-4 flex items-center gap-2">
-          <Plus className="w-4 h-4 text-[#00695C]" /> Add New Photo
+          {editingId ? <Edit2 className="w-4 h-4 text-[#D6A84F]" /> : <Plus className="w-4 h-4 text-[#00695C]" />} 
+          {editingId ? "Edit Photo" : "Add New Photo"}
         </h3>
 
-        <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
           <div>
             <label className="block text-xs font-bold text-[#12262D] mb-1">
               Photo Title
@@ -170,7 +208,7 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
             ) : (
               <Plus className="w-3.5 h-3.5" />
             )}
-            <span>Add to Gallery</span>
+            <span>{editingId ? "Save Changes" : "Add to Gallery"}</span>
           </button>
         </form>
       </div>
@@ -180,8 +218,26 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
         {items.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-xl border border-[#E2E7E5] overflow-hidden shadow-xs relative group"
+            className="bg-white rounded-xl border border-[#E2E7E5] overflow-hidden shadow-xs relative group hover:shadow-md transition-shadow"
           >
+            {/* Action Buttons (visible on hover) */}
+            <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+              <button
+                onClick={() => handleEdit(item)}
+                className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-colors border border-emerald-100"
+                title="Edit Photo"
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => handleDelete(item.id)}
+                className="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center transition-colors border border-rose-100"
+                title="Delete Photo"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            
             <div className="relative aspect-[4/3] bg-slate-100">
               <Image
                 src={item.imageUrl}
