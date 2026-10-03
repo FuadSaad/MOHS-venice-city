@@ -18,7 +18,7 @@ export async function PUT(
 
     const { id } = params;
     const body = await req.json();
-    const { name, email, username, password, permissions, isActive, role } = body;
+    const { name, email, username, phone, password, permissions, isActive, role } = body;
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
@@ -42,6 +42,7 @@ export async function PUT(
     const updateData: any = {};
 
     if (name) updateData.name = name.trim();
+    if (phone !== undefined) updateData.phone = phone?.trim() || null;
     if (email && email !== existingUser.email) {
       const emailTaken = await prisma.user.findUnique({
         where: { email: email.toLowerCase().trim() },
@@ -92,6 +93,7 @@ export async function PUT(
         name: true,
         email: true,
         username: true,
+        phone: true,
         role: true,
         permissions: true,
         isActive: true,

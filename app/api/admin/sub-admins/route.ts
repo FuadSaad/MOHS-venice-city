@@ -19,6 +19,7 @@ export async function GET() {
         name: true,
         email: true,
         username: true,
+        phone: true,
         role: true,
         permissions: true,
         isActive: true,
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, email, username, password, permissions } = body;
+    const { name, email, username, phone, password, permissions } = body;
 
     if (!name || !email || !username || !password) {
       return NextResponse.json(
@@ -121,6 +122,7 @@ export async function POST(req: NextRequest) {
         name: name.trim(),
         email: cleanEmail,
         username: cleanUsername,
+        phone: phone?.trim() || null,
         passwordHash,
         role: "SUB_ADMIN",
         permissions: JSON.stringify(assignedPermissions),
@@ -131,6 +133,7 @@ export async function POST(req: NextRequest) {
         name: true,
         email: true,
         username: true,
+        phone: true,
         role: true,
         permissions: true,
         isActive: true,

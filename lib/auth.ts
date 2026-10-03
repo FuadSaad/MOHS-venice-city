@@ -26,6 +26,7 @@ export function verifyAdminToken(token: string): AdminPayload | null {
       name: decoded.name || "Administrator",
       email: decoded.email,
       username: decoded.username || "",
+      phone: decoded.phone || "",
       role: decoded.role || "SUB_ADMIN",
       permissions: Array.isArray(decoded.permissions) ? decoded.permissions : [],
     };

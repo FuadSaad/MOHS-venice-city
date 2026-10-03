@@ -12,9 +12,10 @@ model User {
   name         String
   email        String   @unique
   username     String?  @unique
+  phone        String?
   passwordHash String
   role         String   @default("SUB_ADMIN") // "SUPER_ADMIN" or "SUB_ADMIN"
-  permissions  String?  // JSON array string e.g. '["properties","enquiries"]'
+  permissions  String?  // JSON array string e.g. '["properties.view","properties.add","enquiries.view"]'
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

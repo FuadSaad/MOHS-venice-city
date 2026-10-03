@@ -1,68 +1,48 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { User, Plus, ShieldCheck, Shield } from "lucide-react";
-import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/rbac";
+import { Search, Bell, ChevronDown } from "lucide-react";
+import { AdminPayload } from "@/lib/rbac";
 
 export default function AdminNavbar({ admin }: { admin?: AdminPayload | null }) {
-  const isSuper = isSuperAdmin(admin);
-  const canAddProperty = hasPermission(admin, "properties");
+  const initials = admin?.name
+    ? admin.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+    : 'AD';
 
   return (
-    <header className="h-16 bg-white border-b border-[#E2E7E5] flex items-center justify-between px-6 sticky top-0 z-30 shadow-2xs">
-      <div className="flex items-center gap-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-[#657278]">
-          MOHS VENICE CITY MANAGEMENT
-        </span>
-        {isSuper ? (
-          <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-extrabold uppercase bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">
-            👑 Super Admin Mode
-          </span>
-        ) : (
-          <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-bold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full">
-            <Shield className="w-3 h-3 text-[#00695C]" /> Sub-Admin Mode
-          </span>
-        )}
+    <header className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+      {/* Left side */}
+      <div className="flex items-center flex-1">
+        <div className="relative w-64">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full pl-9 pr-4 py-1.5 bg-slate-50 border-none rounded-lg text-[13px] text-slate-700 focus:ring-1 focus:ring-slate-300 outline-none"
+          />
+        </div>
       </div>
 
+      {/* Right side */}
       <div className="flex items-center gap-4">
-        {canAddProperty && (
-          <Link
-            href="/admin/properties/new"
-            className="bg-[#00695C] hover:bg-[#005B50] text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>New Property</span>
-          </Link>
-        )}
+        <button className="relative p-1.5 text-slate-500 hover:text-slate-700 transition-colors">
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border border-white" />
+        </button>
 
-        <div className="h-6 w-px bg-slate-200" />
+        <div className="h-5 w-px bg-slate-200" />
 
-        <div className="flex items-center gap-2">
-          <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-              isSuper ? "bg-amber-100 text-amber-800" : "bg-[#E8F5F3] text-[#00695C]"
-            }`}
-          >
-            {isSuper ? "👑" : <User className="w-4 h-4" />}
+        <button className="flex items-center gap-2 hover:bg-slate-50 p-1 rounded-lg transition-colors">
+          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[13px] font-bold text-slate-600">
+            {initials}
           </div>
-          <div className="text-left hidden sm:block">
-            <div className="flex items-center gap-1.5">
-              <p className="text-xs font-bold text-[#12262D]">
-                {admin?.name || "Administrator"}
-              </p>
-              {isSuper && (
-                <span className="text-[9px] bg-amber-100 text-amber-800 font-extrabold px-1 rounded">
-                  Super
-                </span>
-              )}
-            </div>
-            <p className="text-[11px] text-[#657278]">
-              {admin?.username ? `@${admin.username}` : (admin?.email || "admin@mohs.com")}
+          <div className="hidden md:block text-left">
+            <p className="text-[13px] font-medium text-slate-700">
+              {admin?.name || "Administrator"}
             </p>
           </div>
-        </div>
+          <ChevronDown className="w-4 h-4 text-slate-400" />
+        </button>
       </div>
     </header>
   );

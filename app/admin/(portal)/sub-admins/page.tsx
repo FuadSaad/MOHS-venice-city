@@ -20,6 +20,7 @@ export default async function SubAdminsPage() {
       name: true,
       email: true,
       username: true,
+      phone: true,
       role: true,
       permissions: true,
       isActive: true,

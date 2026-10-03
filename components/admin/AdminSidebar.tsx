@@ -18,6 +18,7 @@ import {
   ExternalLink,
   ShieldCheck,
   Shield,
+  Search
 } from "lucide-react";
 import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/rbac";
 
@@ -27,15 +28,16 @@ interface NavItem {
   icon: any;
   permission?: string;
   superAdminOnly?: boolean;
+  badge?: number | string;
 }
 
 const ALL_NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard }, // accessible to all
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "All Properties", href: "/admin/properties", icon: Home, permission: "properties" },
   { label: "Add Property", href: "/admin/properties/new", icon: PlusCircle, permission: "properties" },
   { label: "Township Projects", href: "/admin/projects", icon: FolderKanban, permission: "projects" },
-  { label: "Client Enquiries", href: "/admin/enquiries", icon: MessageSquare, permission: "enquiries" },
-  { label: "Site Visit Requests", href: "/admin/site-visits", icon: CalendarCheck, permission: "site_visits" },
+  { label: "Client Enquiries", href: "/admin/enquiries", icon: MessageSquare, permission: "enquiries", badge: "12" },
+  { label: "Site Visit Requests", href: "/admin/site-visits", icon: CalendarCheck, permission: "site_visits", badge: "5" },
   { label: "Photo Gallery", href: "/admin/gallery", icon: ImageIcon, permission: "gallery" },
   { label: "Customer Reviews", href: "/admin/reviews", icon: Star, permission: "reviews" },
   { label: "Website Settings", href: "/admin/settings", icon: Settings, permission: "settings" },
@@ -47,7 +49,6 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
   const router = useRouter();
   const [admin, setAdmin] = useState<AdminPayload | null>(serverAdmin || null);
 
-  // Sync client session if server prop wasn't provided or updated
   useEffect(() => {
     if (!serverAdmin) {
       fetch("/api/auth/me")
@@ -80,49 +81,31 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
 
   const isSuper = isSuperAdmin(admin);
 
-  // Filter navigation items by role and permissions
   const visibleNavItems = ALL_NAV_ITEMS.filter((item) => {
-    if (isSuper) return true; // Super admin sees everything
-    if (item.superAdminOnly) return false; // Sub-admin cannot see super admin items
-    if (!item.permission) return true; // Dashboard is visible
+    if (isSuper) return true;
+    if (item.superAdminOnly) return false;
+    if (!item.permission) return true;
     return hasPermission(admin, item.permission);
   });
 
   return (
-    <aside className="w-64 bg-[#12262D] text-white flex flex-col shrink-0 min-h-screen border-r border-white/10">
+    <aside className="w-56 bg-[#12262D] text-white flex flex-col shrink-0 min-h-screen border-r border-white/10">
       {/* Brand header */}
-      <div className="p-5 border-b border-white/10 flex items-center justify-between">
+      <div className="h-14 flex items-center px-4 border-b border-white/10">
         <Link href="/admin" className="flex items-center gap-2">
-          <div className="relative w-36 h-10 bg-white/95 rounded-lg p-1.5 flex items-center">
+          <div className="relative w-28 h-8 flex items-center">
             <Image
               src="/images/logo.png"
               alt="MOHS Venice City"
               fill
-              className="object-contain object-left"
+              className="object-contain object-left brightness-0 invert"
             />
           </div>
         </Link>
       </div>
 
-      {/* Role Badge Bar */}
-      <div className="px-4 py-3 bg-[#005B50]/40 border-b border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          {isSuper ? (
-            <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1">
-              <span>👑 Super Administrator</span>
-            </span>
-          ) : (
-            <span className="text-[11px] font-bold text-emerald-300 flex items-center gap-1">
-              <Shield className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Sub-Administrator</span>
-            </span>
-          )}
-        </div>
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-      </div>
-
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {visibleNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -130,16 +113,23 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all ${
                 isActive
-                  ? "bg-[#00695C] text-white shadow-sm"
-                  : "text-slate-300 hover:text-white hover:bg-white/5"
+                  ? "bg-white/10 text-white"
+                  : "text-white/50 hover:text-white/80 hover:bg-white/5"
               }`}
             >
-              <Icon className="w-4 h-4 text-[#D6A84F]" />
-              <span>{item.label}</span>
-              {item.superAdminOnly && (
-                <span className="ml-auto text-[9px] uppercase font-bold bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded">
+              <Icon className="w-4 h-4 shrink-0" />
+              <span className="flex-1 truncate">{item.label}</span>
+              {item.badge && (
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                  isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/70"
+                }`}>
+                  {item.badge}
+                </span>
+              )}
+              {item.superAdminOnly && !item.badge && (
+                <span className="text-[9px] uppercase font-bold bg-white/10 text-white/70 px-1.5 py-0.5 rounded">
                   Super
                 </span>
               )}
@@ -149,29 +139,37 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
       </nav>
 
       {/* Bottom Profile and Actions */}
-      <div className="p-4 border-t border-white/10 space-y-2">
-        {/* User Card */}
+      <div className="p-3 border-t border-white/10 space-y-2">
         {admin && (
-          <div className="px-3 py-2 bg-white/5 rounded-xl border border-white/5 mb-2">
-            <p className="text-xs font-bold text-white truncate">{admin.name || "Administrator"}</p>
-            <p className="text-[10px] text-slate-400 truncate">
-              {admin.username ? `@${admin.username}` : admin.email}
-            </p>
+          <div className="px-3 py-2 flex items-center gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5">
+                <p className="text-[13px] font-medium text-white truncate">{admin.name || "Administrator"}</p>
+                {isSuper ? (
+                  <span className="text-[10px] text-amber-300 flex items-center" title="Super Admin">👑</span>
+                ) : (
+                  <Shield className="w-3 h-3 text-emerald-400 shrink-0" title="Sub Admin" />
+                )}
+              </div>
+              <p className="text-[11px] text-white/50 truncate">
+                {admin.username ? `@${admin.username}` : admin.email}
+              </p>
+            </div>
           </div>
         )}
 
         <Link
           href="/"
           target="_blank"
-          className="flex items-center justify-between px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+          className="flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-white/50 hover:text-white/80 hover:bg-white/5 transition-colors"
         >
           <span>View Public Website</span>
-          <ExternalLink className="w-3.5 h-3.5 text-[#D6A84F]" />
+          <ExternalLink className="w-3.5 h-3.5" />
         </Link>
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold text-rose-300 hover:text-rose-100 hover:bg-rose-500/10 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-400 hover:text-rose-300 hover:bg-white/5 transition-colors"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>
