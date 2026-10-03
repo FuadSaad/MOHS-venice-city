@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Star, Plus, Edit2, Trash2, X, Loader2, CheckCircle2 } from "lucide-react";
+import { Star, Plus, Edit2, Trash2, X, Loader2, CheckCircle2, UploadCloud } from "lucide-react";
 import { ReviewItem } from "@/types/property";
 import { useRouter } from "next/navigation";
 
@@ -30,6 +30,36 @@ export default function AdminReviewsClient({ initialReviews }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setError("");
+
+    try {
+      const form = new FormData();
+      form.append("file", file);
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: form,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setFormData({ ...formData, avatarUrl: data.url });
+      } else {
+        setError(data.error || "Failed to upload image");
+      }
+    } catch (err: any) {
+      setError(err.message || "Network error");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const openAddModal = () => {
     setEditingReview(null);
@@ -311,15 +341,32 @@ export default function AdminReviewsClient({ initialReviews }: Props) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 uppercase">Avatar Image URL (Optional)</label>
-                  <input
-                    type="url"
-                    value={formData.avatarUrl}
-                    onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] transition-all"
-                    placeholder="https://example.com/avatar.jpg"
-                  />
-                  <p className="text-[10px] text-slate-500">Leave blank to use a default avatar.</p>
+                  <label className="text-xs font-bold text-slate-700 uppercase">Reviewer Photo (Optional)</label>
+                  <div className="flex items-start gap-3">
+                    <label className="cursor-pointer shrink-0" title="Upload Photo">
+                      <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors shadow-sm">
+                        {uploadingImage ? <Loader2 className="w-5 h-5 animate-spin text-[#00695C]" /> : <UploadCloud className="w-5 h-5 text-slate-500" />}
+                      </div>
+                      <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                    </label>
+                    <div className="flex-1 space-y-1.5">
+                      <input
+                        type="text"
+                        value={formData.avatarUrl}
+                        onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#00695C]/20 focus:border-[#00695C] transition-all"
+                        placeholder="Upload a photo or paste an image URL..."
+                      />
+                      {formData.avatarUrl && (
+                        <div className="flex items-center gap-2 pt-1 animate-in fade-in">
+                           <div className="relative w-6 h-6 rounded-full overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-sm">
+                              <Image src={formData.avatarUrl} alt="Preview" fill className="object-cover" />
+                           </div>
+                           <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Photo added successfully</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
