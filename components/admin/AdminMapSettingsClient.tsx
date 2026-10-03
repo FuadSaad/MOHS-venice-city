@@ -28,6 +28,7 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
 
   const [modules, setModules] = useState<MapModuleConfig[]>([]);
   const [editingModules, setEditingModules] = useState<number[]>([]);
+  const [deleteConfirmIndex, setDeleteConfirmIndex] = useState<number | null>(null);
 
   const toggleEdit = (index: number) => {
     if (editingModules.includes(index)) {
@@ -81,11 +82,16 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
     setEditingModules([...editingModules, newIndex]);
   };
 
-  const removeModule = (index: number) => {
-    if (confirm("Are you sure you want to remove this map module?")) {
+  const requestDeleteModule = (index: number) => {
+    setDeleteConfirmIndex(index);
+  };
+
+  const confirmDeleteModule = () => {
+    if (deleteConfirmIndex !== null) {
       const newModules = [...modules];
-      newModules.splice(index, 1);
+      newModules.splice(deleteConfirmIndex, 1);
       setModules(newModules);
+      setDeleteConfirmIndex(null);
     }
   };
 
@@ -173,7 +179,7 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
               <div key={mod.id} className="relative">
                 
                 <div className="flex flex-col xl:flex-row gap-6 bg-slate-50/50 p-5 rounded-2xl border border-slate-200 relative group shadow-sm h-full">
-                  <button type="button" onClick={() => removeModule(index)} className="absolute -top-3 -left-3 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 border border-slate-200 hover:border-rose-200 p-2 rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100 z-20">
+                  <button type="button" onClick={() => requestDeleteModule(index)} className="absolute -top-3 -left-3 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 border border-slate-200 hover:border-rose-200 p-2 rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100 z-20">
                     <Trash2 className="w-4 h-4" />
                   </button>
 
@@ -267,6 +273,39 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
           <MapPlotsManager initialPlots={plots} modules={modules} />
         </div>
       )}
+
+      {/* Custom Delete Confirmation Modal */}
+      {deleteConfirmIndex !== null && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setDeleteConfirmIndex(null)}></div>
+          <div className="bg-white rounded-2xl p-6 shadow-2xl relative z-10 max-w-sm w-full animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-6 h-6 text-rose-600" />
+            </div>
+            <h3 className="text-lg font-black text-center text-[#12262D] mb-2">Delete Module?</h3>
+            <p className="text-sm text-center text-slate-500 mb-6 font-medium">
+              Are you sure you want to remove this map module? This will also remove the layout settings for it.
+            </p>
+            <div className="flex items-center gap-3">
+              <button 
+                type="button" 
+                onClick={() => setDeleteConfirmIndex(null)}
+                className="flex-1 py-2.5 px-4 rounded-xl font-bold text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                onClick={confirmDeleteModule}
+                className="flex-1 py-2.5 px-4 rounded-xl font-bold text-sm bg-rose-500 hover:bg-rose-600 text-white transition-colors shadow-lg shadow-rose-500/20"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
