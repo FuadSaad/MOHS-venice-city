@@ -17,7 +17,7 @@ export default async function AdminPortalLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F5F8F8]">
+    <div className="flex h-screen overflow-hidden bg-[#F5F8F8]">
       <AdminSidebar admin={admin} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminNavbar admin={admin} />

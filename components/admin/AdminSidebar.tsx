@@ -50,6 +50,7 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
   const pathname = usePathname();
   const router = useRouter();
   const [admin, setAdmin] = useState<AdminPayload | null>(serverAdmin || null);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
     if (!serverAdmin) {
@@ -91,23 +92,38 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
   });
 
   return (
-    <aside className="w-56 bg-[#12262D] text-white flex flex-col shrink-0 min-h-screen border-r border-white/10">
+    <aside className={`${isMinimized ? 'w-20' : 'w-56'} transition-all duration-300 ease-in-out bg-[#12262D] text-white flex flex-col shrink-0 h-screen border-r border-white/10 relative group`}>
+      
+      {/* Toggle Button */}
+      <button 
+        onClick={() => setIsMinimized(!isMinimized)}
+        className="absolute -right-3 top-20 w-6 h-6 bg-[#12262D] border border-white/10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 z-50 transition-colors shadow-sm"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-3.5 h-3.5 transition-transform duration-300 ${isMinimized ? 'rotate-180' : ''}`}>
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
       {/* Brand header */}
-      <div className="h-14 flex items-center px-4 border-b border-white/10">
-        <Link href="/admin" className="flex items-center gap-2">
-          <div className="relative w-28 h-8 flex items-center">
-            <Image
-              src="/images/logo.png"
-              alt="MOHS Venice City"
-              fill
-              className="object-contain object-left brightness-0 invert"
-            />
-          </div>
+      <div className={`h-14 flex items-center border-b border-white/10 ${isMinimized ? 'justify-center' : 'px-4'}`}>
+        <Link href="/admin" className="flex items-center">
+          {isMinimized ? (
+            <div className="w-8 h-8 rounded bg-white/10 flex items-center justify-center font-black text-sm">M</div>
+          ) : (
+            <div className="relative w-28 h-8 flex items-center">
+              <Image
+                src="/images/logo.png"
+                alt="MOHS Venice City"
+                fill
+                className="object-contain object-left brightness-0 invert"
+              />
+            </div>
+          )}
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overflow-x-hidden sidebar-scrollbar">
         {visibleNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -115,25 +131,31 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
             <Link
               key={item.href}
               href={item.href}
+              title={isMinimized ? item.label : undefined}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all ${
                 isActive
                   ? "bg-white/10 text-white"
                   : "text-white/50 hover:text-white/80 hover:bg-white/5"
-              }`}
+              } ${isMinimized ? 'justify-center px-0' : ''}`}
             >
               <Icon className="w-4 h-4 shrink-0" />
-              <span className="flex-1 truncate">{item.label}</span>
-              {item.badge && (
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                  isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/70"
-                }`}>
-                  {item.badge}
-                </span>
-              )}
-              {item.superAdminOnly && !item.badge && (
-                <span className="text-[9px] uppercase font-bold bg-white/10 text-white/70 px-1.5 py-0.5 rounded">
-                  Super
-                </span>
+              
+              {!isMinimized && (
+                <>
+                  <span className="flex-1 truncate">{item.label}</span>
+                  {item.badge && (
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                      isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/70"
+                    }`}>
+                      {item.badge}
+                    </span>
+                  )}
+                  {item.superAdminOnly && !item.badge && (
+                    <span className="text-[9px] uppercase font-bold bg-white/10 text-white/70 px-1.5 py-0.5 rounded">
+                      Super
+                    </span>
+                  )}
+                </>
               )}
             </Link>
           );
@@ -143,38 +165,46 @@ export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayl
       {/* Bottom Profile and Actions */}
       <div className="p-3 border-t border-white/10 space-y-2">
         {admin && (
-          <div className="px-3 py-2 flex items-center gap-2">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <p className="text-[13px] font-medium text-white truncate">{admin.name || "Administrator"}</p>
-                {isSuper ? (
-                  <span className="text-[10px] text-amber-300 flex items-center" title="Super Admin">👑</span>
-                ) : (
-                  <span title="Sub Admin"><Shield className="w-3 h-3 text-emerald-400 shrink-0" /></span>
-                )}
+          <div className={`py-2 flex items-center ${isMinimized ? 'justify-center' : 'px-3 gap-2'}`}>
+            {isMinimized ? (
+               <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold uppercase" title={admin.name || "Admin"}>
+                 {(admin.name || "A")[0]}
+               </div>
+            ) : (
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-[13px] font-medium text-white truncate">{admin.name || "Administrator"}</p>
+                  {isSuper ? (
+                    <span className="text-[10px] text-amber-300 flex items-center" title="Super Admin"><ShieldCheck className="w-3 h-3" /></span>
+                  ) : (
+                    <span title="Sub Admin"><Shield className="w-3 h-3 text-emerald-400 shrink-0" /></span>
+                  )}
+                </div>
+                <p className="text-[11px] text-white/50 truncate">
+                  {admin.username ? `@${admin.username}` : admin.email}
+                </p>
               </div>
-              <p className="text-[11px] text-white/50 truncate">
-                {admin.username ? `@${admin.username}` : admin.email}
-              </p>
-            </div>
+            )}
           </div>
         )}
 
         <Link
           href="/"
           target="_blank"
-          className="flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-white/50 hover:text-white/80 hover:bg-white/5 transition-colors"
+          title={isMinimized ? "View Public Website" : undefined}
+          className={`flex items-center justify-between py-2 rounded-lg text-[13px] font-medium text-white/50 hover:text-white/80 hover:bg-white/5 transition-colors ${isMinimized ? 'justify-center px-0' : 'px-3'}`}
         >
-          <span>View Public Website</span>
-          <ExternalLink className="w-3.5 h-3.5" />
+          {!isMinimized && <span>View Public Website</span>}
+          <ExternalLink className="w-3.5 h-3.5 shrink-0" />
         </Link>
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium text-rose-400 hover:text-rose-300 hover:bg-white/5 transition-colors"
+          title={isMinimized ? "Sign Out" : undefined}
+          className={`w-full flex items-center py-2 rounded-lg text-[13px] font-medium text-rose-400 hover:text-rose-300 hover:bg-white/5 transition-colors ${isMinimized ? 'justify-center px-0 gap-0' : 'px-3 gap-3'}`}
         >
-          <LogOut className="w-4 h-4" />
-          <span>Sign Out</span>
+          <LogOut className="w-4 h-4 shrink-0" />
+          {!isMinimized && <span>Sign Out</span>}
         </button>
       </div>
     </aside>
