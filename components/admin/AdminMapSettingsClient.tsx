@@ -241,8 +241,9 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
                 </div>
               </div>
             </div>
-          ))}
           </div>
+        ))}
+        </div>
 
           <div className="pt-6 border-t border-slate-200 flex items-center justify-between">
             <button
