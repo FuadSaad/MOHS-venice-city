@@ -27,7 +27,7 @@ export default function MapPlotsManager({ initialPlots, modules }: MapPlotsManag
   const [description, setDescription] = useState("");
   const [moduleSelect, setModuleSelect] = useState(modules[0]?.id || "");
 
-  const openAddModal = () => {
+  const openAddModal = (moduleId?: string) => {
     setEditingPlot(null);
     setTitle("");
     setPrice("");
@@ -36,7 +36,7 @@ export default function MapPlotsManager({ initialPlots, modules }: MapPlotsManag
     setFacing("");
     setFrontRoad("");
     setDescription("");
-    setModuleSelect(modules[0]?.id || "");
+    setModuleSelect(moduleId || modules[0]?.id || "");
     setError(null);
     setIsModalOpen(true);
   };
@@ -139,9 +139,6 @@ export default function MapPlotsManager({ initialPlots, modules }: MapPlotsManag
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Manage Plot Buttons</h3>
-        <button onClick={openAddModal} disabled={modules.length === 0} className="bg-[#00695C] hover:bg-[#005B50] disabled:bg-slate-300 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-sm flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add Plot Button
-        </button>
       </div>
 
       {modules.length === 0 && (
@@ -157,7 +154,12 @@ export default function MapPlotsManager({ initialPlots, modules }: MapPlotsManag
             <div key={mod.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
               <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
                 <span className="text-xs font-bold text-[#12262D] uppercase">{mod.title || `Module ${index + 1}`}</span>
-                <span className="bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{modPlots.length}</span>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => openAddModal(mod.id)} className="bg-[#00695C] hover:bg-[#005B50] text-white text-[10px] font-bold px-2.5 py-1 rounded-md transition-colors shadow-sm flex items-center gap-1.5">
+                    <Plus className="w-3 h-3" /> Add
+                  </button>
+                  <span className="bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{modPlots.length}</span>
+                </div>
               </div>
               <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
                 {modPlots.map((plot, i) => {
