@@ -16,10 +16,8 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
 
   // Map DB plots to the UI format
   const mappedPlots = initialPlots.map(p => {
-    const id = p.title.split(" ")[0].substring(0, 8); // simplified
-
     return {
-      id: id,
+      _originalId: p.id,
       size: p.plotKatha ? `${p.plotKatha} Katha` : "Unknown Size",
       type: p.landCategory || "Plot",
       status: p.status, // AVAILABLE, BOOKED, SOLD
@@ -28,13 +26,25 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
       frontRoad: p.plotRoadWidth || "N/A",
       location: p.location || "N/A",
       desc: p.description || p.overview || "",
-      sectorBlock: p.sectorBlock || ""
+      sectorBlock: p.sectorBlock || "",
+      id: "" // Will be set below
     };
   });
 
   // Split into modules based on sectorBlock
-  const module1Plots = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes(map1Keyword));
-  const module2Plots = mappedPlots.filter(p => !module1Plots.includes(p));
+  const rawModule1 = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes(map1Keyword));
+  const rawModule2 = mappedPlots.filter(p => !rawModule1.includes(p));
+
+  // Assign sequential IDs like CP-01, CP-02 for Module 1 and 01, 02 for Module 2
+  const module1Plots = rawModule1.map((p, i) => ({
+    ...p,
+    id: `CP-${(i + 1).toString().padStart(2, '0')}`
+  }));
+
+  const module2Plots = rawModule2.map((p, i) => ({
+    ...p,
+    id: (i + 1).toString().padStart(2, '0')
+  }));
 
   const filteredModule1 = module1Plots.filter(p => {
     if (filterZone === settings?.map2Subtitle) return false;
