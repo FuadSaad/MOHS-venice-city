@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { Plus, Edit2, Trash2, CheckCircle2, AlertCircle, Loader2, X } from "lucide-react";
 import { PropertyItem } from "@/types/property";
+import { MapModuleConfig } from "./AdminMapSettingsClient";
 
 interface MapPlotsManagerProps {
   initialPlots: PropertyItem[];
-  map1Keyword: string;
-  map2Keyword: string;
+  modules: MapModuleConfig[];
 }
 
-export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword }: MapPlotsManagerProps) {
+export default function MapPlotsManager({ initialPlots, modules }: MapPlotsManagerProps) {
   const [plots, setPlots] = useState<PropertyItem[]>(initialPlots);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPlot, setEditingPlot] = useState<PropertyItem | null>(null);
@@ -25,7 +25,7 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
   const [facing, setFacing] = useState("South Facing");
   const [frontRoad, setFrontRoad] = useState("40 Feet");
   const [description, setDescription] = useState("");
-  const [moduleSelect, setModuleSelect] = useState("1"); // 1 or 2
+  const [moduleSelect, setModuleSelect] = useState(modules[0]?.id || "");
 
   const openAddModal = () => {
     setEditingPlot(null);
@@ -36,7 +36,7 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
     setFacing("");
     setFrontRoad("");
     setDescription("");
-    setModuleSelect("1");
+    setModuleSelect(modules[0]?.id || "");
     setError(null);
     setIsModalOpen(true);
   };
@@ -51,11 +51,15 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
     setFrontRoad(plot.plotRoadWidth || "");
     setDescription(plot.description || "");
     
-    if (plot.sectorBlock?.toLowerCase().includes((map2Keyword || "").toLowerCase())) {
-      setModuleSelect("2");
-    } else {
-      setModuleSelect("1");
+    // Find which module it belongs to
+    let matchedModuleId = modules[0]?.id || "";
+    for (const mod of modules) {
+      if (plot.sectorBlock?.toLowerCase().includes((mod.keyword || "").toLowerCase())) {
+        matchedModuleId = mod.id;
+        break;
+      }
     }
+    setModuleSelect(matchedModuleId);
     
     setError(null);
     setIsModalOpen(true);
@@ -81,6 +85,9 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
     setLoading(true);
     setError(null);
 
+    const selectedModule = modules.find(m => m.id === moduleSelect);
+    const keyword = selectedModule?.keyword || "Map Plot";
+
     const payload = {
       title: title || "Plot",
       propertyType: "PLOT",
@@ -91,7 +98,7 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
       plotKatha: parseFloat(size) || 0,
       plotRoadWidth: frontRoad,
       facing,
-      sectorBlock: moduleSelect === "1" ? (map1Keyword || "Sector 1") : (map2Keyword || "Sector 2"),
+      sectorBlock: keyword,
     };
 
     try {
@@ -122,64 +129,54 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
     }
   };
 
-  const map1Plots = plots.filter(p => p.sectorBlock?.toLowerCase().includes((map1Keyword || "").toLowerCase()));
-  const map2Plots = plots.filter(p => !p.sectorBlock?.toLowerCase().includes((map1Keyword || "").toLowerCase()) && p.sectorBlock?.toLowerCase().includes((map2Keyword || "").toLowerCase()));
+  // Pre-calculate plots per module so we can render them properly
+  const getPlotsForModule = (keyword: string) => {
+    if (!keyword) return [];
+    return plots.filter(p => p.sectorBlock?.toLowerCase().includes(keyword.toLowerCase()));
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Manage Plot Buttons</h3>
-        <button onClick={openAddModal} className="bg-[#00695C] hover:bg-[#005B50] text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-sm flex items-center gap-2">
+        <button onClick={openAddModal} disabled={modules.length === 0} className="bg-[#00695C] hover:bg-[#005B50] disabled:bg-slate-300 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-sm flex items-center gap-2">
           <Plus className="w-4 h-4" /> Add Plot Button
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Module 1 Plots */}
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-          <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
-            <span className="text-xs font-bold text-[#12262D] uppercase">Map Module 1 Plots</span>
-            <span className="bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{map1Plots.length}</span>
-          </div>
-          <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
-            {map1Plots.map((plot, i) => (
-              <div key={plot.id} className="p-3 hover:bg-slate-50 transition-colors flex justify-between items-center">
-                <div>
-                  <div className="text-xs font-bold text-[#12262D]">Plot {i + 1}</div>
-                  <div className="text-[10px] text-slate-500 font-medium">{plot.plotKatha} Katha • ৳{plot.price} • {plot.status}</div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => openEditModal(plot)} className="text-[#00695C] hover:bg-[#00695C]/10 p-1.5 rounded-lg"><Edit2 className="w-3.5 h-3.5" /></button>
-                  <button onClick={() => handleDelete(plot.id)} className="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg"><Trash2 className="w-3.5 h-3.5" /></button>
-                </div>
-              </div>
-            ))}
-            {map1Plots.length === 0 && <div className="p-6 text-center text-xs text-slate-500 font-medium">No plots added to Module 1 yet.</div>}
-          </div>
+      {modules.length === 0 && (
+        <div className="p-8 text-center border border-dashed border-slate-300 rounded-2xl bg-slate-50 text-slate-500 font-medium text-sm">
+          No map modules configured yet. Go to "Map Layout & Images" to add one.
         </div>
+      )}
 
-        {/* Module 2 Plots */}
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-          <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
-            <span className="text-xs font-bold text-[#12262D] uppercase">Map Module 2 Plots</span>
-            <span className="bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{map2Plots.length}</span>
-          </div>
-          <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
-            {map2Plots.map((plot, i) => (
-              <div key={plot.id} className="p-3 hover:bg-slate-50 transition-colors flex justify-between items-center">
-                <div>
-                  <div className="text-xs font-bold text-[#12262D]">Plot {i + 1}</div>
-                  <div className="text-[10px] text-slate-500 font-medium">{plot.plotKatha} Katha • ৳{plot.price} • {plot.status}</div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => openEditModal(plot)} className="text-[#00695C] hover:bg-[#00695C]/10 p-1.5 rounded-lg"><Edit2 className="w-3.5 h-3.5" /></button>
-                  <button onClick={() => handleDelete(plot.id)} className="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg"><Trash2 className="w-3.5 h-3.5" /></button>
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {modules.map((mod, index) => {
+          const modPlots = getPlotsForModule(mod.keyword);
+          return (
+            <div key={mod.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+              <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
+                <span className="text-xs font-bold text-[#12262D] uppercase">{mod.title || `Module ${index + 1}`}</span>
+                <span className="bg-[#00695C] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{modPlots.length}</span>
               </div>
-            ))}
-            {map2Plots.length === 0 && <div className="p-6 text-center text-xs text-slate-500 font-medium">No plots added to Module 2 yet.</div>}
-          </div>
-        </div>
+              <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
+                {modPlots.map((plot, i) => (
+                  <div key={plot.id} className="p-3 hover:bg-slate-50 transition-colors flex justify-between items-center">
+                    <div>
+                      <div className="text-xs font-bold text-[#12262D]">{plot.title || `Plot ${i + 1}`}</div>
+                      <div className="text-[10px] text-slate-500 font-medium">{plot.plotKatha} Katha • ৳{plot.price} • {plot.status}</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => openEditModal(plot)} className="text-[#00695C] hover:bg-[#00695C]/10 p-1.5 rounded-lg"><Edit2 className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => handleDelete(plot.id)} className="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg"><Trash2 className="w-3.5 h-3.5" /></button>
+                    </div>
+                  </div>
+                ))}
+                {modPlots.length === 0 && <div className="p-6 text-center text-xs text-slate-500 font-medium">No plots added yet.</div>}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Modal */}
@@ -207,8 +204,9 @@ export default function MapPlotsManager({ initialPlots, map1Keyword, map2Keyword
                 <div className="col-span-2">
                   <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1">Place plot on which Map?</label>
                   <select value={moduleSelect} onChange={(e) => setModuleSelect(e.target.value)} className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2.5 text-xs text-[#12262D] outline-none">
-                    <option value="1">Map Module 1</option>
-                    <option value="2">Map Module 2</option>
+                    {modules.map(m => (
+                      <option key={m.id} value={m.id}>{m.title}</option>
+                    ))}
                   </select>
                 </div>
                 

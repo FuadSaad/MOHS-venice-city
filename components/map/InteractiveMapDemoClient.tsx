@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2, RotateCcw, ChevronDown } from "lucide-react";
@@ -11,8 +9,34 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
   const [filterStatus, setFilterStatus] = useState("All Status");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const map1Keyword = settings?.map1Keyword?.toLowerCase() || "sector 1";
-  const map2Keyword = settings?.map2Keyword?.toLowerCase() || "sector 2";
+  const [modules, setModules] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      if (settings?.mapModulesJson) {
+        setModules(JSON.parse(settings.mapModulesJson));
+      } else {
+        setModules([
+          {
+            id: "1",
+            image: settings?.map1Image,
+            title: settings?.map1Title,
+            subtitle: settings?.map1Subtitle,
+            keyword: settings?.map1Keyword,
+          },
+          {
+            id: "2",
+            image: settings?.map2Image,
+            title: settings?.map2Title,
+            subtitle: settings?.map2Subtitle,
+            keyword: settings?.map2Keyword,
+          }
+        ]);
+      }
+    } catch (e) {
+      setModules([]);
+    }
+  }, [settings]);
 
   // Map DB plots to the UI format
   const mappedPlots = initialPlots.map(p => {
@@ -31,46 +55,34 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
     };
   });
 
-  // Split into modules based on sectorBlock
-  const rawModule1 = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes(map1Keyword));
-  const rawModule2 = mappedPlots.filter(p => !rawModule1.includes(p));
+  const getFilteredPlotsForModule = (mod: any) => {
+    const keyword = mod.keyword?.toLowerCase() || "";
+    const rawModulePlots = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes(keyword));
+    
+    // Assign sequential IDs
+    const modulePlots = rawModulePlots.map((p, i) => ({
+      ...p,
+      id: `CP-${(i + 1).toString().padStart(2, '0')}` // Give all modules sequential CP-01, CP-02
+    }));
 
-  // Assign sequential IDs like CP-01, CP-02 for Module 1 and 01, 02 for Module 2
-  const module1Plots = rawModule1.map((p, i) => ({
-    ...p,
-    id: `CP-${(i + 1).toString().padStart(2, '0')}`
-  }));
-
-  const module2Plots = rawModule2.map((p, i) => ({
-    ...p,
-    id: (i + 1).toString().padStart(2, '0')
-  }));
-
-  const filteredModule1 = module1Plots.filter(p => {
-    if (filterZone === settings?.map2Subtitle) return false;
-    if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
-    if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
-    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
-
-  const filteredModule2 = module2Plots.filter(p => {
-    if (filterZone === settings?.map1Subtitle) return false;
-    if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
-    if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
-    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
+    return modulePlots.filter(p => {
+      if (filterZone !== "All Zones" && filterZone !== mod.subtitle) return false;
+      if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
+      if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
+      if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      return true;
+    });
+  };
 
   const totalPlots = mappedPlots.length;
   const availablePlots = mappedPlots.filter(p => p.status === "AVAILABLE").length;
-  const matchingPlots = filteredModule1.length + filteredModule2.length;
+  const matchingPlots = modules.reduce((acc, mod) => acc + getFilteredPlotsForModule(mod).length, 0);
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 p-4 sm:p-6 lg:p-8 flex flex-col items-center">
       
       {/* Top Header & Stats */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-4 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-4 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="text-left">
           <h1 className="text-3xl md:text-4xl font-black font-heading text-[#12262D] tracking-tight mb-2">
             Interactive Property Map
@@ -80,7 +92,7 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
           </p>
         </div>
         
-        <div className="flex items-center gap-2 md:gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100 self-start lg:self-auto">
+        <div className="flex items-center gap-2 md:gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100 self-start lg:self-auto shrink-0">
           <div className="flex flex-col items-center justify-center px-3 md:px-5 py-1.5 md:py-2 border-r border-slate-100">
             <span className="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Total Plots</span>
             <span className="font-heading font-black text-[#12262D] text-lg md:text-2xl leading-none">{totalPlots}+</span>
@@ -90,14 +102,14 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
             <span className="font-heading font-black text-emerald-700 text-lg md:text-2xl leading-none">{availablePlots}</span>
           </div>
           <div className="flex flex-col items-center justify-center px-3 md:px-5 py-1.5 md:py-2">
-            <span className="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Facilities</span>
-            <span className="font-heading font-black text-[#00695C] text-lg md:text-2xl leading-none">12 Hubs</span>
+            <span className="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Zones</span>
+            <span className="font-heading font-black text-[#00695C] text-lg md:text-2xl leading-none">{modules.length}</span>
           </div>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="w-full max-w-7xl mx-auto mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+      <div className="w-full max-w-[1400px] mx-auto mb-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
         <div className="w-full md:w-auto flex-1 flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide snap-x">
           
           <div className="relative snap-start shrink-0">
@@ -107,8 +119,9 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
               className="w-full bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer hover:border-slate-300 transition-colors"
             >
               <option value="All Zones">Zone: All Zones</option>
-              <option value={settings?.map1Subtitle || "Corporate & Commercial Zone"}>{settings?.map1Subtitle || "Corporate & Commercial Zone"}</option>
-              <option value={settings?.map2Subtitle || "Premium Residential Zone"}>{settings?.map2Subtitle || "Premium Residential Zone"}</option>
+              {modules.map(mod => (
+                <option key={mod.id} value={mod.subtitle}>{mod.subtitle}</option>
+              ))}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
           </div>
@@ -176,24 +189,16 @@ export default function InteractiveMapDemoClient({ initialPlots = [], settings }
         </div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 xl:items-start">
-        
-        {/* Module 1 */}
-        <MapModule 
-          imageSrc={settings?.map1Image || "/images/map-interactive.jpg"} 
-          title={settings?.map1Title || "Sector 1"} 
-          subtitle={settings?.map1Subtitle || "Corporate & Commercial Zone"}
-          plotsData={filteredModule1} 
-        />
-        
-        {/* Module 2 */}
-        <MapModule 
-          imageSrc={settings?.map2Image || "/images/map-interactive-2.jpg"} 
-          title={settings?.map2Title || "Sector 2"} 
-          subtitle={settings?.map2Subtitle || "Premium Residential Zone"}
-          plotsData={filteredModule2} 
-        />
-
+      <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 xl:gap-8 xl:items-start">
+        {modules.map((mod) => (
+          <MapModule 
+            key={mod.id}
+            imageSrc={mod.image} 
+            title={mod.title} 
+            subtitle={mod.subtitle}
+            plotsData={getFilteredPlotsForModule(mod)} 
+          />
+        ))}
       </div>
     </div>
   );

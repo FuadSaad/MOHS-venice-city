@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Save, CheckCircle2, AlertCircle, Loader2, Image as ImageIcon, Map as MapIcon, SlidersHorizontal } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Save, CheckCircle2, AlertCircle, Loader2, Image as ImageIcon, Map as MapIcon, SlidersHorizontal, Plus, Trash2 } from "lucide-react";
 import { WebsiteSettingsData } from "@/lib/settings";
 import MapPlotsManager from "./MapPlotsManager";
 import { PropertyItem } from "@/types/property";
@@ -11,6 +11,14 @@ interface AdminMapSettingsClientProps {
   plots: PropertyItem[];
 }
 
+export interface MapModuleConfig {
+  id: string;
+  image: string;
+  title: string;
+  subtitle: string;
+  keyword: string;
+}
+
 export default function AdminMapSettingsClient({ initialSettings, plots }: AdminMapSettingsClientProps) {
   const [activeTab, setActiveTab] = useState<"CONFIG" | "PLOTS">("CONFIG");
 
@@ -18,17 +26,57 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Map 1 Settings
-  const [map1Image, setMap1Image] = useState(initialSettings.map1Image);
-  const [map1Title, setMap1Title] = useState(initialSettings.map1Title);
-  const [map1Subtitle, setMap1Subtitle] = useState(initialSettings.map1Subtitle);
-  const [map1Keyword, setMap1Keyword] = useState(initialSettings.map1Keyword);
+  const [modules, setModules] = useState<MapModuleConfig[]>([]);
 
-  // Map 2 Settings
-  const [map2Image, setMap2Image] = useState(initialSettings.map2Image);
-  const [map2Title, setMap2Title] = useState(initialSettings.map2Title);
-  const [map2Subtitle, setMap2Subtitle] = useState(initialSettings.map2Subtitle);
-  const [map2Keyword, setMap2Keyword] = useState(initialSettings.map2Keyword);
+  useEffect(() => {
+    try {
+      if (initialSettings.mapModulesJson) {
+        setModules(JSON.parse(initialSettings.mapModulesJson));
+      } else {
+        // Fallback to legacy structure if mapModulesJson is empty
+        setModules([
+          {
+            id: "1",
+            image: initialSettings.map1Image,
+            title: initialSettings.map1Title,
+            subtitle: initialSettings.map1Subtitle,
+            keyword: initialSettings.map1Keyword,
+          },
+          {
+            id: "2",
+            image: initialSettings.map2Image,
+            title: initialSettings.map2Title,
+            subtitle: initialSettings.map2Subtitle,
+            keyword: initialSettings.map2Keyword,
+          }
+        ]);
+      }
+    } catch (e) {
+      setModules([]);
+    }
+  }, [initialSettings]);
+
+  const handleModuleChange = (index: number, field: keyof MapModuleConfig, value: string) => {
+    const newModules = [...modules];
+    newModules[index] = { ...newModules[index], [field]: value };
+    setModules(newModules);
+  };
+
+  const addModule = () => {
+    const newId = Date.now().toString();
+    setModules([
+      ...modules, 
+      { id: newId, image: "", title: `New Module ${modules.length + 1}`, subtitle: "", keyword: "" }
+    ]);
+  };
+
+  const removeModule = (index: number) => {
+    if (confirm("Are you sure you want to remove this map module?")) {
+      const newModules = [...modules];
+      newModules.splice(index, 1);
+      setModules(newModules);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,8 +89,7 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          map1Image, map1Title, map1Subtitle, map1Keyword,
-          map2Image, map2Title, map2Subtitle, map2Keyword,
+          mapModulesJson: JSON.stringify(modules)
         }),
       });
 
@@ -110,97 +157,68 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
 
         <form onSubmit={handleSave} className="space-y-10">
           
-          {/* Module 1 */}
-          <div className="flex flex-col lg:flex-row gap-8 bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
-            {/* Preview side */}
-            <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-3">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-[#00695C] text-white flex items-center justify-center font-black text-sm shadow-sm">1</div>
-                <div>
-                  <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Module 1</h3>
-                  <p className="text-[10px] text-slate-500 font-bold uppercase">{map1Title || "Untitled"}</p>
+          {modules.map((mod, index) => (
+            <div key={mod.id} className="relative">
+              {index > 0 && <hr className="border-slate-100 mb-10" />}
+              
+              <div className="flex flex-col lg:flex-row gap-8 bg-slate-50/50 p-6 rounded-2xl border border-slate-100 relative group">
+                <button type="button" onClick={() => removeModule(index)} className="absolute -top-3 -right-3 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 border border-slate-200 hover:border-rose-200 p-2 rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+
+                {/* Preview side */}
+                <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-[#00695C] text-white flex items-center justify-center font-black text-sm shadow-sm">{index + 1}</div>
+                    <div>
+                      <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Module {index + 1}</h3>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase">{mod.title || "Untitled"}</p>
+                    </div>
+                  </div>
+                  <div className="aspect-[3/4] w-full bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative flex items-center justify-center">
+                    {mod.image ? (
+                      <img src={mod.image} alt={`Map ${index + 1} Preview`} className="w-full h-full object-contain p-2" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                    ) : (
+                      <ImageIcon className="w-8 h-8 text-slate-300" />
+                    )}
+                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
+                  </div>
+                </div>
+                
+                {/* Form side */}
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
+                    <input type="url" required value={mod.image} onChange={(e) => handleModuleChange(index, "image", e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Title</label>
+                    <input type="text" required value={mod.title} onChange={(e) => handleModuleChange(index, "title", e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Subtitle / Zone</label>
+                    <input type="text" required value={mod.subtitle} onChange={(e) => handleModuleChange(index, "subtitle", e.target.value)} placeholder="e.g. Corporate Zone" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Filtering Keyword</label>
+                    <input type="text" required value={mod.keyword} onChange={(e) => handleModuleChange(index, "keyword", e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-emerald-50/50 border border-emerald-200 rounded-xl px-4 py-3 text-sm font-bold text-emerald-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm" />
+                    <p className="text-[10px] text-emerald-600 mt-1.5 font-bold">Properties with this word in their "Sector/Block" will appear on this map.</p>
+                  </div>
                 </div>
               </div>
-              <div className="aspect-[3/4] w-full bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative flex items-center justify-center">
-                {map1Image ? (
-                  <img src={map1Image} alt="Map 1 Preview" className="w-full h-full object-contain p-2" onError={(e) => (e.currentTarget.style.display = 'none')} />
-                ) : (
-                  <ImageIcon className="w-8 h-8 text-slate-300" />
-                )}
-                <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
-              </div>
             </div>
-            
-            {/* Form side */}
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
-                <input type="url" required value={map1Image} onChange={(e) => setMap1Image(e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
-                <p className="text-[10px] text-slate-500 mt-1.5 font-medium">Link to the high-resolution map image (local path or external URL).</p>
-              </div>
-              <div>
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Title</label>
-                <input type="text" required value={map1Title} onChange={(e) => setMap1Title(e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
-              </div>
-              <div>
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Subtitle / Zone</label>
-                <input type="text" required value={map1Subtitle} onChange={(e) => setMap1Subtitle(e.target.value)} placeholder="e.g. Corporate & Commercial Zone" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Filtering Keyword</label>
-                <input type="text" required value={map1Keyword} onChange={(e) => setMap1Keyword(e.target.value)} placeholder="e.g. Sector 1" className="w-full bg-emerald-50/50 border border-emerald-200 rounded-xl px-4 py-3 text-sm font-bold text-emerald-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm" />
-                <p className="text-[10px] text-emerald-600 mt-1.5 font-bold">Properties with this word in their "Sector/Block" will appear on this map.</p>
-              </div>
-            </div>
-          </div>
+          ))}
 
-          <hr className="border-slate-100" />
+          <div className="pt-6 border-t border-slate-200 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={addModule}
+              className="bg-slate-100 hover:bg-slate-200 text-[#12262D] font-bold py-3.5 px-6 rounded-xl text-sm flex items-center gap-2 transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Another Map Module</span>
+            </button>
 
-          {/* Module 2 */}
-          <div className="flex flex-col lg:flex-row gap-8 bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
-            {/* Preview side */}
-            <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-3">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-[#00695C] text-white flex items-center justify-center font-black text-sm shadow-sm">2</div>
-                <div>
-                  <h3 className="text-sm font-black text-[#12262D] uppercase tracking-wide">Module 2</h3>
-                  <p className="text-[10px] text-slate-500 font-bold uppercase">{map2Title || "Untitled"}</p>
-                </div>
-              </div>
-              <div className="aspect-[3/4] w-full bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative flex items-center justify-center">
-                {map2Image ? (
-                  <img src={map2Image} alt="Map 2 Preview" className="w-full h-full object-contain p-2" onError={(e) => (e.currentTarget.style.display = 'none')} />
-                ) : (
-                  <ImageIcon className="w-8 h-8 text-slate-300" />
-                )}
-                <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
-              </div>
-            </div>
-            
-            {/* Form side */}
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
-                <input type="url" required value={map2Image} onChange={(e) => setMap2Image(e.target.value)} placeholder="/images/map-interactive-2.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
-                <p className="text-[10px] text-slate-500 mt-1.5 font-medium">Link to the high-resolution map image (local path or external URL).</p>
-              </div>
-              <div>
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Title</label>
-                <input type="text" required value={map2Title} onChange={(e) => setMap2Title(e.target.value)} placeholder="e.g. Sector 2" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
-              </div>
-              <div>
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Module Subtitle / Zone</label>
-                <input type="text" required value={map2Subtitle} onChange={(e) => setMap2Subtitle(e.target.value)} placeholder="e.g. Premium Residential Zone" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Filtering Keyword</label>
-                <input type="text" required value={map2Keyword} onChange={(e) => setMap2Keyword(e.target.value)} placeholder="e.g. Sector 2" className="w-full bg-emerald-50/50 border border-emerald-200 rounded-xl px-4 py-3 text-sm font-bold text-emerald-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm" />
-                <p className="text-[10px] text-emerald-600 mt-1.5 font-bold">Properties with this word in their "Sector/Block" will appear on this map.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-4 flex justify-end">
             <button
               type="submit"
               disabled={loading}
@@ -218,7 +236,7 @@ export default function AdminMapSettingsClient({ initialSettings, plots }: Admin
       </div>
       ) : (
         <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <MapPlotsManager initialPlots={plots} map1Keyword={map1Keyword} map2Keyword={map2Keyword} />
+          <MapPlotsManager initialPlots={plots} modules={modules} />
         </div>
       )}
     </div>

@@ -15,6 +15,7 @@ export interface WebsiteSettingsData {
   map2Title: string;
   map2Subtitle: string;
   map2Keyword: string;
+  mapModulesJson: string;
 }
 
 export const DEFAULT_SETTINGS: WebsiteSettingsData = {
@@ -32,6 +33,7 @@ export const DEFAULT_SETTINGS: WebsiteSettingsData = {
   map2Title: "Sector 2",
   map2Subtitle: "Premium Residential Zone",
   map2Keyword: "Sector 2",
+  mapModulesJson: "",
 };
 
 export async function getWebsiteSettings(): Promise<WebsiteSettingsData> {
@@ -57,6 +59,7 @@ export async function getWebsiteSettings(): Promise<WebsiteSettingsData> {
       map2Title: map.map2Title || DEFAULT_SETTINGS.map2Title,
       map2Subtitle: map.map2Subtitle || DEFAULT_SETTINGS.map2Subtitle,
       map2Keyword: map.map2Keyword || DEFAULT_SETTINGS.map2Keyword,
+      mapModulesJson: map.mapModulesJson || DEFAULT_SETTINGS.mapModulesJson,
     };
   } catch (error) {
     console.error("Failed to load website settings from DB, using defaults:", error);

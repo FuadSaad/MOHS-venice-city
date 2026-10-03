@@ -30,7 +30,8 @@ export async function PUT(req: NextRequest) {
     const allowedKeys = [
       "companyName", "tagline", "phone", "email", "address", "visitingHours",
       "map1Image", "map1Title", "map1Subtitle", "map1Keyword",
-      "map2Image", "map2Title", "map2Subtitle", "map2Keyword"
+      "map2Image", "map2Title", "map2Subtitle", "map2Keyword",
+      "mapModulesJson"
     ];
 
     for (const key of allowedKeys) {
