@@ -132,6 +132,16 @@ export default function AdminMapSettingsClient({ initialSettings }: AdminMapSett
             
             {/* Form side */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
+              <div className="sm:col-span-2 flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div>
+                  <h4 className="text-xs font-black text-[#12262D]">Want to add or edit buttons here?</h4>
+                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">Go to Properties and use <strong>{map1Keyword || "Sector 1"}</strong> as the Sector/Block.</p>
+                </div>
+                <a href="/admin/properties/new" className="bg-[#00695C] hover:bg-[#005B50] text-white text-[10px] font-bold px-4 py-2 rounded-lg transition-colors">
+                  + Add Plot Button
+                </a>
+              </div>
+
               <div className="sm:col-span-2">
                 <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
                 <input type="url" required value={map1Image} onChange={(e) => setMap1Image(e.target.value)} placeholder="/images/map-interactive.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
@@ -178,6 +188,16 @@ export default function AdminMapSettingsClient({ initialSettings }: AdminMapSett
             
             {/* Form side */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 content-start">
+              <div className="sm:col-span-2 flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div>
+                  <h4 className="text-xs font-black text-[#12262D]">Want to add or edit buttons here?</h4>
+                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">Go to Properties and use <strong>{map2Keyword || "Sector 2"}</strong> as the Sector/Block.</p>
+                </div>
+                <a href="/admin/properties/new" className="bg-[#00695C] hover:bg-[#005B50] text-white text-[10px] font-bold px-4 py-2 rounded-lg transition-colors">
+                  + Add Plot Button
+                </a>
+              </div>
+
               <div className="sm:col-span-2">
                 <label className="block text-[11px] font-black text-[#12262D] uppercase tracking-wider mb-1.5">Background Map Image URL</label>
                 <input type="url" required value={map2Image} onChange={(e) => setMap2Image(e.target.value)} placeholder="/images/map-interactive-2.jpg" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-[#12262D] outline-none focus:border-[#00695C] focus:ring-1 focus:ring-[#00695C] transition-all shadow-sm" />
