@@ -63,7 +63,7 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
           <Plus className="w-4 h-4 text-[#00695C]" /> Add New Photo
         </h3>
 
-        <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
           <div>
             <label className="block text-xs font-bold text-[#12262D] mb-1">
               Photo Title
@@ -106,6 +106,19 @@ export default function AdminGalleryClient({ initialItems }: AdminGalleryClientP
               placeholder="https://images.unsplash.com/..."
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-[#12262D] mb-1">
+              Description (Optional)
+            </label>
+            <input
+              type="text"
+              placeholder="Short description..."
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
               className="w-full bg-[#F5F8F8] border border-[#E2E7E5] rounded-xl px-3 py-2 text-xs text-[#12262D] outline-none"
             />
           </div>

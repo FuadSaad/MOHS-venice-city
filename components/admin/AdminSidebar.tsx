@@ -41,7 +41,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
   { label: "Photo Gallery", href: "/admin/gallery", icon: ImageIcon, permission: "gallery" },
   { label: "Customer Reviews", href: "/admin/reviews", icon: Star, permission: "reviews" },
   { label: "Website Settings", href: "/admin/settings", icon: Settings, permission: "settings" },
-  { label: "Sub-Admins & Team", href: "/admin/sub-admins", icon: ShieldCheck, superAdminOnly: true },
+  { label: "Configure", href: "/admin/sub-admins", icon: ShieldCheck, superAdminOnly: true },
 ];
 
 export default function AdminSidebar({ admin: serverAdmin }: { admin?: AdminPayload | null }) {
