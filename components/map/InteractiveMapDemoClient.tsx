@@ -5,16 +5,17 @@ import Image from "next/image";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { ZoomIn, ZoomOut, Expand, X, CheckCircle2, PhoneCall, Info, Calendar, Share2, RotateCcw, ChevronDown } from "lucide-react";
 
-export default function InteractiveMapDemoClient({ initialPlots = [] }: { initialPlots?: any[] }) {
+export default function InteractiveMapDemoClient({ initialPlots = [], settings }: { initialPlots?: any[], settings?: any }) {
   const [filterZone, setFilterZone] = useState("All Zones");
   const [filterSize, setFilterSize] = useState("All Sizes");
   const [filterStatus, setFilterStatus] = useState("All Status");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const map1Keyword = settings?.map1Keyword?.toLowerCase() || "sector 1";
+  const map2Keyword = settings?.map2Keyword?.toLowerCase() || "sector 2";
+
   // Map DB plots to the UI format
   const mappedPlots = initialPlots.map(p => {
-    // Generate a short ID if title contains a Plot No, or just use a part of title
-    // or we can just use the title as ID for the card
     const id = p.title.split(" ")[0].substring(0, 8); // simplified
 
     return {
@@ -32,12 +33,11 @@ export default function InteractiveMapDemoClient({ initialPlots = [] }: { initia
   });
 
   // Split into modules based on sectorBlock
-  // If sectorBlock contains "Sector 1" or "Commercial", put in module 1. Else module 2.
-  const module1Plots = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes("sector 1") || (p.sectorBlock || "").toLowerCase().includes("commercial"));
+  const module1Plots = mappedPlots.filter(p => (p.sectorBlock || "").toLowerCase().includes(map1Keyword));
   const module2Plots = mappedPlots.filter(p => !module1Plots.includes(p));
 
   const filteredModule1 = module1Plots.filter(p => {
-    if (filterZone === "Premium Residential") return false;
+    if (filterZone === settings?.map2Subtitle) return false;
     if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
     if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -45,7 +45,7 @@ export default function InteractiveMapDemoClient({ initialPlots = [] }: { initia
   });
 
   const filteredModule2 = module2Plots.filter(p => {
-    if (filterZone === "Corporate & Commercial") return false;
+    if (filterZone === settings?.map1Subtitle) return false;
     if (filterSize !== "All Sizes" && p.size !== filterSize) return false;
     if (filterStatus !== "All Status" && p.status !== filterStatus) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -97,8 +97,8 @@ export default function InteractiveMapDemoClient({ initialPlots = [] }: { initia
               className="w-full bg-white border border-slate-200 text-[#12262D] text-xs font-bold rounded-xl pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00695C] shadow-sm appearance-none cursor-pointer hover:border-slate-300 transition-colors"
             >
               <option value="All Zones">Zone: All Zones</option>
-              <option value="Corporate & Commercial">Corporate & Commercial</option>
-              <option value="Premium Residential">Premium Residential</option>
+              <option value={settings?.map1Subtitle || "Corporate & Commercial Zone"}>{settings?.map1Subtitle || "Corporate & Commercial Zone"}</option>
+              <option value={settings?.map2Subtitle || "Premium Residential Zone"}>{settings?.map2Subtitle || "Premium Residential Zone"}</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
           </div>
@@ -170,17 +170,17 @@ export default function InteractiveMapDemoClient({ initialPlots = [] }: { initia
         
         {/* Module 1 */}
         <MapModule 
-          imageSrc="/images/map-interactive.jpg" 
-          title="Sector 1" 
-          subtitle="Corporate & Commercial Zone"
+          imageSrc={settings?.map1Image || "/images/map-interactive.jpg"} 
+          title={settings?.map1Title || "Sector 1"} 
+          subtitle={settings?.map1Subtitle || "Corporate & Commercial Zone"}
           plotsData={filteredModule1} 
         />
         
         {/* Module 2 */}
         <MapModule 
-          imageSrc="/images/map-interactive-2.jpg" 
-          title="Sector 2" 
-          subtitle="Premium Residential Zone"
+          imageSrc={settings?.map2Image || "/images/map-interactive-2.jpg"} 
+          title={settings?.map2Title || "Sector 2"} 
+          subtitle={settings?.map2Subtitle || "Premium Residential Zone"}
           plotsData={filteredModule2} 
         />
 

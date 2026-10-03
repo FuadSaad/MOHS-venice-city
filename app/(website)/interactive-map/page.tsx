@@ -1,6 +1,7 @@
 import React from "react";
 import InteractiveMapDemoClient from "@/components/map/InteractiveMapDemoClient";
 import prisma from "@/lib/prisma";
+import { getWebsiteSettings } from "@/lib/settings";
 
 export const metadata = {
   title: "Interactive Masterplan | MOHS Venice City",
@@ -15,9 +16,11 @@ export default async function InteractiveMapPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const settings = await getWebsiteSettings();
+
   return (
     <div className="w-full">
-      <InteractiveMapDemoClient initialPlots={plots} />
+      <InteractiveMapDemoClient initialPlots={plots} settings={settings} />
     </div>
   );
 }

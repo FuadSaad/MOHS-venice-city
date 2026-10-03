@@ -18,7 +18,8 @@ import {
   ExternalLink,
   ShieldCheck,
   Shield,
-  Search
+  Search,
+  Map as MapIcon
 } from "lucide-react";
 import { AdminPayload, isSuperAdmin, hasPermission } from "@/lib/rbac";
 
@@ -41,6 +42,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
   { label: "Photo Gallery", href: "/admin/gallery", icon: ImageIcon, permission: "gallery" },
   { label: "Customer Reviews", href: "/admin/reviews", icon: Star, permission: "reviews" },
   { label: "Website Settings", href: "/admin/settings", icon: Settings, permission: "settings" },
+  { label: "Interactive Map", href: "/admin/map-settings", icon: MapIcon, permission: "settings" },
   { label: "Configure", href: "/admin/sub-admins", icon: ShieldCheck, superAdminOnly: true },
 ];
 
